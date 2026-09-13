@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ular Tangga Seru! 🐍🪜</title>
+    
+    <link rel="icon" href="../aset/Logo.png" type="image/png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Nunito', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#ecfdf5', 500: '#10b981', 600: '#059669', 900: '#064e3b' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* STATIC LIGHT GRADIENT UNTUK PERFORMA RINGAN */
+        .static-bg {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #f0fdfa 100%);
+        }
+
+        .board-wrapper {
+            width: 100%;
+            max-width: min(100vw - 16px, calc(100vh - 120px)); 
+            position: relative;
+            margin: auto;
+        }
+
+        .board-container {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            position: relative;
+            z-index: 10;
+        }
+
+        .cell {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            border-radius: 6px;
+        }
+
+        .cell-number {
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            font-size: 0.6rem;
+            opacity: 0.7;
+        }
+
+        .quiz-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background-color: #ef4444;
+            border-radius: 50%;
+        }
+
+        @media (min-width: 640px) {
+            .cell-number { font-size: 0.8rem; top: 4px; left: 6px; }
+            .cell { border-radius: 12px; }
+            .quiz-dot { width: 10px; height: 10px; top: 6px; right: 6px; }
+        }
+
+        .player-token {
+            position: absolute;
+            width: 6vmin;
+            height: 6vmin;
+            max-width: 40px;
+            max-height: 40px;
+            transform: translate(-50%, -80%); 
+            transition: top 0.3s ease, left 0.3s ease;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            will-change: top, left;
+        }
+
+        .token-emoji {
+            font-size: 4vmin;
+            line-height: 1;
+            position: relative;
+            z-index: 2;
+            margin-bottom: -10%; 
+        }
+
+        @media (min-width: 640px) {
+            .token-emoji { font-size: 28px; }
+        }
+
+        .token-base {
+            width: 80%;
+            height: 30%;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.8);
+            position: absolute;
+            bottom: 0;
+            z-index: 1;
+        }
+
+        .base-0 { background: #2563eb; } 
+        .base-1 { background: #dc2626; } 
+        .base-2 { background: #059669; } 
+        .base-3 { background: #d97706; } 
+
+        @keyframes jump-arc {
+            0% { transform: translate(-50%, -80%) scale(1); z-index: 60; }
+            50% { transform: translate(-50%, -150%) scale(1.2); z-index: 60; }
+            100% { transform: translate(-50%, -80%) scale(1); z-index: 60; }
+        }
+        .jumping {
+            animation: jump-arc 0.3s ease-in-out;
+            z-index: 60 !important;
+        }
+
+        .toy-btn {
+            transition: transform 0.1s;
+        }
+        .toy-btn:active {
+            transform: translateY(2px);
+        }
+        .toy-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .card-active {
+            transform: scale(1.02);
+            opacity: 1 !important;
+        }
+        .card-inactive {
+            transform: scale(0.98);
+            opacity: 0.55;
+        }
+
+        .perspective-1000 { perspective: 1000px; }
+        .dice-cube {
+            width: 100px; 
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        .dice-face {
+            position: absolute;
+            width: 100%; 
+            height: 100%;
+            background: #ffffff;
+            border: 3px solid #cbd5e1;
+            border-radius: 16px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            padding: 12px;
+            backface-visibility: hidden;
+            justify-items: center;
+            align-items: center;
+        }
+        .pip {
+            width: 18px; 
+            height: 18px;
+            background: #334155;
+            border-radius: 50%;
+        }
+        .face-1 { transform: translateZ(50px); }
+        .face-1 .pip { grid-area: 2 / 2 / 3 / 3; background: #ef4444; width: 24px; height: 24px;}
+        .face-2 { transform: rotateY(90deg) translateZ(50px); }
+        .face-2 .pip:nth-child(1) { grid-area: 1 / 3 / 2 / 4; }
+        .face-2 .pip:nth-child(2) { grid-area: 3 / 1 / 4 / 2; }
+        .face-3 { transform: rotateX(90deg) translateZ(50px); }
+        .face-3 .pip:nth-child(1) { grid-area: 1 / 3 / 2 / 4; }
+        .face-3 .pip:nth-child(2) { grid-area: 2 / 2 / 3 / 3; }
+        .face-3 .pip:nth-child(3) { grid-area: 3 / 1 / 4 / 2; }
+        .face-4 { transform: rotateX(-90deg) translateZ(50px); }
+        .face-4 .pip:nth-child(1) { grid-area: 1 / 1 / 2 / 2; }
+        .face-4 .pip:nth-child(2) { grid-area: 1 / 3 / 2 / 4; }
+        .face-4 .pip:nth-child(3) { grid-area: 3 / 1 / 4 / 2; }
+        .face-4 .pip:nth-child(4) { grid-area: 3 / 3 / 4 / 4; }
+        .face-5 { transform: rotateY(-90deg) translateZ(50px); }
+        .face-5 .pip:nth-child(1) { grid-area: 1 / 1 / 2 / 2; }
+        .face-5 .pip:nth-child(2) { grid-area: 1 / 3 / 2 / 4; }
+        .face-5 .pip:nth-child(3) { grid-area: 2 / 2 / 3 / 3; }
+        .face-5 .pip:nth-child(4) { grid-area: 3 / 1 / 4 / 2; }
+        .face-5 .pip:nth-child(5) { grid-area: 3 / 3 / 4 / 4; }
+        .face-6 { transform: rotateY(180deg) translateZ(50px); }
+        .face-6 .pip:nth-child(1) { grid-area: 1 / 1 / 2 / 2; }
+        .face-6 .pip:nth-child(2) { grid-area: 2 / 1 / 3 / 2; }
+        .face-6 .pip:nth-child(3) { grid-area: 3 / 1 / 4 / 2; }
+        .face-6 .pip:nth-child(4) { grid-area: 1 / 3 / 2 / 4; }
+        .face-6 .pip:nth-child(5) { grid-area: 2 / 3 / 3 / 4; }
+        .face-6 .pip:nth-child(6) { grid-area: 3 / 3 / 4 / 4; }
+
+        /* MINI DICE PIP STYLE */
+        .mini-dice-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            width: 100%;
+            height: 100%;
+            padding: 3px;
+            justify-items: center;
+            align-items: center;
+        }
+        .mini-pip {
+            width: 6px;
+            height: 6px;
+            background-color: #334155;
+            border-radius: 50%;
+        }
+        .mini-pip-red {
+            width: 9px;
+            height: 9px;
+            background-color: #ef4444;
+            border-radius: 50%;
+        }
+
+        #dice-shadow {
+            width: 80px; height: 20px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 50%;
+            position: absolute;
+            bottom: -20px;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-4px); }
+            40%, 80% { transform: translateX(4px); }
+        }
+        .animate-shake {
+            animation: shake 0.3s ease-in-out;
+        }
+
+        /* AUTO RESIZE TEXTAREA STYLE */
+        .auto-expand {
+            resize: none;
+            overflow-y: hidden;
+            line-height: 1.25;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            box-sizing: border-box;
+        }
+    </style>
+
+    <!-- Firebase SDK Setup -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBQpXLMAYgAfqNzlc_mXpcz86sglGYpHxY",
+            authDomain: "media-pembelajaran-53e2d.firebaseapp.com",
+            projectId: "media-pembelajaran-53e2d",
+            storageBucket: "media-pembelajaran-53e2d.firebasestorage.app",
+            messagingSenderId: "17750786160",
+            appId: "1:17750786160:web:2f35ddbc0fdb975b76f4b5",
+            measurementId: "G-TBBJV494FB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.dbFirestore = db;
+        window.fsCollection = collection;
+        window.fsAddDoc = addDoc;
+        window.fsGetDocs = getDocs;
+        window.fsDoc = doc;
+        window.fsDeleteDoc = deleteDoc;
+        window.fsUpdateDoc = updateDoc;
+        window.fsWriteBatch = writeBatch;
+    </script>
+</head>
+<body class="static-bg min-h-screen w-screen overflow-x-hidden text-slate-800 antialiased relative flex flex-col justify-start items-center p-2 sm:p-4">
+
+    <!-- MAIN WRAPPER TERSTRUKTUR -->
+    <div class="w-full max-w-xl flex flex-col items-center gap-3 my-auto pt-2 pb-6">
+
+        <!-- 1. JUDUL / INFOBAR KELAS, MAPEL & MATERI -->
+        <div id="game-identity-bar" class="bg-white border-2 border-emerald-200 px-3.5 py-1.5 rounded-2xl shadow-sm font-black text-xs sm:text-sm text-emerald-700 uppercase tracking-wider hidden flex items-center justify-between gap-2 z-[80] w-auto flex-wrap">
+            <div class="flex items-center gap-1.5 flex-wrap">
+                <span>Kelas</span> <span id="bar-kelas" class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-lg"></span> 
+                <span>Mapel</span> <span id="bar-mapel" class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded-lg"></span>
+                <span>Materi</span> <span id="bar-materi" class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-lg"></span>
+            </div>
+            
+            <button onclick="resetGame()" class="ml-1 text-rose-500 hover:text-rose-600 bg-rose-50 hover:bg-rose-100 p-1.5 rounded-xl border border-rose-200 shadow-sm transition-all flex items-center justify-center shrink-0" title="Ulang Permainan">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+            </button>
+        </div>
+
+        <!-- 2. PAPAN PERMAINAN -->
+        <div class="board-wrapper flex justify-center items-center">
+            <div class="board-container bg-white p-1 sm:p-2 rounded-2xl sm:rounded-[2rem] shadow-lg border-2 sm:border-4 border-white">
+                <div class="w-full h-full bg-slate-50 rounded-xl overflow-hidden border border-slate-200 relative">
+                    <svg id="svg-layer" class="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
+                    <div id="board-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-10 p-0.5 w-full h-full border-t border-l border-slate-300/60"></div>
+
+                    <div id="tokens-container">
+                        <div id="player-token-0" class="player-token hidden"><div class="token-emoji">🐰</div><div class="token-base base-0"></div></div>
+                        <div id="player-token-1" class="player-token hidden"><div class="token-emoji">🐐</div><div class="token-base base-1"></div></div>
+                        <div id="player-token-2" class="player-token hidden"><div class="token-emoji">🐸</div><div class="token-base base-2"></div></div>
+                        <div id="player-token-3" class="player-token hidden"><div class="token-emoji">🐱</div><div class="token-base base-3"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. TOMBOL LEMPAR DADU -->
+        <div class="w-full lg:fixed lg:bottom-5 lg:right-5 lg:w-auto z-[90]">
+            <button id="btn-roll" onclick="rollDice3D()" class="toy-btn w-full lg:w-auto bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl py-3 lg:py-2.5 px-4 lg:px-5 shadow-md active:translate-y-1 transition-all text-sm tracking-wider uppercase border border-brand-600 flex items-center justify-center gap-3">
+                <div id="mini-dice-visual" class="w-8 h-8 lg:w-9 lg:h-9 bg-white border border-slate-200 rounded-xl flex items-center justify-center p-0.5 shrink-0">
+                    <div class="mini-dice-grid">
+                        <div class="col-start-2 row-start-2 mini-pip-red"></div>
+                    </div>
+                </div>
+                <span>LEMPAR DADU!</span>
+            </button>
+        </div>
+
+        <!-- 4. DAFTAR PEMAIN -->
+        <div class="w-full lg:fixed lg:top-5 lg:right-5 lg:w-56 bg-white p-3 rounded-2xl shadow-md border-2 border-emerald-100 flex flex-col gap-2 max-h-48 lg:max-h-80 overflow-y-auto z-[90]">
+            <div class="flex items-center justify-between border-b pb-1 sticky top-0 bg-white z-10">
+                <h3 class="font-black text-slate-700 text-xs tracking-wide uppercase flex items-center gap-1.5">
+                    <span>👥</span> Daftar Pemain
+                </h3>
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Petak</span>
+            </div>
+
+            <div class="flex flex-col gap-1.5">
+                <div id="card-p0" class="bg-white p-2 rounded-xl border border-blue-200 flex items-center justify-between transition-all duration-200 hidden">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-blue-100 border border-blue-400 flex items-center justify-center font-black text-sm">🐰</div>
+                        <div>
+                            <div class="text-[11px] font-black text-slate-700 leading-tight">Pemain 1</div>
+                            <div class="text-[9px] font-bold text-blue-500 uppercase leading-none">Kelinci</div>
+                        </div>
+                    </div>
+                    <div class="bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
+                        <div class="text-xs font-black text-blue-600 leading-none" id="pos-p0">1</div>
+                    </div>
+                </div>
+
+                <div id="card-p1" class="bg-white p-2 rounded-xl border border-red-200 flex items-center justify-between transition-all duration-200 hidden">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-red-100 border border-red-400 flex items-center justify-center font-black text-sm">🐐</div>
+                        <div>
+                            <div class="text-[11px] font-black text-slate-700 leading-tight">Pemain 2</div>
+                            <div class="text-[9px] font-bold text-red-500 uppercase leading-none">Kambing</div>
+                        </div>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
+                        <div class="text-xs font-black text-red-600 leading-none" id="pos-p1">1</div>
+                    </div>
+                </div>
+
+                <div id="card-p2" class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between transition-all duration-200 hidden">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-emerald-100 border border-emerald-400 flex items-center justify-center font-black text-sm">🐸</div>
+                        <div>
+                            <div class="text-[11px] font-black text-slate-700 leading-tight">Pemain 3</div>
+                            <div class="text-[9px] font-bold text-emerald-500 uppercase leading-none">Katak</div>
+                        </div>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
+                        <div class="text-xs font-black text-emerald-600 leading-none" id="pos-p2">1</div>
+                    </div>
+                </div>
+
+                <div id="card-p3" class="bg-white p-2 rounded-xl border border-yellow-200 flex items-center justify-between transition-all duration-200 hidden">
+                    <div class="flex items-center gap-2">
+                        <div class="w-7 h-7 rounded-lg bg-yellow-100 border border-yellow-400 flex items-center justify-center font-black text-sm">🐱</div>
+                        <div>
+                            <div class="text-[11px] font-black text-slate-700 leading-tight">Pemain 4</div>
+                            <div class="text-[9px] font-bold text-yellow-600 uppercase leading-none">Kucing</div>
+                        </div>
+                    </div>
+                    <div class="bg-yellow-50 border border-yellow-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
+                        <div class="text-xs font-black text-yellow-600 leading-none" id="pos-p3">1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL 1: STARTUP FORM -->
+    <div id="startup-modal" class="fixed inset-0 z-[10000] flex items-center justify-center bg-slate-900/60 p-2 sm:p-4">
+        <div id="startup-card" class="bg-white p-5 sm:p-8 rounded-3xl sm:rounded-[2rem] shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border-2 sm:border-4 border-emerald-100 relative space-y-4 sm:space-y-5">
+            
+            <div id="ui-startup-warning" class="hidden bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold px-3 py-2 rounded-xl text-center flex items-center justify-center gap-2">
+                <span>⚠️</span> <span id="ui-warning-text">Lengkapi pilihan dulu!</span>
+            </div>
+
+            <button onclick="openSettingsAuth()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors" title="Pengaturan Guru">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </button>
+
+            <div class="text-center">
+                <div class="text-3xl sm:text-4xl mb-1">🎲🐍</div>
+                <h2 class="text-xl sm:text-2xl font-black text-emerald-600">Mulai Permainan</h2>
+            </div>
+            
+            <div class="space-y-1">
+                <label class="block text-[11px] font-black text-slate-500 uppercase">Jumlah Pemain</label>
+                <div class="grid grid-cols-4 gap-2">
+                    <button type="button" onclick="setPlayerCount(1)" id="btn-pcount-1" class="py-2 bg-emerald-50 border-2 border-brand-500 text-brand-600 font-black rounded-xl text-sm text-center">1</button>
+                    <button type="button" onclick="setPlayerCount(2)" id="btn-pcount-2" class="py-2 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-xl text-sm text-center">2</button>
+                    <button type="button" onclick="setPlayerCount(3)" id="btn-pcount-3" class="py-2 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-xl text-sm text-center">3</button>
+                    <button type="button" onclick="setPlayerCount(4)" id="btn-pcount-4" class="py-2 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-xl text-sm text-center">4</button>
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <label class="block text-[11px] font-black text-slate-500 uppercase">Kelas</label>
+                <div id="play-kelas-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[100px] overflow-y-auto p-0.5"></div>
+            </div>
+
+            <div class="space-y-1">
+                <label class="block text-[11px] font-black text-slate-500 uppercase">Mata Pelajaran</label>
+                <div id="play-mapel-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[100px] overflow-y-auto bg-slate-50 rounded-xl p-2 border">
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <label class="block text-[11px] font-black text-slate-500 uppercase">Materi</label>
+                <div id="play-materi-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[100px] overflow-y-auto bg-slate-50 rounded-xl p-2 border">
+                </div>
+            </div>
+
+            <button onclick="validateAndStartGame()" class="w-full py-3 bg-brand-500 hover:bg-brand-600 text-white font-black rounded-xl text-sm sm:text-base transition-all shadow-md">
+                Masuk Papan 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL 2: AUTH GURU -->
+    <div id="auth-modal" class="fixed inset-0 z-[10001] flex items-center justify-center bg-slate-900/60 p-4 hidden">
+        <div class="bg-white p-6 rounded-3xl border-2 border-slate-200 max-w-sm w-full text-center">
+            <h3 class="text-xl font-black text-slate-700 mb-2">Akses Admin</h3>
+            <input type="password" id="admin-pass" class="w-full p-2.5 border-2 border-slate-200 rounded-xl mb-4 text-center font-bold tracking-widest focus:border-brand-500 outline-none" placeholder="••••••••">
+            <div class="flex gap-2">
+                <button onclick="closeAuthModal()" class="w-1/2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 font-black rounded-xl text-xs">Batal</button>
+                <button onclick="verifyAdminPass()" class="w-1/2 py-2 bg-brand-500 hover:bg-brand-600 text-white font-black rounded-xl text-xs">Masuk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL INPUT DIALOG MODERN -->
+    <div id="input-prompt-modal" class="fixed inset-0 z-[30000] flex items-center justify-center bg-slate-900/50 p-4 hidden">
+        <div class="bg-white p-5 rounded-2xl border border-slate-300 max-w-sm w-full space-y-3">
+            <h3 id="prompt-title" class="text-sm font-black text-slate-700">Tambah Data</h3>
+            <input type="text" id="prompt-input-text" class="w-full p-2 border border-slate-300 rounded-xl text-xs font-bold uppercase outline-none focus:border-brand-500" placeholder="...">
+            <div class="flex gap-2 justify-end text-xs font-bold">
+                <button onclick="closePromptDialog(false)" class="px-3 py-1.5 bg-slate-100 text-slate-500 rounded-lg">Batal</button>
+                <button onclick="closePromptDialog(true)" class="px-3 py-1.5 bg-brand-500 text-white rounded-lg">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW 3: PANEL PENGATURAN -->
+    <div id="admin-modal" class="fixed inset-0 bg-slate-100 overflow-y-auto hidden flex flex-col p-2 sm:p-4 z-[20000]">
+        <div class="max-w-4xl w-full mx-auto bg-white rounded-xl border border-slate-300 p-3 sm:p-4 flex flex-col h-[95vh] sm:h-[92vh] relative">
+            
+            <div class="flex justify-between items-center border-b pb-2 mb-2 shrink-0">
+                <h2 class="text-sm sm:text-base font-black text-slate-800 flex items-center gap-1">⚙️ Bank Soal</h2>
+                
+                <div class="flex items-center gap-2">
+                    <!-- INPUT FILE TERSEMBUNYI DENGAN TOMBOL UPLOAD JSON -->
+                    <input type="file" id="json-upload-input" accept=".json" class="hidden" onchange="prosesUploadJson(event)">
+                    <button onclick="pemicuPilihFileJson()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition-all">
+                        <span>📤</span>
+                        <span>Upload JSON</span>
+                    </button>
+                    <button onclick="closeAdminModal()" class="text-slate-600 hover:bg-slate-200 text-xs font-bold bg-slate-100 px-2.5 py-1.5 rounded-lg">✕ Tutup</button>
+                </div>
+            </div>
+
+            <!-- TIGA LEVEL FILTER: KELAS -> MAPEL -> MATERI -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200 mb-2 text-xs shrink-0">
+                <div class="flex items-center gap-1">
+                    <span class="font-bold text-slate-600">Kelas:</span>
+                    <select id="admin-select-kelas" onchange="gantiKelasAdminDropdown()" class="flex-1 p-1 border border-slate-300 rounded font-bold bg-white text-slate-800 outline-none focus:border-emerald-500">
+                    </select>
+                    <button onclick="pemicuTambahKelas()" class="bg-emerald-600 text-white font-bold px-2 py-1 rounded text-xs" title="Tambah Kelas">➕</button>
+                    <button onclick="pemicuHapusKelas()" class="bg-rose-600 text-white font-bold px-2 py-1 rounded text-xs" title="Hapus Kelas">✕</button>
+                </div>
+
+                <div class="flex items-center gap-1">
+                    <span class="font-bold text-slate-600">Mapel:</span>
+                    <select id="admin-select-mapel" onchange="gantiMapelAdminDropdown()" class="flex-1 p-1 border border-slate-300 rounded font-bold bg-white text-slate-800 outline-none focus:border-emerald-500">
+                    </select>
+                    <button id="admin-btn-add-mapel" onclick="pemicuTambahMapel()" class="bg-emerald-600 text-white font-bold px-2 py-1 rounded text-xs" title="Tambah Mapel">➕</button>
+                    <button id="admin-btn-del-mapel" onclick="pemicuHapusMapel()" class="bg-rose-600 text-white font-bold px-2 py-1 rounded text-xs" title="Hapus Mapel">✕</button>
+                </div>
+
+                <div class="flex items-center gap-1">
+                    <span class="font-bold text-slate-600">Materi:</span>
+                    <select id="admin-select-materi" onchange="gantiMateriAdminDropdown()" class="flex-1 p-1 border border-slate-300 rounded font-bold bg-white text-slate-800 outline-none focus:border-emerald-500">
+                    </select>
+                    <button id="admin-btn-add-materi" onclick="pemicuTambahMateri()" class="bg-emerald-600 text-white font-bold px-2 py-1 rounded text-xs" title="Tambah Materi">➕</button>
+                    <button id="admin-btn-del-materi" onclick="pemicuHapusMateri()" class="bg-rose-600 text-white font-bold px-2 py-1 rounded text-xs" title="Hapus Materi">✕</button>
+                </div>
+            </div>
+
+            <div id="admin-soal-view" class="space-y-2 flex-1 flex flex-col overflow-hidden hidden">
+                <div class="flex justify-between items-center bg-slate-100 px-2.5 py-1 rounded border border-slate-200 shrink-0">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span id="admin-scope-kelas" class="text-[10px] font-black px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded uppercase"></span>
+                        <span id="admin-scope-mapel" class="text-[10px] font-black px-1.5 py-0.5 bg-purple-100 text-purple-700 rounded uppercase"></span>
+                        <span id="admin-scope-materi" class="text-[10px] font-black px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded uppercase"></span>
+                    </div>
+                </div>
+
+                <!-- LIST INPUT SOAL MODEL TABEL BARIS -->
+                <div id="admin-linear-soal-stack" class="space-y-3 flex-1 overflow-y-auto pr-1 pb-2">
+                </div>
+
+                <div class="border-t pt-2 bg-white flex justify-between items-center shrink-0">
+                    <button onclick="tambahBarisSoalOtomatis()" class="py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded">
+                        ➕ Soal Baru
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL 4: TAMPILAN KUIS SISWA -->
+    <div id="quiz-modal" class="fixed inset-0 z-[2000] flex items-center justify-center bg-slate-900/70 p-3 hidden">
+        <div class="bg-white p-5 sm:p-8 rounded-3xl shadow-2xl max-w-lg w-full border-4 border-blue-400 relative">
+            
+            <div class="text-center mt-1 mb-4 sm:mb-6">
+                <span id="quiz-player-tag" class="text-xs sm:text-sm font-black px-2.5 py-1 bg-slate-100 rounded-lg text-slate-600">Giliran Pemain</span>
+                <p id="quiz-text" class="text-base sm:text-lg font-bold text-slate-800 mt-3 leading-relaxed whitespace-pre-line">Pertanyaan kuis...</p>
+            </div>
+
+            <div class="flex flex-col gap-2 sm:gap-3">
+                <button onclick="checkJawabanSiswa('A')" id="btn-ans-a" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-xl sm:rounded-2xl border-2 border-slate-200 font-bold transition-all flex gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black">A.</span> <span id="text-ans-a">Pilihan A</span></button>
+                <button onclick="checkJawabanSiswa('B')" id="btn-ans-b" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-2xl border-2 border-slate-200 font-bold transition-all flex gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black">B.</span> <span id="text-ans-b">Pilihan B</span></button>
+                <button onclick="checkJawabanSiswa('C')" id="btn-ans-c" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-2xl border-2 border-slate-200 font-bold transition-all flex gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black">C.</span> <span id="text-ans-c">Pilihan C</span></button>
+                <button onclick="checkJawabanSiswa('D')" id="btn-ans-d" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-2xl border-2 border-slate-200 font-bold transition-all flex gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black">D.</span> <span id="text-ans-d">Pilihan D</span></button>
+            </div>
+            <div id="quiz-feedback" class="mt-3 text-center font-black text-xs sm:text-sm hidden"></div>
+        </div>
+    </div>
+
+    <!-- DICE VIEWPORT OVERLAY -->
+    <div id="dice-3d-overlay" class="fixed inset-0 z-[1000] perspective-1000 pointer-events-none flex items-center justify-center opacity-0 hidden transition-opacity duration-200">
+        <div id="dice-wrapper" class="flex flex-col items-center">
+            <div id="dice-cube" class="dice-cube shadow-lg rounded-2xl">
+                <div class="dice-face face-1"><div class="pip"></div></div>
+                <div class="dice-face face-2"><div class="pip"></div><div class="pip"></div></div>
+                <div class="dice-face face-3"><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+                <div class="dice-face face-4"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+                <div class="dice-face face-5"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+                <div class="dice-face face-6"><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div>
+            </div>
+            <div id="dice-shadow"></div>
+        </div>
+    </div>
+
+    <!-- WIN MODAL LAYER -->
+    <div id="confetti-container" class="fixed inset-0 pointer-events-none z-[9999] hidden flex justify-center items-center p-4">
+        <div class="bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border-4 border-yellow-300 shadow-2xl text-center transform scale-0 transition-transform duration-300 max-w-sm w-full" id="win-modal">
+            <div class="text-5xl sm:text-7xl mb-2 sm:mb-4">🏆</div>
+            <h2 id="win-title" class="text-2xl sm:text-4xl font-black mb-2">SELAMAT!</h2>
+            <p id="win-desc" class="text-xs sm:text-lg font-bold text-slate-600 mb-4 sm:mb-6">Kamu berhasil mencapai garis akhir (100).</p>
+            <button onclick="resetGame()" class="px-6 py-2.5 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-black rounded-xl border-2 border-yellow-600 shadow-md transition-all pointer-events-auto text-xs sm:text-base">
+                Main Lagi!
+            </button>
+        </div>
+    </div>
+
+    <!-- MASTER SCRIPT LOGIC PERMAINAN -->
+    <script>
+        const ladders = { 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
+        const snakes = { 17: 7, 54: 34, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 99: 78 };
+
+        const cellColors = ['bg-red-50 text-red-500', 'bg-blue-50 text-blue-500', 'bg-emerald-50 text-emerald-500', 'bg-yellow-50 text-yellow-600', 'bg-purple-50 text-purple-500', 'bg-pink-50 text-pink-500'];
+
+        let tempPlayerCount = 1; 
+        let numPlayers = 1;
+        let currentPlayer = 0;
+        let playerPositions = [1, 1, 1, 1];
+        let previousPositions = [1, 1, 1, 1]; 
+        let isMoving = false;
+
+        let selectedKelasPlay = "";
+        let selectedMapelPlay = "";
+        let selectedMateriPlay = "";
+
+        const playerNames = ['🐰 Kelinci', '🐐 Kambing', '🐸 Katak', '🐱 Kucing'];
+        const playerColorClasses = ['text-blue-600', 'text-red-600', 'text-emerald-600', 'text-yellow-600'];
+        const playerRingClasses = ['ring-blue-400', 'ring-red-400', 'ring-emerald-400', 'ring-yellow-400'];
+
+        const posOffsets = [{ dx: -2, dy: -2 }, { dx: 2, dy: -2 }, { dx: -2, dy: 2 }, { dx: 2, dy: 2 }];
+
+        let bankSoalGlobal = []; 
+        let filteredSoalGame = []; 
+        let soalAktif = null;
+        let petakKuisMap = {};
+
+        // Admin Scope Variables
+        let selectedKelasAdmin = "";
+        let selectedMapelAdmin = "";
+        let selectedMateriAdmin = "";
+        let localAdminSoalList = [];
+        let activePromptCallback = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            buildBoard();
+            drawSnakesAndLadders();
+            muatMasterDataFirebase();
+        });
+
+        async function muatMasterDataFirebase() {
+            try {
+                const querySnapshot = await window.fsGetDocs(window.fsCollection(window.dbFirestore, "ular_tangga"));
+                bankSoalGlobal = [];
+                querySnapshot.forEach((doc) => {
+                    let d = doc.data(); d.id = doc.id;
+                    bankSoalGlobal.push(d);
+                });
+                renderPlayKelasGridHTML();
+            } catch (err) {
+                console.error("Gagal sinkron database:", err);
+            }
+        }
+
+        /* --- FUNGSI UPLOAD SOAL BATCH VIA FILE JSON --- */
+        function pemicuPilihFileJson() {
+            document.getElementById('json-upload-input').click();
+        }
+
+        async function prosesUploadJson(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const dataJson = JSON.parse(e.target.result);
+                    if (!Array.isArray(dataJson)) {
+                        alert("Format file JSON harus berupa array daftar soal: [ { ... }, { ... } ]");
+                        return;
+                    }
+
+                    if (dataJson.length === 0) {
+                        alert("File JSON kosong.");
+                        return;
+                    }
+
+                    if (!confirm(`Unggah ${dataJson.length} soal sekaligus ke database?`)) {
+                        event.target.value = '';
+                        return;
+                    }
+
+                    const batch = window.fsWriteBatch(window.dbFirestore);
+                    const collectionRef = window.fsCollection(window.dbFirestore, "ular_tangga");
+
+                    dataJson.forEach(item => {
+                        const newDocRef = window.fsDoc(collectionRef);
+                        const payload = {
+                            kelas: (item.kelas || selectedKelasAdmin || "1A").toString().toUpperCase(),
+                            mapel: (item.mapel || selectedMapelAdmin || "UMUM").toString().toUpperCase(),
+                            materi: (item.materi || selectedMateriAdmin || "UMUM").toString().toUpperCase(),
+                            soal: item.soal || item.pertanyaan || "",
+                            a: item.a || (item.pilihan ? item.pilihan[0] : "") || "",
+                            b: item.b || (item.pilihan ? item.pilihan[1] : "") || "",
+                            c: item.c || (item.pilihan ? item.pilihan[2] : "") || "",
+                            d: item.d || (item.pilihan ? item.pilihan[3] : "") || "",
+                            kunci: (item.kunci || (item.jawaban !== undefined ? (typeof item.jawaban === 'number' ? ['A','B','C','D'][item.jawaban] : item.jawaban) : "A")).toString().toUpperCase(),
+                            timestamp: new Date().getTime()
+                        };
+                        batch.set(newDocRef, payload);
+                    });
+
+                    await batch.commit();
+                    alert(`✅ Berhasil mengunggah ${dataJson.length} soal!`);
+                    
+                    event.target.value = '';
+                    await muatMasterDataFirebase();
+
+                    if(selectedKelasAdmin) {
+                        renderAdminKelasDropdownOptions();
+                    }
+                } catch (err) {
+                    console.error("Gagal mengunggah file JSON:", err);
+                    alert("❌ Gagal mengunggah JSON: " + err.message);
+                    event.target.value = '';
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        /* --- STARTUP SELECTION MODAL LOGIC --- */
+        function renderPlayKelasGridHTML() {
+            const container = document.getElementById('play-kelas-grid');
+            container.innerHTML = '';
+            const listKelas = [...new Set(bankSoalGlobal.map(item => item.kelas ? item.kelas.toUpperCase() : ''))].filter(Boolean).sort();
+
+            if(listKelas.length === 0) {
+                container.innerHTML = `<div class="col-span-3 text-center text-xs text-slate-400 font-bold py-2">Kosong</div>`;
+                return;
+            }
+
+            listKelas.forEach(k => {
+                const activeStyle = (k === selectedKelasPlay) 
+                    ? "bg-blue-500 border-blue-600 text-white" 
+                    : "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100";
+
+                container.innerHTML += `
+                    <div onclick="selectPlayKelasCard('${k}')" class="p-2 border-2 rounded-xl text-center text-xs font-black cursor-pointer transition-all shadow-sm ${activeStyle}">
+                        ${k}
+                    </div>
+                `;
+            });
+
+            renderPlayMapelGridHTML();
+        }
+
+        function selectPlayKelasCard(kls) {
+            selectedKelasPlay = kls; 
+            selectedMapelPlay = "";
+            selectedMateriPlay = "";
+            renderPlayKelasGridHTML();
+            sembunyikanWarningUI();
+        }
+
+        function renderPlayMapelGridHTML() {
+            const container = document.getElementById('play-mapel-grid');
+            container.innerHTML = '';
+
+            if(!selectedKelasPlay) {
+                container.innerHTML = `<div class="col-span-2 text-center text-xs text-slate-400 font-bold py-2">Pilih kelas dulu</div>`;
+                renderPlayMateriGridHTML();
+                return;
+            }
+
+            const filtered = bankSoalGlobal.filter(item => item.kelas && item.kelas.toUpperCase() === selectedKelasPlay);
+            const listMapel = [...new Set(filtered.map(item => item.mapel ? item.mapel.toUpperCase() : ''))].filter(Boolean).sort();
+
+            if(listMapel.length === 0) {
+                container.innerHTML = `<div class="col-span-2 text-center text-xs text-slate-400 font-bold py-2">Kosong</div>`;
+                renderPlayMateriGridHTML();
+                return;
+            }
+
+            listMapel.forEach(m => {
+                const activeStyle = (m === selectedMapelPlay)
+                    ? "bg-purple-500 border-purple-600 text-white"
+                    : "bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100";
+
+                container.innerHTML += `
+                    <div onclick="selectPlayMapelCard('${m}')" class="p-2 border-2 rounded-xl text-center text-xs font-black cursor-pointer transition-all shadow-sm ${activeStyle}">
+                        ${m}
+                    </div>
+                `;
+            });
+
+            renderPlayMateriGridHTML();
+        }
+
+        function selectPlayMapelCard(mpl) {
+            selectedMapelPlay = mpl;
+            selectedMateriPlay = "";
+            renderPlayMapelGridHTML();
+            sembunyikanWarningUI();
+        }
+
+        function renderPlayMateriGridHTML() {
+            const container = document.getElementById('play-materi-grid');
+            container.innerHTML = '';
+
+            if(!selectedKelasPlay || !selectedMapelPlay) {
+                container.innerHTML = `<div class="col-span-2 text-center text-xs text-slate-400 font-bold py-2">Pilih mapel dulu</div>`;
+                return;
+            }
+
+            const filtered = bankSoalGlobal.filter(i => 
+                i.kelas && i.kelas.toUpperCase() === selectedKelasPlay && 
+                i.mapel && i.mapel.toUpperCase() === selectedMapelPlay
+            );
+            const listMateri = [...new Set(filtered.map(item => item.materi ? item.materi.toUpperCase() : ' UMUM'))].sort();
+
+            if(listMateri.length === 0) {
+                container.innerHTML = `<div class="col-span-2 text-center text-xs text-slate-400 font-bold py-2">Kosong</div>`;
+                return;
+            }
+
+            listMateri.forEach(mt => {
+                const labelMateri = mt.trim() || 'UMUM';
+                const activeStyle = (labelMateri === selectedMateriPlay)
+                    ? "bg-amber-500 border-amber-600 text-white"
+                    : "bg-amber-50 border-amber-200 text-amber-800 hover:bg-amber-100";
+
+                container.innerHTML += `
+                    <div onclick="selectPlayMateriCard('${labelMateri}')" class="p-2 border-2 rounded-xl text-center text-xs font-black cursor-pointer transition-all shadow-sm ${activeStyle}">
+                        ${labelMateri}
+                    </div>
+                `;
+            });
+        }
+
+        function selectPlayMateriCard(mtr) {
+            selectedMateriPlay = mtr;
+            renderPlayMateriGridHTML();
+            sembunyikanWarningUI();
+        }
+
+        function setPlayerCount(count) {
+            tempPlayerCount = count;
+            for(let i=1; i<=4; i++) {
+                document.getElementById(`btn-pcount-${i}`).className = (i === count)
+                    ? "py-2 bg-emerald-50 border-2 border-brand-500 text-brand-600 font-black rounded-xl text-sm text-center shadow-sm"
+                    : "py-2 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-xl text-sm text-center";
+            }
+            sembunyikanWarningUI();
+        }
+
+        function tampilkanWarningUI(pesan) {
+            const warningBanner = document.getElementById('ui-startup-warning');
+            const warningText = document.getElementById('ui-warning-text');
+            const startupCard = document.getElementById('startup-card');
+
+            warningText.innerText = pesan;
+            warningBanner.classList.remove('hidden');
+            
+            startupCard.classList.remove('animate-shake');
+            void startupCard.offsetWidth; 
+            startupCard.classList.add('animate-shake');
+        }
+
+        function sembunyikanWarningUI() {
+            document.getElementById('ui-startup-warning').classList.add('hidden');
+        }
+
+        function validateAndStartGame() {
+            if(!selectedKelasPlay || !selectedMapelPlay || !selectedMateriPlay) {
+                tampilkanWarningUI("Lengkapi pilihan!");
+                return;
+            }
+
+            numPlayers = tempPlayerCount;
+            document.getElementById('bar-kelas').innerText = selectedKelasPlay;
+            document.getElementById('bar-mapel').innerText = selectedMapelPlay;
+            document.getElementById('bar-materi').innerText = selectedMateriPlay;
+            document.getElementById('game-identity-bar').classList.remove('hidden');
+
+            filteredSoalGame = bankSoalGlobal.filter(i => 
+                i.kelas && i.kelas.toUpperCase() === selectedKelasPlay && 
+                i.mapel && i.mapel.toUpperCase() === selectedMapelPlay &&
+                (i.materi ? i.materi.toUpperCase() : 'UMUM') === selectedMateriPlay &&
+                i.soal !== ''
+            );
+            
+            distribusikanKuisAcakPapan();
+            executeStartGame();
+        }
+
+        function distribusikanKuisAcakPapan() {
+            petakKuisMap = {};
+            buildBoard(); 
+
+            if (filteredSoalGame.length === 0) return;
+
+            let petakTersedia = [];
+            for(let i = 2; i <= 98; i++) {
+                if(!ladders[i] && !snakes[i]) {
+                    petakTersedia.push(i);
+                }
+            }
+            if(petakTersedia.length < filteredSoalGame.length) {
+                for(let i = 2; i <= 98; i++) {
+                    if(!petakTersedia.includes(i)) petakTersedia.push(i);
+                }
+            }
+
+            petakTersedia.sort(() => Math.random() - 0.5);
+
+            filteredSoalGame.forEach((soal, index) => {
+                if (index < petakTersedia.length) {
+                    let nomorPetakTerpilih = petakTersedia[index];
+                    petakKuisMap[nomorPetakTerpilih] = soal;
+
+                    const cellEl = document.getElementById(`cell-${nomorPetakTerpilih}`);
+                    if(cellEl) {
+                        const dot = document.createElement('div');
+                        dot.className = "quiz-dot";
+                        cellEl.appendChild(dot);
+                    }
+                }
+            });
+        }
+
+        function executeStartGame() {
+            currentPlayer = 0; 
+            playerPositions = [1, 1, 1, 1]; 
+            previousPositions = [1, 1, 1, 1];
+            isMoving = false;
+            document.getElementById('startup-modal').classList.add('hidden');
+            for(let i=0; i<4; i++) {
+                const token = document.getElementById(`player-token-${i}`);
+                const card = document.getElementById(`card-p${i}`);
+                if(i < numPlayers) {
+                    token.classList.remove('hidden'); card.classList.remove('hidden'); card.classList.add('flex');
+                    updatePlayerPosition(i, 1);
+                } else {
+                    token.classList.add('hidden'); card.classList.add('hidden');
+                }
+            }
+            updateTurnUI();
+        }
+
+        function openPromptDialog(title, placeholder, callback) {
+            document.getElementById('prompt-title').innerText = title;
+            const input = document.getElementById('prompt-input-text');
+            input.placeholder = placeholder; input.value = '';
+            document.getElementById('input-prompt-modal').classList.remove('hidden');
+            input.focus();
+            activePromptCallback = callback;
+        }
+
+        function closePromptDialog(isConfirm) {
+            document.getElementById('input-prompt-modal').classList.add('hidden');
+            if(isConfirm && activePromptCallback) {
+                const val = document.getElementById('prompt-input-text').value.trim();
+                activePromptCallback(val);
+            }
+            activePromptCallback = null;
+        }
+
+        function openSettingsAuth() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('admin-pass').value = '';
+        }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+        
+        function verifyAdminPass() {
+            if(document.getElementById('admin-pass').value === 'admin') {
+                closeAuthModal();
+                document.getElementById('admin-modal').classList.remove('hidden');
+                selectedKelasAdmin = ""; selectedMapelAdmin = ""; selectedMateriAdmin = "";
+                document.getElementById('admin-soal-view').classList.add('hidden');
+                renderAdminKelasDropdownOptions();
+            } else {
+                alert('Password salah!');
+            }
+        }
+        
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+            selectedKelasPlay = ""; selectedMapelPlay = ""; selectedMateriPlay = "";
+            muatMasterDataFirebase();
+        }
+
+        /* --- ADMIN DROPDOWN LOGIC: KELAS -> MAPEL -> MATERI --- */
+        function renderAdminKelasDropdownOptions() {
+            const select = document.getElementById('admin-select-kelas');
+            select.innerHTML = '';
+            
+            const listKelas = [...new Set(bankSoalGlobal.map(item => item.kelas ? item.kelas.toUpperCase() : ''))].filter(Boolean).sort();
+            listKelas.forEach(k => {
+                const selectedAttr = (k === selectedKelasAdmin) ? 'selected' : '';
+                select.innerHTML += `<option value="${k}" ${selectedAttr}>${k}</option>`;
+            });
+
+            if (listKelas.length > 0 && !selectedKelasAdmin) {
+                selectedKelasAdmin = listKelas[0];
+            }
+
+            renderAdminMapelDropdownOptions();
+        }
+
+        function pemicuTambahKelas() {
+            openPromptDialog("Tambah Kelas", "Contoh: 5B", (val) => {
+                if(val !== "") {
+                    const kName = val.toUpperCase(); selectedKelasAdmin = kName;
+                    if(!bankSoalGlobal.some(i => i.kelas && i.kelas.toUpperCase() === kName)) {
+                        bankSoalGlobal.push({ kelas: kName, mapel: 'PILIHAN BARU', materi: 'UMUM', soal: '' });
+                    }
+                    renderAdminKelasDropdownOptions();
+                    document.getElementById('admin-soal-view').classList.add('hidden');
+                }
+            });
+        }
+
+        function pemicuHapusKelas() {
+            const kls = document.getElementById('admin-select-kelas').value;
+            if(!kls) return;
+            if(!confirm(`Hapus data ${kls}?`)) return;
+            pemicuEksekusiHapusKelas(kls);
+        }
+
+        async function pemicuEksekusiHapusKelas(kls) {
+            const targets = bankSoalGlobal.filter(i => i.kelas && i.kelas.toUpperCase() === kls);
+            for(let item of targets) {
+                if(item.id) await window.fsDeleteDoc(window.fsDoc(window.dbFirestore, "ular_tangga", item.id));
+            }
+            bankSoalGlobal = bankSoalGlobal.filter(i => !i.kelas || i.kelas.toUpperCase() !== kls);
+            selectedKelasAdmin = ""; selectedMapelAdmin = ""; selectedMateriAdmin = "";
+            renderAdminKelasDropdownOptions();
+            document.getElementById('admin-soal-view').classList.add('hidden');
+        }
+
+        function gantiKelasAdminDropdown() {
+            selectedKelasAdmin = document.getElementById('admin-select-kelas').value;
+            selectedMapelAdmin = ""; selectedMateriAdmin = "";
+            document.getElementById('admin-soal-view').classList.add('hidden');
+            renderAdminMapelDropdownOptions();
+        }
+
+        function renderAdminMapelDropdownOptions() {
+            const select = document.getElementById('admin-select-mapel');
+            const addBtn = document.getElementById('admin-btn-add-mapel');
+            const delBtn = document.getElementById('admin-btn-del-mapel');
+
+            if(!selectedKelasAdmin) {
+                select.innerHTML = '';
+                select.disabled = true;
+                addBtn.classList.add('opacity-50', 'pointer-events-none');
+                delBtn.classList.add('opacity-50', 'pointer-events-none');
+                renderAdminMateriDropdownOptions();
+                return;
+            }
+
+            select.disabled = false;
+            addBtn.classList.remove('opacity-50', 'pointer-events-none');
+            delBtn.classList.remove('opacity-50', 'pointer-events-none');
+            
+            select.innerHTML = '';
+            const filtered = bankSoalGlobal.filter(i => i.kelas && i.kelas.toUpperCase() === selectedKelasAdmin && i.mapel !== 'PILIHAN BARU');
+            const listMapel = [...new Set(filtered.map(item => item.mapel ? item.mapel.toUpperCase() : ''))].filter(Boolean).sort();
+
+            listMapel.forEach(m => {
+                const selectedAttr = (m === selectedMapelAdmin) ? 'selected' : '';
+                select.innerHTML += `<option value="${m}" ${selectedAttr}>${m}</option>`;
+            });
+
+            if (listMapel.length > 0) {
+                if (!selectedMapelAdmin || !listMapel.includes(selectedMapelAdmin)) {
+                    selectedMapelAdmin = listMapel[0];
+                }
+            } else {
+                selectedMapelAdmin = "";
+            }
+
+            renderAdminMateriDropdownOptions();
+        }
+
+        function gantiMapelAdminDropdown() {
+            selectedMapelAdmin = document.getElementById('admin-select-mapel').value;
+            selectedMateriAdmin = "";
+            document.getElementById('admin-soal-view').classList.add('hidden');
+            renderAdminMateriDropdownOptions();
+        }
+
+        function pemicuTambahMapel() {
+            openPromptDialog(`Tambah Mapel`, "Contoh: MATEMATIKA", (val) => {
+                if(val !== "") {
+                    const mName = val.toUpperCase(); selectedMapelAdmin = mName;
+                    if(!bankSoalGlobal.some(i => i.kelas && i.kelas.toUpperCase() === selectedKelasAdmin && i.mapel && i.mapel.toUpperCase() === mName)) {
+                        bankSoalGlobal.push({ kelas: selectedKelasAdmin, mapel: mName, materi: 'UMUM', soal: '' });
+                    }
+                    renderAdminMapelDropdownOptions();
+                }
+            });
+        }
+
+        function pemicuHapusMapel() {
+            const mpl = document.getElementById('admin-select-mapel').value;
+            if(!mpl) return;
+            if(!confirm(`Hapus ${mpl}?`)) return;
+            pemicuEksekusiHapusMapel(mpl);
+        }
+
+        async function pemicuEksekusiHapusMapel(mpl) {
+            const targets = bankSoalGlobal.filter(i => i.kelas && i.kelas.toUpperCase() === selectedKelasAdmin && i.mapel && i.mapel.toUpperCase() === mpl);
+            for(let item of targets) {
+                if(item.id) await window.fsDeleteDoc(window.fsDoc(window.dbFirestore, "ular_tangga", item.id));
+            }
+            bankSoalGlobal = bankSoalGlobal.filter(i => !(i.kelas && i.kelas.toUpperCase() === selectedKelasAdmin && i.mapel && i.mapel.toUpperCase() === mpl));
+            selectedMapelAdmin = ""; selectedMateriAdmin = "";
+            renderAdminMapelDropdownOptions();
+            document.getElementById('admin-soal-view').classList.add('hidden');
+        }
+
+        /* --- LOGIC DROPDOWN MATERI (FILTER HIT KETIGA) --- */
+        function renderAdminMateriDropdownOptions() {
+            const select = document.getElementById('admin-select-materi');
+            const addBtn = document.getElementById('admin-btn-add-materi');
+            const delBtn = document.getElementById('admin-btn-del-materi');
+
+            if(!selectedKelasAdmin || !selectedMapelAdmin) {
+                select.innerHTML = '';
+                select.disabled = true;
+                addBtn.classList.add('opacity-50', 'pointer-events-none');
+                delBtn.classList.add('opacity-50', 'pointer-events-none');
+                document.getElementById('admin-soal-view').classList.add('hidden');
+                return;
+            }
+
+            select.disabled = false;
+            addBtn.classList.remove('opacity-50', 'pointer-events-none');
+            delBtn.classList.remove('opacity-50', 'pointer-events-none');
+
+            select.innerHTML = '';
+            const filtered = bankSoalGlobal.filter(i => 
+                i.kelas && i.kelas.toUpperCase() === selectedKelasAdmin && 
+                i.mapel && i.mapel.toUpperCase() === selectedMapelAdmin &&
+                i.materi !== 'PILIHAN BARU'
+            );
+            const listMateri = [...new Set(filtered.map(item => item.materi ? item.materi.toUpperCase() : 'UMUM'))].sort();
+
+            listMateri.forEach(mt => {
+                const selectedAttr = (mt === selectedMateriAdmin) ? 'selected' : '';
+                select.innerHTML += `<option value="${mt}" ${selectedAttr}>${mt}</option>`;
+            });
+
+            if (listMateri.length > 0) {
+                if (!selectedMateriAdmin || !listMateri.includes(selectedMateriAdmin)) {
+                    selectedMateriAdmin = listMateri[0];
+                }
+                bukaBankSoalView(selectedMateriAdmin);
+            } else {
+                document.getElementById('admin-soal-view').classList.add('hidden');
+            }
+        }
+
+        function gantiMateriAdminDropdown() {
+            selectedMateriAdmin = document.getElementById('admin-select-materi').value;
+            if(selectedMateriAdmin) { bukaBankSoalView(selectedMateriAdmin); }
+            else { document.getElementById('admin-soal-view').classList.add('hidden'); }
+        }
+
+        function pemicuTambahMateri() {
+            openPromptDialog(`Tambah Materi`, "Contoh: PECAHAN SENILAI", (val) => {
+                if(val !== "") {
+                    const mtName = val.toUpperCase(); selectedMateriAdmin = mtName;
+                    if(!bankSoalGlobal.some(i => i.kelas && i.kelas.toUpperCase() === selectedKelasAdmin && i.mapel && i.mapel.toUpperCase() === selectedMapelAdmin && i.materi && i.materi.toUpperCase() === mtName)) {
+                        bankSoalGlobal.push({ kelas: selectedKelasAdmin, mapel: selectedMapelAdmin, materi: mtName, soal: '' });
+                    }
+                    renderAdminMateriDropdownOptions();
+                    bukaBankSoalView(mtName);
+                }
+            });
+        }
+
+        function pemicuHapusMateri() {
+            const mt = document.getElementById('admin-select-materi').value;
+            if(!mt) return;
+            if(!confirm(`Hapus materi ${mt}?`)) return;
+            pemicuEksekusiHapusMateri(mt);
+        }
+
+        async function pemicuEksekusiHapusMateri(mt) {
+            const targets = bankSoalGlobal.filter(i => 
+                i.kelas && i.kelas.toUpperCase() === selectedKelasAdmin && 
+                i.mapel && i.mapel.toUpperCase() === selectedMapelAdmin &&
+                (i.materi ? i.materi.toUpperCase() : 'UMUM') === mt
+            );
+            for(let item of targets) {
+                if(item.id) await window.fsDeleteDoc(window.fsDoc(window.dbFirestore, "ular_tangga", item.id));
+            }
+            bankSoalGlobal = bankSoalGlobal.filter(i => !(
+                i.kelas && i.kelas.toUpperCase() === selectedKelasAdmin && 
+                i.mapel && i.mapel.toUpperCase() === selectedMapelAdmin &&
+                (i.materi ? i.materi.toUpperCase() : 'UMUM') === mt
+            ));
+            selectedMateriAdmin = "";
+            renderAdminMateriDropdownOptions();
+            document.getElementById('admin-soal-view').classList.add('hidden');
+        }
+
+        function bukaBankSoalView(materi) {
+            document.getElementById('admin-soal-view').classList.remove('hidden');
+            document.getElementById('admin-scope-kelas').innerText = selectedKelasAdmin;
+            document.getElementById('admin-scope-mapel').innerText = selectedMapelAdmin;
+            document.getElementById('admin-scope-materi').innerText = selectedMateriAdmin;
+
+            localAdminSoalList = bankSoalGlobal.filter(i => 
+                i.kelas && i.kelas.toUpperCase() === selectedKelasAdmin && 
+                i.mapel && i.mapel.toUpperCase() === selectedMapelAdmin && 
+                (i.materi ? i.materi.toUpperCase() : 'UMUM') === selectedMateriAdmin && 
+                i.soal !== ''
+            );
+            renderLinearSoalStackHTML();
+        }
+
+        /* AUTO RESIZE TINGGI TEXTAREA */
+        function autoResizeTextarea(el) {
+            if(!el) return;
+            el.style.height = '1px';
+            el.style.height = el.scrollHeight + 'px';
+        }
+
+        /* FORM INPUT SOAL MODEL TABEL BARIS FLAT */
+        function renderLinearSoalStackHTML() {
+            const container = document.getElementById('admin-linear-soal-stack');
+            container.innerHTML = '';
+
+            if(localAdminSoalList.length === 0) {
+                container.innerHTML = `
+                    <div id="admin-empty-card" class="text-center py-4 text-slate-400 font-bold text-xs border-b border-slate-200">
+                        Belum ada data.
+                    </div>
+                `;
+                return;
+            }
+
+            localAdminSoalList.forEach((item, index) => {
+                const row = document.createElement('div');
+                row.className = "py-2 border-b border-slate-200 space-y-1 text-xs";
+                row.innerHTML = `
+                    <div class="flex items-start gap-1.5">
+                        <span class="font-black text-slate-400 w-5 text-right shrink-0 pt-0.5">${index + 1}.</span>
+                        <textarea id="auto-soal-${index}" rows="1" oninput="autoResizeTextarea(this)" onblur="autoSaveSoalKeFirebase(${index})" class="auto-expand flex-1 p-1 border border-slate-300 rounded font-medium outline-none focus:border-emerald-600 bg-white text-xs leading-tight" placeholder="Pertanyaan...">${item.soal || ''}</textarea>
+                        <button onclick="hapusBarisSoal(${index})" class="text-rose-600 font-bold text-[11px] hover:underline px-1 shrink-0 pt-0.5">Hapus</button>
+                    </div>
+                    <div class="pl-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-1">
+                        <div class="flex items-center gap-1 bg-white p-0.5 border border-slate-200 rounded">
+                            <span class="font-bold text-slate-400 text-[10px] pl-1">A</span>
+                            <div onclick="toggleKunciAutoSave(${index}, 'A')">${renderToggleSwitchHTML(item.kunci === 'A')}</div>
+                            <textarea id="auto-a-${index}" rows="1" oninput="autoResizeTextarea(this)" onblur="autoSaveSoalKeFirebase(${index})" class="auto-expand flex-1 p-0.5 text-xs outline-none focus:bg-emerald-50 leading-tight" placeholder="Pilihan A">${item.a || ''}</textarea>
+                        </div>
+                        <div class="flex items-center gap-1 bg-white p-0.5 border border-slate-200 rounded">
+                            <span class="font-bold text-slate-400 text-[10px] pl-1">B</span>
+                            <div onclick="toggleKunciAutoSave(${index}, 'B')">${renderToggleSwitchHTML(item.kunci === 'B')}</div>
+                            <textarea id="auto-b-${index}" rows="1" oninput="autoResizeTextarea(this)" onblur="autoSaveSoalKeFirebase(${index})" class="auto-expand flex-1 p-0.5 text-xs outline-none focus:bg-emerald-50 leading-tight" placeholder="Pilihan B">${item.b || ''}</textarea>
+                        </div>
+                        <div class="flex items-center gap-1 bg-white p-0.5 border border-slate-200 rounded">
+                            <span class="font-bold text-slate-400 text-[10px] pl-1">C</span>
+                            <div onclick="toggleKunciAutoSave(${index}, 'C')">${renderToggleSwitchHTML(item.kunci === 'C')}</div>
+                            <textarea id="auto-c-${index}" rows="1" oninput="autoResizeTextarea(this)" onblur="autoSaveSoalKeFirebase(${index})" class="auto-expand flex-1 p-0.5 text-xs outline-none focus:bg-emerald-50 leading-tight" placeholder="Pilihan C">${item.c || ''}</textarea>
+                        </div>
+                        <div class="flex items-center gap-1 bg-white p-0.5 border border-slate-200 rounded">
+                            <span class="font-bold text-slate-400 text-[10px] pl-1">D</span>
+                            <div onclick="toggleKunciAutoSave(${index}, 'D')">${renderToggleSwitchHTML(item.kunci === 'D')}</div>
+                            <textarea id="auto-d-${index}" rows="1" oninput="autoResizeTextarea(this)" onblur="autoSaveSoalKeFirebase(${index})" class="auto-expand flex-1 p-0.5 text-xs outline-none focus:bg-emerald-50 leading-tight" placeholder="Pilihan D">${item.d || ''}</textarea>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(row);
+
+                setTimeout(() => {
+                    autoResizeTextarea(document.getElementById(`auto-soal-${index}`));
+                    autoResizeTextarea(document.getElementById(`auto-a-${index}`));
+                    autoResizeTextarea(document.getElementById(`auto-b-${index}`));
+                    autoResizeTextarea(document.getElementById(`auto-c-${index}`));
+                    autoResizeTextarea(document.getElementById(`auto-d-${index}`));
+                }, 0);
+            });
+        }
+
+        /* TOGGLE KUNCI JAWABAN */
+        function renderToggleSwitchHTML(isTrue) {
+            return isTrue ? `
+                <button type="button" class="px-1 py-0.5 bg-emerald-600 text-white font-black text-[9px] rounded shrink-0 cursor-pointer">
+                    ✓
+                </button>
+            ` : `
+                <button type="button" class="px-1 py-0.5 bg-slate-100 text-slate-400 font-bold text-[9px] rounded shrink-0 cursor-pointer hover:bg-slate-200">
+                    —
+                </button>
+            `;
+        }
+
+        function toggleKunciAutoSave(index, opsi) {
+            localAdminSoalList[index].kunci = opsi;
+            autoSaveSoalKeFirebase(index);
+            renderLinearSoalStackHTML();
+        }
+
+        function tambahBarisSoalOtomatis() {
+            const emptyCard = document.getElementById('admin-empty-card');
+            if(emptyCard) emptyCard.remove();
+
+            localAdminSoalList.push({
+                kelas: selectedKelasAdmin, mapel: selectedMapelAdmin, materi: selectedMateriAdmin,
+                soal: '', a: '', b: '', c: '', d: '', kunci: 'A', id: ''
+            });
+            renderLinearSoalStackHTML();
+
+            setTimeout(() => {
+                const container = document.getElementById('admin-linear-soal-stack');
+                container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+            }, 50);
+        }
+
+        async function autoSaveSoalKeFirebase(index) {
+            const targetItem = localAdminSoalList[index];
+            if(!targetItem) return;
+
+            const txtSoal = document.getElementById(`auto-soal-${index}`).value.trim();
+            const txtA = document.getElementById(`auto-a-${index}`).value.trim();
+            const txtB = document.getElementById(`auto-b-${index}`).value.trim();
+            const txtC = document.getElementById(`auto-c-${index}`).value.trim();
+            const txtD = document.getElementById(`auto-d-${index}`).value.trim();
+            
+            targetItem.soal = txtSoal;
+            targetItem.a = txtA; targetItem.b = txtB; targetItem.c = txtC; targetItem.d = txtD;
+
+            if(!txtSoal) return;
+
+            const payload = {
+                kelas: selectedKelasAdmin, mapel: selectedMapelAdmin, materi: selectedMateriAdmin,
+                soal: txtSoal, a: txtA, b: txtB, c: txtC, d: txtD, kunci: targetItem.kunci,
+                timestamp: new Date().getTime()
+            };
+
+            try {
+                if(targetItem.id) {
+                    await window.fsUpdateDoc(window.fsDoc(window.dbFirestore, "ular_tangga", targetItem.id), payload);
+                } else {
+                    const docRef = await window.fsAddDoc(window.fsCollection(window.dbFirestore, "ular_tangga"), payload);
+                    targetItem.id = docRef.id;
+                }
+
+                const snapshot = await window.fsGetDocs(window.fsCollection(window.dbFirestore, "ular_tangga"));
+                bankSoalGlobal = [];
+                snapshot.forEach(doc => {
+                    let obj = doc.data(); obj.id = doc.id;
+                    bankSoalGlobal.push(obj);
+                });
+            } catch (e) {
+                console.error("Auto-Save gagal: ", e);
+            }
+        }
+
+        async function hapusBarisSoal(index) {
+            const targetItem = localAdminSoalList[index];
+            if(!targetItem) return;
+
+            if(targetItem.id) {
+                if(!confirm("Hapus soal?")) return;
+                try {
+                    await window.fsDeleteDoc(window.fsDoc(window.dbFirestore, "ular_tangga", targetItem.id));
+                    bankSoalGlobal = bankSoalGlobal.filter(i => i.id !== targetItem.id);
+                } catch(err) {
+                    alert("Gagal menghapus: " + err.message);
+                }
+            }
+            localAdminSoalList.splice(index, 1);
+            renderLinearSoalStackHTML();
+        }
+
+        function buildBoard() {
+            const grid = document.getElementById('board-grid');
+            grid.innerHTML = '';
+            for (let row = 9; row >= 0; row--) {
+                for (let col = 0; col < 10; col++) {
+                    let num = (row % 2 === 0) ? (row * 10) + col + 1 : (row * 10) + (9 - col) + 1; 
+                    const cell = document.createElement('div');
+                    cell.id = `cell-${num}`; 
+                    cell.className = `cell border-b border-r border-slate-300/60 ${cellColors[num % cellColors.length]}`;
+                    cell.innerHTML = `<span class="cell-number">${num}</span>`;
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function getCoordinates(num) {
+            let row = Math.floor((num - 1) / 10);
+            let col = (num - 1) % 10;
+            if (row % 2 !== 0) col = 9 - col;
+            let x = (col * 10) + 5; let y = 95 - (row * 10);
+            return { x, y };
+        }
+
+        /* RENDERING TANGGA & ULAR TERKONTROL & PRESISI DENGAN PERBAIKAN KOORDINAT */
+        function drawSnakesAndLadders() {
+            const svg = document.getElementById('svg-layer');
+            let svgContent = '';
+
+            for (const [start, end] of Object.entries(ladders)) {
+                const pos1 = getCoordinates(parseInt(start)); const pos2 = getCoordinates(end);
+                const dx = pos2.x - pos1.x; const dy = pos2.y - pos1.y;
+                const length = Math.sqrt(dx*dx + dy*dy);
+                if (length === 0) continue;
+
+                const px = -dy/length; const py = dx/length; const w = 1.6;
+                const r1x1 = pos1.x + px*w; const r1y1 = pos1.y + py*w;
+                const r1x2 = pos2.x + px*w; const r1y2 = pos2.y + py*w;
+                const r2x1 = pos1.x - px*w; const r2y1 = pos1.y - py*w;
+                const r2x2 = pos2.x - px*w; const r2y2 = pos2.y - py*w;
+
+                // TIANG UTAMA TANGGA
+                svgContent += `<line x1="${r1x1}" y1="${r1y1}" x2="${r1x2}" y2="${r1y2}" stroke="#78350f" stroke-width="1.2" stroke-linecap="round"/>`;
+                svgContent += `<line x1="${r2x1}" y1="${r2y1}" x2="${r2x2}" y2="${r2y2}" stroke="#78350f" stroke-width="1.2" stroke-linecap="round"/>`;
+
+                // ANAK TANGGA PRESISI
+                const stepSize = 6.5;
+                const rungCount = Math.floor(length / stepSize); 
+                for(let i = 1; i <= rungCount; i++) {
+                    const t = i / (rungCount + 1);
+                    const rx1 = r1x1 + (r1x2 - r1x1)*t; 
+                    const ry1 = r1y1 + (r1y2 - r1y1)*t;
+                    const rx2 = r2x1 + (r2x2 - r2x1)*t; 
+                    const ry2 = r2y1 + (r2y2 - r2y1)*t;
+                    svgContent += `<line x1="${rx1}" y1="${ry1}" x2="${rx2}" y2="${ry2}" stroke="#a16207" stroke-width="0.9" stroke-linecap="round"/>`;
+                }
+            }
+
+            const snakeColors = [{ body: '#ef4444', belly: '#fca5a5' }, { body: '#10b981', belly: '#6ee7b7' }, { body: '#3b82f6', belly: '#93c5fd' }, { body: '#8b5cf6', belly: '#c4b5fd' }];
+            let sIdx = 0;
+            for (const [head, tail] of Object.entries(snakes)) {
+                const hPos = getCoordinates(parseInt(head)); const tPos = getCoordinates(tail);
+                const dx = tPos.x - hPos.x; const dy = tPos.y - hPos.y;
+                const length = Math.sqrt(dx*dx + dy*dy);
+                const px = -dy/length; const py = dx/length;
+                const curve = length > 30 ? 15 : 8; 
+                const cx1 = hPos.x + dx*0.3 + px*curve; const cy1 = hPos.y + dy*0.3 + py*curve;
+                const cx2 = hPos.x + dx*0.7 - px*curve; const cy2 = hPos.y + dy*0.7 - py*curve;
+
+                const pathData = `M ${hPos.x} ${hPos.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${tPos.x} ${tPos.y}`;
+                const col = snakeColors[sIdx % snakeColors.length]; sIdx++;
+
+                svgContent += `<path d="${pathData}" stroke="${col.body}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+                svgContent += `<path d="${pathData}" stroke="${col.belly}" stroke-width="1.4" stroke-dasharray="1.2 2.5" fill="none" stroke-linecap="round"/>`;
+
+                const hdx = hPos.x - cx1; const hdy = hPos.y - cy1;
+                const hAngle = Math.atan2(hdy, hdx) * 180 / Math.PI;
+                
+                const tdx = tPos.x - cx2; const tdy = tPos.y - cy2;
+                const tAngle = Math.atan2(tdy, tdx) * 180 / Math.PI;
+
+                svgContent += `
+                    <g transform="translate(${hPos.x}, ${hPos.y}) rotate(${hAngle})">
+                        <ellipse cx="-1.2" cy="0" rx="3.2" ry="2.4" fill="${col.body}"/>
+                        <circle cx="-0.4" cy="-1.1" r="0.7" fill="white"/><circle cx="-0.2" cy="-1.1" r="0.35" fill="black"/>
+                        <circle cx="-0.4" cy="1.1" r="0.7" fill="white"/><circle cx="-0.2" cy="1.1" r="0.35" fill="black"/>
+                        <path d="M 2 0 L 4 -0.6 M 2 0 L 4 0.6 M 2 0 L 3 0" stroke="#f43f5e" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+                    </g>
+                    <g transform="translate(${tPos.x}, ${tPos.y}) rotate(${tAngle})">
+                        <path d="M -2.5 -1.2 L 1.2 0 L -2.5 1.2 Z" fill="${col.body}"/>
+                    </g>
+                `;
+            }
+            svg.innerHTML = svgContent;
+        }
+
+        function updateTurnUI() {
+            for (let i = 0; i < numPlayers; i++) {
+                const card = document.getElementById(`card-p${i}`);
+                if (card) {
+                    if (i === currentPlayer) {
+                        card.classList.add('card-active', 'ring-2', playerRingClasses[i]);
+                        card.classList.remove('card-inactive');
+                    } else {
+                        card.classList.add('card-inactive');
+                        card.classList.remove('card-active', 'ring-2', playerRingClasses[i]);
+                    }
+                }
+            }
+        }
+
+        function updatePlayerPosition(pIndex, num) {
+            const pos = getCoordinates(num);
+            const token = document.getElementById(`player-token-${pIndex}`);
+            token.classList.remove('jumping'); void token.offsetWidth; token.classList.add('jumping');
+            const offset = posOffsets[pIndex];
+            token.style.left = `calc(${pos.x}% + ${offset.dx}%)`;
+            token.style.top = `calc(${pos.y}% + ${offset.dy}%)`;
+            document.getElementById(`pos-p${pIndex}`).innerText = num;
+        }
+
+        function moveTokenStepByStep(pIndex, startPos, endPos, stepDelay, onComplete) {
+            if (startPos === endPos) { if (onComplete) onComplete(); return; }
+            let nextPos = (startPos < endPos) ? startPos + 1 : startPos - 1;
+            playerPositions[pIndex] = nextPos;
+            updatePlayerPosition(pIndex, nextPos);
+            setTimeout(() => { moveTokenStepByStep(pIndex, nextPos, endPos, stepDelay, onComplete); }, stepDelay);
+        }
+
+        function renderMiniDicePip(val) {
+            let pipsHTML = '';
+            switch(val) {
+                case 1:
+                    pipsHTML = `<div class="col-start-2 row-start-2 mini-pip-red"></div>`; break;
+                case 2:
+                    pipsHTML = `<div class="col-start-3 row-start-1 mini-pip"></div><div class="col-start-1 row-start-3 mini-pip"></div>`; break;
+                case 3:
+                    pipsHTML = `<div class="col-start-3 row-start-1 mini-pip"></div><div class="col-start-2 row-start-2 mini-pip"></div><div class="col-start-1 row-start-3 mini-pip"></div>`; break;
+                case 4:
+                    pipsHTML = `<div class="col-start-1 row-start-1 mini-pip"></div><div class="col-start-3 row-start-1 mini-pip"></div><div class="col-start-1 row-start-3 mini-pip"></div><div class="col-start-3 row-start-3 mini-pip"></div>`; break;
+                case 5:
+                    pipsHTML = `<div class="col-start-1 row-start-1 mini-pip"></div><div class="col-start-3 row-start-1 mini-pip"></div><div class="col-start-2 row-start-2 mini-pip"></div><div class="col-start-1 row-start-3 mini-pip"></div><div class="col-start-3 row-start-3 mini-pip"></div>`; break;
+                case 6:
+                    pipsHTML = `<div class="col-start-1 row-start-1 mini-pip"></div><div class="col-start-3 row-start-1 mini-pip"></div><div class="col-start-1 row-start-2 mini-pip"></div><div class="col-start-3 row-start-2 mini-pip"></div><div class="col-start-1 row-start-3 mini-pip"></div><div class="col-start-3 row-start-3 mini-pip"></div>`; break;
+            }
+            return `<div class="mini-dice-grid">${pipsHTML}</div>`;
+        }
+
+        function rollDice3D() {
+            if (isMoving) return; isMoving = true;
+            document.getElementById('btn-roll').disabled = true;
+
+            const overlay = document.getElementById('dice-3d-overlay'); const wrapper = document.getElementById('dice-wrapper');
+            const cube = document.getElementById('dice-cube'); const shadow = document.getElementById('dice-shadow');
+            const miniVisual = document.getElementById('mini-dice-visual');
+
+            overlay.classList.remove('hidden'); void overlay.offsetWidth;
+            overlay.classList.remove('opacity-0'); overlay.classList.add('opacity-100');
+
+            wrapper.style.transition = 'none'; cube.style.transition = 'none'; shadow.style.transition = 'none';
+            wrapper.style.transform = 'translate(-45vmin, 45vmin) scale(0.2)';
+            cube.style.transform = 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
+            shadow.style.transform = 'scale(0.2)'; shadow.style.opacity = '0';
+
+            const result = Math.floor(Math.random() * 6) + 1;
+            let rotX = 0, rotY = 0;
+            switch(result) {
+                case 1: rotX = 0; rotY = 0; break;
+                case 2: rotX = 0; rotY = -90; break;
+                case 3: rotX = -90; rotY = 0; break;
+                case 4: rotX = 90; rotY = 0; break;
+                case 5: rotX = 0; rotY = 90; break;
+                case 6: rotX = 180; rotY = 0; break;
+            }
+
+            setTimeout(() => {
+                wrapper.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                wrapper.style.transform = 'translate(0, 0) scale(1)';
+                cube.style.transition = 'transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                cube.style.transform = `rotateX(${rotX + 720}deg) rotateY(${rotY + 720}deg)`;
+                shadow.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease-in';
+                shadow.style.transform = 'scale(1)'; shadow.style.opacity = '1';
+                
+                let blink = setInterval(() => {
+                    miniVisual.innerHTML = renderMiniDicePip(Math.floor(Math.random()*6)+1);
+                }, 100);
+
+                setTimeout(() => {
+                    clearInterval(blink); 
+                    miniVisual.innerHTML = renderMiniDicePip(result);
+
+                    setTimeout(() => {
+                        overlay.classList.remove('opacity-100'); overlay.classList.add('opacity-0');
+                        setTimeout(() => overlay.classList.add('hidden'), 200);
+
+                        let cPos = playerPositions[currentPlayer]; 
+                        previousPositions[currentPlayer] = cPos; 
+
+                        let tPos = cPos + result;
+                        if (tPos > 100) { setTimeout(nextTurn, 800); return; }
+                        
+                        moveTokenStepByStep(currentPlayer, cPos, tPos, 300, () => pemicuEvaluasiPetakLangkah(tPos));
+                    }, 600);
+                }, 900);
+            }, 50);
+        }
+
+        function pemicuEvaluasiPetakLangkah(targetPos) {
+            if(petakKuisMap[targetPos]) {
+                soalAktif = petakKuisMap[targetPos];
+                soalAktif.targetPos = targetPos;
+
+                document.getElementById('quiz-player-tag').innerText = `Tantangan ${playerNames[currentPlayer]}`;
+                document.getElementById('quiz-text').innerText = soalAktif.soal;
+                document.getElementById('text-ans-a').innerText = soalAktif.a;
+                document.getElementById('text-ans-b').innerText = soalAktif.b;
+                document.getElementById('text-ans-c').innerText = soalAktif.c;
+                document.getElementById('text-ans-d').innerText = soalAktif.d;
+
+                document.getElementById('quiz-feedback').classList.add('hidden');
+                ['a','b','c','d'].forEach(ch => {
+                    const b = document.getElementById(`btn-ans-${ch}`);
+                    b.className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-xl sm:rounded-2xl border-2 border-slate-200 font-bold transition-all flex gap-2 sm:gap-3 text-xs sm:text-base";
+                    b.disabled = false;
+                });
+                document.getElementById('quiz-modal').classList.remove('hidden');
+            } else {
+                checkSnakesLadders(currentPlayer, targetPos);
+            }
+        }
+
+        function checkJawabanSiswa(jawaban) {
+            const kunci = soalAktif.kunci; const feedback = document.getElementById('quiz-feedback');
+            ['a','b','c','d'].forEach(ch => document.getElementById(`btn-ans-${ch}`).disabled = true);
+            const btnT = document.getElementById(`btn-ans-${jawaban.toLowerCase()}`);
+
+            if(jawaban === kunci) {
+                btnT.className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-emerald-100 text-left rounded-xl sm:rounded-2xl border-2 border-emerald-400 font-bold text-emerald-700 flex gap-2 sm:gap-3 text-xs sm:text-base";
+                feedback.innerHTML = "🎉 BENAR!"; feedback.className = "mt-3 text-center font-black text-xs sm:text-sm text-emerald-600 block";
+                setTimeout(() => { document.getElementById('quiz-modal').classList.add('hidden'); checkSnakesLadders(currentPlayer, soalAktif.targetPos); }, 1200);
+            } else {
+                btnT.className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-rose-100 text-left rounded-xl sm:rounded-2xl border-2 border-rose-400 font-bold text-rose-700 flex gap-2 sm:gap-3 text-xs sm:text-base";
+                document.getElementById(`btn-ans-${kunci.toLowerCase()}`).className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-emerald-50 text-left rounded-xl sm:rounded-2xl border-2 border-emerald-300 font-bold text-emerald-600 flex gap-2 sm:gap-3 text-xs sm:text-base";
+                
+                let petakAsal = previousPositions[currentPlayer];
+                feedback.innerHTML = `❌ SALAH! Kembali ke petak ${petakAsal}.`; 
+                feedback.className = "mt-3 text-center font-black text-xs sm:text-sm text-rose-600 block";
+
+                setTimeout(() => {
+                    document.getElementById('quiz-modal').classList.add('hidden');
+                    moveTokenStepByStep(currentPlayer, soalAktif.targetPos, petakAsal, 250, () => {
+                        checkSnakesLadders(currentPlayer, petakAsal);
+                    });
+                }, 1800);
+            }
+        }
+
+        function checkSnakesLadders(pIndex, pos) {
+            if (pos === 100) { triggerWin(pIndex); return; }
+            if (ladders[pos]) {
+                playerPositions[pIndex] = ladders[pos]; updatePlayerPosition(pIndex, ladders[pos]); setTimeout(nextTurn, 1000);
+            } else if (snakes[pos]) {
+                playerPositions[pIndex] = snakes[pos]; updatePlayerPosition(pIndex, snakes[pos]); setTimeout(nextTurn, 1000);
+            } else {
+                setTimeout(nextTurn, 400);
+            }
+        }
+
+        function nextTurn() {
+            if(playerPositions.includes(100)) return;
+            currentPlayer = (currentPlayer + 1) % numPlayers; updateTurnUI();
+            isMoving = false; document.getElementById('btn-roll').disabled = false;
+        }
+
+        function triggerWin(pIndex) {
+            const mc = document.getElementById('confetti-container'); const wm = document.getElementById('win-modal');
+            document.getElementById('win-title').innerHTML = `${playerNames[pIndex]} MENANG!`;
+            document.getElementById('win-title').className = `text-2xl sm:text-4xl font-black mb-2 ${playerColorClasses[pIndex]}`;
+            document.getElementById('win-desc').innerHTML = `<b>${playerNames[pIndex]}</b> berhasil sampai petak 100!`;
+            mc.classList.remove('hidden');
+            setTimeout(() => { wm.classList.remove('scale-0'); wm.classList.add('scale-100'); }, 50);
+        }
+
+        function resetGame() {
+            const mc = document.getElementById('confetti-container'); const wm = document.getElementById('win-modal');
+            wm.classList.remove('scale-100'); wm.classList.add('scale-0');
+            setTimeout(() => {
+                mc.classList.add('hidden'); document.getElementById('game-identity-bar').classList.add('hidden');
+                document.getElementById('startup-modal').classList.remove('hidden');
+                selectedKelasPlay = ""; selectedMapelPlay = ""; selectedMateriPlay = "";
+                petakKuisMap = {};
+                sembunyikanWarningUI();
+                muatMasterDataFirebase();
+            }, 300);
+        }
+    </script>
+</body>
+</html>
