@@ -271,6 +271,21 @@
             .nav-btn-custom { width: 40px; height: 40px; }
             .nav-btn-custom svg { width: 18px; height: 18px; }
         }
+
+        /* Banner Motivasi Top Toast Animation */
+        #event-banner {
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+        }
+        .banner-hidden {
+            transform: translateY(-150%) scale(0.9);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .banner-visible {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            pointer-events: auto;
+        }
     </style>
 
     <!-- Firebase SDK Setup -->
@@ -301,9 +316,18 @@
 </head>
 <body class="static-bg min-h-screen w-screen overflow-x-hidden text-slate-800 antialiased relative flex flex-col justify-center items-center p-2 sm:p-4">
 
+    <!-- BANNER MOTIVASI OTOMATIS (TOP TOAST NOTIFIKASI) -->
+    <div id="event-banner" class="fixed top-5 z-[30000] max-w-md w-[92%] p-4 rounded-3xl shadow-2xl border-4 banner-hidden transition-all duration-500 flex items-center gap-3">
+        <div id="banner-emoji" class="text-4xl shrink-0 bg-white/20 p-2 rounded-2xl">🚀</div>
+        <div class="flex-1">
+            <h4 id="banner-title" class="font-black text-sm uppercase tracking-wider">INFORMASI</h4>
+            <p id="banner-message" class="font-bold text-xs leading-snug mt-0.5">Penyemangat...</p>
+        </div>
+    </div>
+
     <!-- NAVIGASI KIRI ATAS: TOMBOL HOME & FULLSCREEN -->
     <div class="fixed top-4 left-4 z-[100] flex items-center gap-3">
-        <button onclick="goHome()" class="nav-btn-custom" title="Kembali ke Beranda / Menu Utama">
+        <button onclick="goHome()" class="nav-btn-custom" title="Kembali ke Pengaturan Sesi">
             <svg viewBox="0 0 24 24">
                 <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
             </svg>
@@ -316,7 +340,7 @@
         </button>
     </div>
 
-    <!-- PENGATURAN PERMAINAN FULLSCREEN FULL-PAGE -->
+    <!-- PENGATURAN PERMAINAN FULLSCREEN FULL-PAGE (PRO LAYOUT) -->
     <div id="startup-modal" class="fixed inset-0 z-[10000] bg-slate-900 text-slate-100 flex flex-col justify-between p-4 sm:p-8 antialiased overflow-hidden">
         
         <!-- HEADER PENGATURAN -->
@@ -330,12 +354,21 @@
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Pengaturan Sesi & Karakter Pemain</p>
                 </div>
             </div>
-            <div class="hidden sm:block text-right">
-                <span class="text-xs text-emerald-400 font-black uppercase tracking-widest">Universitas Jember</span>
+            <!-- TOMBOL KEMBALI KE BERANDA (INDEX.HTML) -->
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shadow-md">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                    <span>Beranda</span>
+                </a>
+                <div class="hidden sm:block text-right">
+                    <span class="text-xs text-emerald-400 font-black uppercase tracking-widest">Universitas Jember</span>
+                </div>
             </div>
         </div>
 
-        <!-- AREA UTAMA SPLIT PANEL -->
+        <!-- AREA UTAMA SPLIT PANEL (KIRI CONTROLS & KANAN AVATAR GRID) -->
         <div class="my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-center py-4">
             
             <!-- PANEL KIRI: JUMLAH PEMAIN & TAB SELEKSI (4 COL) -->
@@ -524,16 +557,6 @@
 
     </div>
 
-    <!-- BANNER MOTIVASI EVENT ULAR & TANGGA -->
-    <div id="banner-modal" class="fixed inset-0 z-[15000] flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-4 hidden transition-all duration-300" onclick="closeBannerModal()">
-        <div id="banner-card" class="bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center relative border-4 transform transition-all duration-300 scale-95" onclick="event.stopPropagation()">
-            <div id="banner-icon" class="text-6xl sm:text-7xl mb-3 animate-bounce">🚀</div>
-            <h3 id="banner-title" class="text-2xl sm:text-3xl font-black font-jakarta tracking-tight mb-2">HEBAT Sekali!</h3>
-            <p id="banner-desc" class="text-sm sm:text-base font-bold text-slate-600 leading-relaxed mb-4">Kamu berhasil naik tangga!</p>
-            <div class="text-[11px] font-black uppercase tracking-widest text-slate-400">Menutup otomatis...</div>
-        </div>
-    </div>
-
     <!-- MODAL QR CODE POP-UP -->
     <div id="qr-modal" class="fixed inset-0 z-[12000] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4 hidden">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-xs w-full text-center relative border-4 border-emerald-400">
@@ -607,21 +630,47 @@
         let currentGameId = "ROOM_" + Math.random().toString(36).substring(2, 8).toUpperCase();
         let qrCodeInstance = null;
         let lastProcessedTimestamp = 0;
-        let bannerTimer = null;
-
-        const ladderMotivations = [
-            "Luar biasa! Kamu semakin dekat dengan kemenangan! 🪜✨",
-            "Mantap! Terus melangkah maju pantang menyerah! 🚀🌟",
-            "Hebat! Keberuntungan berpihak pada anak rajin! 🎉💪",
-            "Woow, lompatan yang sangat bagus! Tetap semangat! ⭐🔥"
-        ];
+        let bannerTimeout = null;
 
         const snakeMotivations = [
-            "Jangan berkecil hati! Kegagalan adalah awal dari sukses! 🐍💚",
-            "Tetap semangat! Kamu pasti bisa mengejarnya kembali! 🌈💪",
-            "Jangan menyerah! Setiap tantangan membuatmu lebih kuat! ⭐✨",
-            "Ayo bangkit lagi! Perjalanan masih seru dan banyak kesempatan! 🚀🔥"
+            "Jangan menyerah! Kegagalan adalah awal dari keberhasilan. Yuk bangkit lagi! 💪✨",
+            "Tetap semangat! Jatuh itu biasa, yang luar biasa adalah kembali bangkit dengan senyuman! 😊🚀",
+            "Tidak apa-apa turun sedikit! Setiap tantangan membuatmu makin pintar dan kuat! 🌟🦁",
+            "Tetap optimis! Perjalanan masih panjang dan kamu pasti bisa melaluinya! 🔥🌈"
         ];
+
+        const ladderMotivations = [
+            "HEBAT SEKALI! Kamu melesat tinggi! Pertahankan semangat juangmu! 🚀🎉",
+            "Luar biasa! Kerja keras dan kecerdasanmu membawamu makin dekat ke puncak! ⭐🏆",
+            "WOW KEREN! Kamu naik tangga keberhasilan! Ayo melangkah lebih jauh! ✨💥",
+            "MANTAP! Semangat belajar membawamu terbang tinggi! Teruskan prestasimu! 🎈🥳"
+        ];
+
+        function showEventBanner(type, playerName) {
+            const banner = document.getElementById('event-banner');
+            const bEmoji = document.getElementById('banner-emoji');
+            const bTitle = document.getElementById('banner-title');
+            const bMsg = document.getElementById('banner-message');
+
+            if (bannerTimeout) clearTimeout(bannerTimeout);
+
+            if (type === 'ladder') {
+                banner.className = "fixed top-5 z-[30000] max-w-md w-[92%] p-4 rounded-3xl shadow-2xl border-4 banner-visible bg-emerald-600 border-emerald-300 text-white flex items-center gap-3";
+                bEmoji.innerText = "🪜✨";
+                bTitle.innerText = `HEBAT! ${playerName.toUpperCase()} NAIK TANGGA!`;
+                bMsg.innerText = ladderMotivations[Math.floor(Math.random() * ladderMotivations.length)];
+            } else if (type === 'snake') {
+                banner.className = "fixed top-5 z-[30000] max-w-md w-[92%] p-4 rounded-3xl shadow-2xl border-4 banner-visible bg-amber-500 border-amber-200 text-slate-950 flex items-center gap-3";
+                bEmoji.innerText = "🐍💪";
+                bTitle.innerText = `SEMANGAT! ${playerName.toUpperCase()} TURUN ULAR!`;
+                bMsg.innerText = snakeMotivations[Math.floor(Math.random() * snakeMotivations.length)];
+            }
+
+            bannerTimeout = setTimeout(() => {
+                banner.classList.remove('banner-visible');
+                banner.classList.add('banner-hidden');
+            }, 3500);
+        }
 
         function getAudioContext() {
             if (!audioCtx) audioCtx = new AudioContext();
@@ -687,48 +736,6 @@
             } catch (e) { console.error("SFX error:", e); }
         }
 
-        /* LOGIKA BANNER MOTIVASI OTOMATIS */
-        function showMotivationBanner(type, playerName) {
-            const modal = document.getElementById('banner-modal');
-            const card = document.getElementById('banner-card');
-            const icon = document.getElementById('banner-icon');
-            const title = document.getElementById('banner-title');
-            const desc = document.getElementById('banner-desc');
-
-            if (bannerTimer) clearTimeout(bannerTimer);
-
-            if (type === 'ladder') {
-                playSound('correct');
-                icon.innerText = "🪜✨";
-                title.innerText = "HEBAT! NAIK TANGGA!";
-                title.className = "text-2xl sm:text-3xl font-black font-jakarta tracking-tight mb-2 text-emerald-600";
-                card.className = "bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center relative border-4 border-emerald-400 transform transition-all duration-300 scale-100";
-                const randText = ladderMotivations[Math.floor(Math.random() * ladderMotivations.length)];
-                desc.innerHTML = `<b>${playerName}</b> menaiki tangga!<br><span class="text-emerald-700 font-extrabold mt-1 block">${randText}</span>`;
-            } else {
-                playSound('wrong');
-                icon.innerText = "🐍💪";
-                title.innerText = "OPS, TERPLESAT ULAR!";
-                title.className = "text-2xl sm:text-3xl font-black font-jakarta tracking-tight mb-2 text-amber-600";
-                card.className = "bg-white p-6 sm:p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center relative border-4 border-amber-400 transform transition-all duration-300 scale-100";
-                const randText = snakeMotivations[Math.floor(Math.random() * snakeMotivations.length)];
-                desc.innerHTML = `<b>${playerName}</b> tergelincir turun.<br><span class="text-amber-700 font-extrabold mt-1 block">${randText}</span>`;
-            }
-
-            modal.classList.remove('hidden');
-
-            // Otomatis menutup banner setelah 3 detik
-            bannerTimer = setTimeout(() => {
-                closeBannerModal();
-            }, 3000);
-        }
-
-        function closeBannerModal() {
-            if (bannerTimer) clearTimeout(bannerTimer);
-            const modal = document.getElementById('banner-modal');
-            modal.classList.add('hidden');
-        }
-
         /* LOGIKA TAMPILKAN POP-UP QR CODE DINAMIS */
         function showQRCode(playerIdx) {
             playSound('click');
@@ -762,7 +769,7 @@
 
         function goHome() {
             playSound('click');
-            window.location.href = "index.html";
+            document.getElementById('startup-modal').classList.remove('hidden');
         }
 
         function toggleFullScreen() {
@@ -878,7 +885,7 @@
             renderAnimalSelectionControls();
         }
 
-        /* RENDERING SELEKSI KARAKTER */
+        /* RENDERING SELEKSI KARAKTER DENGAN DESIGN FULLSCREEN BARU */
         function renderAnimalSelectionControls() {
             const tabsContainer = document.getElementById('player-tabs-container');
             const gridContainer = document.getElementById('animals-catalog-grid');
@@ -1352,18 +1359,18 @@
 
         function checkSnakesLadders(pIndex, pos) {
             if (pos === 100) { triggerWin(pIndex); return; }
-            const pName = `${selectedAnimals[pIndex].emoji} ${selectedAnimals[pIndex].name}`;
-
             if (ladders[pos]) {
-                showMotivationBanner('ladder', pName);
+                playSound('correct');
+                showEventBanner('ladder', selectedAnimals[pIndex].name);
                 playerPositions[pIndex] = ladders[pos]; 
                 updatePlayerPosition(pIndex, ladders[pos]); 
-                setTimeout(nextTurn, 1400);
+                setTimeout(nextTurn, 1000);
             } else if (snakes[pos]) {
-                showMotivationBanner('snake', pName);
+                playSound('wrong');
+                showEventBanner('snake', selectedAnimals[pIndex].name);
                 playerPositions[pIndex] = snakes[pos]; 
                 updatePlayerPosition(pIndex, snakes[pos]); 
-                setTimeout(nextTurn, 1400);
+                setTimeout(nextTurn, 1000);
             } else {
                 setTimeout(nextTurn, 400);
             }
