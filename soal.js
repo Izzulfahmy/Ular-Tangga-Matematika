@@ -64,11 +64,11 @@ const bankSoal = [
   },
   {
     id: 8,
-    soal: "Urutan siklus hidup ayam yang benar adalah...",
-    a: "Telur → ayam dewasa → anak ayam",
-    b: "Anak ayam → telur → ayam dewasa",
-    c: "Telur → anak ayam → ayam dewasa",
-    d: "Anak ayam → ayam dewasa → telur",
+    soal: "Urutan siklus hidup ayam yang benar ditunjukkan oleh gambar...",
+    a: "<img src='aset/hewan/8a.png' alt='Opsi A' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    b: "<img src='aset/hewan/8b.png' alt='Opsi B' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    c: "<img src='aset/hewan/8c.png' alt='Opsi C' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    d: "<img src='aset/hewan/8d.png' alt='Opsi D' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
     kunci: "C"
   },
   {

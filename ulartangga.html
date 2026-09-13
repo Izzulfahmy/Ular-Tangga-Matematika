@@ -573,19 +573,19 @@
         </div>
     </div>
 
-    <!-- MODAL KUIS SISWA -->
+    <!-- MODAL KUIS SISWA (FLEKSIBEL TEKS & GAMBAR) -->
     <div id="quiz-modal" class="fixed inset-0 z-[2000] flex items-center justify-center bg-slate-900/70 p-3 hidden">
-        <div class="bg-white p-5 sm:p-8 rounded-3xl shadow-2xl max-w-lg w-full border-4 border-blue-400 relative">
+        <div class="bg-white p-5 sm:p-8 rounded-3xl shadow-2xl max-w-lg w-full border-4 border-blue-400 relative max-h-[85vh] overflow-y-auto">
             <div class="text-center mt-1 mb-4 sm:mb-6">
                 <span id="quiz-player-tag" class="text-xs sm:text-sm font-black px-2.5 py-1 bg-slate-100 rounded-lg text-slate-600">Giliran Pemain</span>
                 <p id="quiz-text" class="text-base sm:text-lg font-bold text-slate-800 mt-3 leading-relaxed whitespace-pre-line">Pertanyaan kuis...</p>
             </div>
 
             <div class="flex flex-col gap-2 sm:gap-3">
-                <button onclick="checkJawabanSiswa('A')" id="btn-ans-a" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-xl sm:rounded-2xl border-2 border-slate-200 font-bold transition-all flex gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black">A.</span> <span id="text-ans-a">Pilihan A</span></button>
-                <button onclick="checkJawabanSiswa('B')" id="btn-ans-b" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-2xl border-2 border-slate-200 font-bold transition-all flex gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black">B.</span> <span id="text-ans-b">Pilihan B</span></button>
-                <button onclick="checkJawabanSiswa('C')" id="btn-ans-c" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-2xl border-2 border-slate-200 font-bold transition-all flex gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black">C.</span> <span id="text-ans-c">Pilihan C</span></button>
-                <button onclick="checkJawabanSiswa('D')" id="btn-ans-d" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-2xl border-2 border-slate-200 font-bold transition-all flex gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black">D.</span> <span id="text-ans-d">Pilihan D</span></button>
+                <button onclick="checkJawabanSiswa('A')" id="btn-ans-a" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-xl sm:rounded-2xl border-2 border-slate-200 font-bold transition-all flex items-center gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black shrink-0">A.</span> <span id="text-ans-a" class="w-full">Pilihan A</span></button>
+                <button onclick="checkJawabanSiswa('B')" id="btn-ans-b" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-xl sm:rounded-2xl border-2 border-slate-200 font-bold transition-all flex items-center gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black shrink-0">B.</span> <span id="text-ans-b" class="w-full">Pilihan B</span></button>
+                <button onclick="checkJawabanSiswa('C')" id="btn-ans-c" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-xl sm:rounded-2xl border-2 border-slate-200 font-bold transition-all flex items-center gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black shrink-0">C.</span> <span id="text-ans-c" class="w-full">Pilihan C</span></button>
+                <button onclick="checkJawabanSiswa('D')" id="btn-ans-d" class="w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-xl sm:rounded-2xl border-2 border-slate-200 font-bold transition-all flex items-center gap-2 sm:gap-3 text-xs sm:text-base"><span class="text-blue-500 font-black shrink-0">D.</span> <span id="text-ans-d" class="w-full">Pilihan D</span></button>
             </div>
             <div id="quiz-feedback" class="mt-3 text-center font-black text-xs sm:text-sm hidden"></div>
         </div>
@@ -872,7 +872,6 @@
         let petakKuisMap = {};
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Menggunakan bankSoal dari soal.js jika tersedia, atau sync Firestore
             if (typeof bankSoal !== 'undefined' && Array.isArray(bankSoal)) {
                 bankSoalGlobal = bankSoal;
             }
@@ -1046,23 +1045,19 @@
             if (bankSoalGlobal.length === 0) return;
 
             let petakTersedia = [];
-            // Hindari petak awal (1), petak akhir (100), petak tangga, dan petak ular
             for(let i = 2; i <= 99; i++) {
                 if(!ladders[i] && !snakes[i]) {
                     petakTersedia.push(i);
                 }
             }
 
-            // Acak urutan petak secara acak
             petakTersedia.sort(() => Math.random() - 0.5);
 
-            // Petakan 30 soal ke petak yang sudah diacak
             bankSoalGlobal.forEach((soal, index) => {
                 if (index < petakTersedia.length) {
                     let nomorPetakTerpilih = petakTersedia[index];
                     petakKuisMap[nomorPetakTerpilih] = soal;
 
-                    // Tambahkan tanda titik merah pada pojok kanan atas petak
                     const cellEl = document.getElementById(`cell-${nomorPetakTerpilih}`);
                     if(cellEl) {
                         const dot = document.createElement('div');
@@ -1158,7 +1153,7 @@
                     const rx1 = r1x1 + (r1x2 - r1x1) * t; 
                     const ry1 = r1y1 + (r1y2 - r1y1) * t;
                     const rx2 = r2x1 + (r2x2 - r2x1) * t; 
-                    const ry2 = r2y1 + (r2y2 - r2y1) * t;
+                    const ry2 = r2y2 + (r2y2 - r2y1) * t;
                     svgContent += `<line x1="${rx1}" y1="${ry1}" x2="${rx2}" y2="${ry2}" stroke="#a16207" stroke-width="0.6" stroke-linecap="round"/>`;
                 }
             }
@@ -1333,6 +1328,7 @@
             }, 50);
         }
 
+        /* PEMBARUAN UTAMA: Menggunakan innerHTML agar fleksibel merender teks maupun gambar dari soal.js */
         function pemicuEvaluasiPetakLangkah(targetPos) {
             if (targetPos >= 100) {
                 triggerWin(currentPlayer);
@@ -1343,17 +1339,17 @@
                 soalAktif = petakKuisMap[targetPos];
                 soalAktif.targetPos = targetPos;
 
-                document.getElementById('quiz-player-tag').innerText = `Tantangan ${selectedAnimals[currentPlayer].emoji} ${selectedAnimals[currentPlayer].name}`;
-                document.getElementById('quiz-text').innerText = soalAktif.soal;
-                document.getElementById('text-ans-a').innerText = soalAktif.a;
-                document.getElementById('text-ans-b').innerText = soalAktif.b;
-                document.getElementById('text-ans-c').innerText = soalAktif.c;
-                document.getElementById('text-ans-d').innerText = soalAktif.d;
+                document.getElementById('quiz-player-tag').innerHTML = `Tantangan ${selectedAnimals[currentPlayer].emoji} ${selectedAnimals[currentPlayer].name}`;
+                document.getElementById('quiz-text').innerHTML = soalAktif.soal;
+                document.getElementById('text-ans-a').innerHTML = soalAktif.a;
+                document.getElementById('text-ans-b').innerHTML = soalAktif.b;
+                document.getElementById('text-ans-c').innerHTML = soalAktif.c;
+                document.getElementById('text-ans-d').innerHTML = soalAktif.d;
 
                 document.getElementById('quiz-feedback').classList.add('hidden');
                 ['a','b','c','d'].forEach(ch => {
                     const b = document.getElementById(`btn-ans-${ch}`);
-                    b.className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-xl sm:rounded-2xl border-2 border-slate-200 font-bold transition-all flex gap-2 sm:gap-3 text-xs sm:text-base";
+                    b.className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-slate-50 hover:bg-blue-50 text-left rounded-xl sm:rounded-2xl border-2 border-slate-200 font-bold transition-all flex items-center gap-2 sm:gap-3 text-xs sm:text-base";
                     b.disabled = false;
                 });
                 document.getElementById('quiz-modal').classList.remove('hidden');
@@ -1370,14 +1366,14 @@
 
             if(jawaban === kunci) {
                 playSound('correct');
-                btnT.className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-emerald-100 text-left rounded-xl sm:rounded-2xl border-2 border-emerald-400 font-bold text-emerald-700 flex gap-2 sm:gap-3 text-xs sm:text-base";
+                btnT.className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-emerald-100 text-left rounded-xl sm:rounded-2xl border-2 border-emerald-400 font-bold text-emerald-700 flex items-center gap-2 sm:gap-3 text-xs sm:text-base";
                 feedback.innerHTML = "🎉 BENAR!"; feedback.className = "mt-3 text-center font-black text-xs sm:text-sm text-emerald-600 block";
                 setTimeout(() => { document.getElementById('quiz-modal').classList.add('hidden'); checkSnakesLadders(currentPlayer, soalAktif.targetPos); }, 1200);
             } else {
                 playSound('wrong');
-                btnT.className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-rose-100 text-left rounded-xl sm:rounded-2xl border-2 border-rose-400 font-bold text-rose-700 flex gap-2 sm:gap-3 text-xs sm:text-base";
+                btnT.className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-rose-100 text-left rounded-xl sm:rounded-2xl border-2 border-rose-400 font-bold text-rose-700 flex items-center gap-2 sm:gap-3 text-xs sm:text-base";
                 if(document.getElementById(`btn-ans-${kunci.toLowerCase()}`)) {
-                    document.getElementById(`btn-ans-${kunci.toLowerCase()}`).className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-emerald-50 text-left rounded-xl sm:rounded-2xl border-2 border-emerald-300 font-bold text-emerald-600 flex gap-2 sm:gap-3 text-xs sm:text-base";
+                    document.getElementById(`btn-ans-${kunci.toLowerCase()}`).className = "w-full py-2.5 px-3 sm:py-3 sm:px-4 bg-emerald-50 text-left rounded-xl sm:rounded-2xl border-2 border-emerald-300 font-bold text-emerald-600 flex items-center gap-2 sm:gap-3 text-xs sm:text-base";
                 }
                 
                 let petakAsal = previousPositions[currentPlayer];
