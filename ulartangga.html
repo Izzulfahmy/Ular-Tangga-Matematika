@@ -26,7 +26,6 @@
     </script>
 
     <style>
-        /* STATIC LIGHT GRADIENT UNTUK PERFORMA RINGAN */
         .static-bg {
             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #f0fdfa 100%);
         }
@@ -208,7 +207,6 @@
         .face-6 .pip:nth-child(5) { grid-area: 2 / 3 / 3 / 4; }
         .face-6 .pip:nth-child(6) { grid-area: 3 / 3 / 4 / 4; }
 
-        /* MINI DICE PIP STYLE */
         .mini-dice-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -239,18 +237,9 @@
             position: absolute;
             bottom: -20px;
         }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-4px); }
-            40%, 80% { transform: translateX(4px); }
-        }
-        .animate-shake {
-            animation: shake 0.3s ease-in-out;
-        }
     </style>
 
-    <!-- Firebase SDK Setup (Database Rahasia Kehidupan Hewan) -->
+    <!-- Firebase SDK Setup -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -286,10 +275,10 @@
                     <div id="board-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-10 p-0.5 w-full h-full border-t border-l border-slate-300/60"></div>
 
                     <div id="tokens-container">
-                        <div id="player-token-0" class="player-token hidden"><div class="token-emoji">🐰</div><div class="token-base base-0"></div></div>
-                        <div id="player-token-1" class="player-token hidden"><div class="token-emoji">🐐</div><div class="token-base base-1"></div></div>
-                        <div id="player-token-2" class="player-token hidden"><div class="token-emoji">🐸</div><div class="token-base base-2"></div></div>
-                        <div id="player-token-3" class="player-token hidden"><div class="token-emoji">🐱</div><div class="token-base base-3"></div></div>
+                        <div id="player-token-0" class="player-token hidden"><div class="token-emoji" id="emoji-p0">🐰</div><div class="token-base base-0"></div></div>
+                        <div id="player-token-1" class="player-token hidden"><div class="token-emoji" id="emoji-p1">🐐</div><div class="token-base base-1"></div></div>
+                        <div id="player-token-2" class="player-token hidden"><div class="token-emoji" id="emoji-p2">🐸</div><div class="token-base base-2"></div></div>
+                        <div id="player-token-3" class="player-token hidden"><div class="token-emoji" id="emoji-p3">🐱</div><div class="token-base base-3"></div></div>
                     </div>
                 </div>
             </div>
@@ -319,10 +308,10 @@
             <div class="flex flex-col gap-1.5">
                 <div id="card-p0" class="bg-white p-2 rounded-xl border border-blue-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-lg bg-blue-100 border border-blue-400 flex items-center justify-center font-black text-sm">🐰</div>
+                        <div class="w-7 h-7 rounded-lg bg-blue-100 border border-blue-400 flex items-center justify-center font-black text-sm" id="card-emoji-p0">🐰</div>
                         <div>
                             <div class="text-[11px] font-black text-slate-700 leading-tight">Pemain 1</div>
-                            <div class="text-[9px] font-bold text-blue-500 uppercase leading-none">Kelinci</div>
+                            <div class="text-[9px] font-bold text-blue-500 uppercase leading-none" id="card-name-p0">Kelinci</div>
                         </div>
                     </div>
                     <div class="bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
@@ -332,10 +321,10 @@
 
                 <div id="card-p1" class="bg-white p-2 rounded-xl border border-red-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-lg bg-red-100 border border-red-400 flex items-center justify-center font-black text-sm">🐐</div>
+                        <div class="w-7 h-7 rounded-lg bg-red-100 border border-red-400 flex items-center justify-center font-black text-sm" id="card-emoji-p1">🐐</div>
                         <div>
                             <div class="text-[11px] font-black text-slate-700 leading-tight">Pemain 2</div>
-                            <div class="text-[9px] font-bold text-red-500 uppercase leading-none">Kambing</div>
+                            <div class="text-[9px] font-bold text-red-500 uppercase leading-none" id="card-name-p1">Kambing</div>
                         </div>
                     </div>
                     <div class="bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
@@ -345,10 +334,10 @@
 
                 <div id="card-p2" class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-lg bg-emerald-100 border border-emerald-400 flex items-center justify-center font-black text-sm">🐸</div>
+                        <div class="w-7 h-7 rounded-lg bg-emerald-100 border border-emerald-400 flex items-center justify-center font-black text-sm" id="card-emoji-p2">🐸</div>
                         <div>
                             <div class="text-[11px] font-black text-slate-700 leading-tight">Pemain 3</div>
-                            <div class="text-[9px] font-bold text-emerald-500 uppercase leading-none">Katak</div>
+                            <div class="text-[9px] font-bold text-emerald-500 uppercase leading-none" id="card-name-p2">Katak</div>
                         </div>
                     </div>
                     <div class="bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
@@ -358,10 +347,10 @@
 
                 <div id="card-p3" class="bg-white p-2 rounded-xl border border-yellow-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
-                        <div class="w-7 h-7 rounded-lg bg-yellow-100 border border-yellow-400 flex items-center justify-center font-black text-sm">🐱</div>
+                        <div class="w-7 h-7 rounded-lg bg-yellow-100 border border-yellow-400 flex items-center justify-center font-black text-sm" id="card-emoji-p3">🐱</div>
                         <div>
                             <div class="text-[11px] font-black text-slate-700 leading-tight">Pemain 4</div>
-                            <div class="text-[9px] font-bold text-yellow-600 uppercase leading-none">Kucing</div>
+                            <div class="text-[9px] font-bold text-yellow-600 uppercase leading-none" id="card-name-p3">Kucing</div>
                         </div>
                     </div>
                     <div class="bg-yellow-50 border border-yellow-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
@@ -373,29 +362,53 @@
 
     </div>
 
-    <!-- MODAL STARTUP: PILIH JUMLAH PEMAIN -->
-    <div id="startup-modal" class="fixed inset-0 z-[10000] flex items-center justify-center bg-slate-900/60 p-4">
-        <div id="startup-card" class="bg-white p-6 sm:p-8 rounded-3xl sm:rounded-[2rem] shadow-2xl max-w-sm w-full border-4 border-emerald-100 text-center space-y-6">
+    <!-- MODAL STARTUP FULLSCREEN: MULTI-STEP PILIH JUMLAH & KARAKTER HEWAN -->
+    <div id="startup-modal" class="fixed inset-0 z-[10000] flex items-center justify-center bg-slate-900/80 p-4">
+        
+        <!-- TAHAP 1: PILIH JUMLAH PEMAIN -->
+        <div id="step-count-card" class="bg-white p-6 sm:p-8 rounded-3xl sm:rounded-[2rem] shadow-2xl max-w-md w-full border-4 border-emerald-100 text-center space-y-6">
             <div>
-                <div class="text-4xl mb-2">🎲🐍</div>
-                <h2 class="text-2xl font-black text-emerald-600">Mulai Permainan</h2>
-                <p class="text-xs font-bold text-slate-400 mt-1">Pilih jumlah pemain untuk bermain</p>
+                <div class="text-5xl mb-2">🎲🐍</div>
+                <h2 class="text-2xl font-black text-emerald-600">Ular Tangga Seru!</h2>
+                <p class="text-xs font-bold text-slate-400 mt-1">Langkah 1: Pilih Jumlah Pemain</p>
             </div>
             
             <div class="space-y-2">
-                <label class="block text-xs font-black text-slate-500 uppercase tracking-wider">Jumlah Pemain</label>
+                <label class="block text-xs font-black text-slate-500 uppercase tracking-wider">Berapa Pemain yang Bermain?</label>
                 <div class="grid grid-cols-4 gap-2">
-                    <button type="button" onclick="setPlayerCount(1)" id="btn-pcount-1" class="py-3 bg-emerald-50 border-2 border-brand-500 text-brand-600 font-black rounded-xl text-base text-center">1</button>
-                    <button type="button" onclick="setPlayerCount(2)" id="btn-pcount-2" class="py-3 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-xl text-base text-center">2</button>
-                    <button type="button" onclick="setPlayerCount(3)" id="btn-pcount-3" class="py-3 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-xl text-base text-center">3</button>
-                    <button type="button" onclick="setPlayerCount(4)" id="btn-pcount-4" class="py-3 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-xl text-base text-center">4</button>
+                    <button type="button" onclick="setPlayerCount(1)" id="btn-pcount-1" class="py-3.5 bg-emerald-50 border-2 border-brand-500 text-brand-600 font-black rounded-2xl text-lg text-center shadow-sm">1</button>
+                    <button type="button" onclick="setPlayerCount(2)" id="btn-pcount-2" class="py-3.5 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-lg text-center">2</button>
+                    <button type="button" onclick="setPlayerCount(3)" id="btn-pcount-3" class="py-3.5 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-lg text-center">3</button>
+                    <button type="button" onclick="setPlayerCount(4)" id="btn-pcount-4" class="py-3.5 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-lg text-center">4</button>
                 </div>
             </div>
 
-            <button onclick="startGameDirectly()" class="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl text-base transition-all shadow-md active:translate-y-1">
-                Masuk Papan 🚀
+            <button onclick="goToAnimalSelectionStep()" class="w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl text-base transition-all shadow-md active:translate-y-1">
+                Lanjut Pilih Karakter Hewan 🐾
             </button>
         </div>
+
+        <!-- TAHAP 2: PILIH NAMA/AVATAR HEWAN SISWA -->
+        <div id="step-animal-card" class="bg-white p-6 sm:p-8 rounded-3xl sm:rounded-[2rem] shadow-2xl max-w-lg w-full border-4 border-emerald-100 text-center space-y-5 hidden">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-black text-emerald-600">Pilih Hewan Pion</h2>
+                <p class="text-xs font-bold text-slate-400 mt-1">Langkah 2: Tentukan nama hewan setiap pemain</p>
+            </div>
+
+            <div id="animal-selection-list" class="space-y-3 max-h-60 sm:max-h-80 overflow-y-auto p-1">
+                <!-- Dihasilkan secara dinamis via JavaScript -->
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="backToPlayerCountStep()" class="w-1/3 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-black rounded-2xl text-sm transition-all">
+                    ← Kembali
+                </button>
+                <button onclick="startGameDirectly()" class="w-2/3 py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl text-base transition-all shadow-md active:translate-y-1">
+                    Mulai Permainan 🚀
+                </button>
+            </div>
+        </div>
+
     </div>
 
     <!-- MODAL: TAMPILAN KUIS SISWA -->
@@ -447,8 +460,28 @@
     <script>
         const ladders = { 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
         const snakes = { 17: 7, 54: 34, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 99: 78 };
-
         const cellColors = ['bg-red-50 text-red-500', 'bg-blue-50 text-blue-500', 'bg-emerald-50 text-emerald-500', 'bg-yellow-50 text-yellow-600', 'bg-purple-50 text-purple-500', 'bg-pink-50 text-pink-500'];
+
+        // OPIS HEWAN YANG DAPAT DIPILIH SISWA
+        const availableAnimals = [
+            { emoji: '🐰', name: 'Kelinci' },
+            { emoji: '🐐', name: 'Kambing' },
+            { emoji: '🐸', name: 'Katak' },
+            { emoji: '🐱', name: 'Kucing' },
+            { emoji: '🐶', name: 'Anjing' },
+            { emoji: '🦊', name: 'Rubah' },
+            { emoji: '🐼', name: 'Panda' },
+            { emoji: '🦁', name: 'Singa' },
+            { emoji: '🐯', name: 'Harimau' },
+            { emoji: '🐮', name: 'Sapi' }
+        ];
+
+        let selectedAnimals = [
+            { emoji: '🐰', name: 'Kelinci' },
+            { emoji: '🐐', name: 'Kambing' },
+            { emoji: '🐸', name: 'Katak' },
+            { emoji: '🐱', name: 'Kucing' }
+        ];
 
         let tempPlayerCount = 1; 
         let numPlayers = 1;
@@ -457,7 +490,7 @@
         let previousPositions = [1, 1, 1, 1]; 
         let isMoving = false;
 
-        const playerNames = ['🐰 Kelinci', '🐐 Kambing', '🐸 Katak', '🐱 Kucing'];
+        let playerNames = [];
         const playerColorClasses = ['text-blue-600', 'text-red-600', 'text-emerald-600', 'text-yellow-600'];
         const playerRingClasses = ['ring-blue-400', 'ring-red-400', 'ring-emerald-400', 'ring-yellow-400'];
 
@@ -488,17 +521,68 @@
             }
         }
 
+        // TAHAP 1: PILIH JUMLAH PEMAIN
         function setPlayerCount(count) {
             tempPlayerCount = count;
             for(let i=1; i<=4; i++) {
                 document.getElementById(`btn-pcount-${i}`).className = (i === count)
-                    ? "py-3 bg-emerald-50 border-2 border-brand-500 text-brand-600 font-black rounded-xl text-base text-center shadow-sm"
-                    : "py-3 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-xl text-base text-center";
+                    ? "py-3.5 bg-emerald-50 border-2 border-brand-500 text-brand-600 font-black rounded-2xl text-lg text-center shadow-sm"
+                    : "py-3.5 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-lg text-center";
             }
+        }
+
+        function goToAnimalSelectionStep() {
+            document.getElementById('step-count-card').classList.add('hidden');
+            document.getElementById('step-animal-card').classList.remove('hidden');
+
+            const container = document.getElementById('animal-selection-list');
+            container.innerHTML = '';
+
+            for (let i = 0; i < tempPlayerCount; i++) {
+                const pBox = document.createElement('div');
+                pBox.className = "bg-slate-50 p-3 rounded-2xl border-2 border-slate-200 text-left space-y-1.5";
+                
+                let optionsHTML = availableAnimals.map((anim, idx) => `
+                    <option value="${idx}" ${selectedAnimals[i].name === anim.name ? 'selected' : ''}>
+                        ${anim.emoji} ${anim.name}
+                    </option>
+                `).join('');
+
+                pBox.innerHTML = `
+                    <label class="block text-xs font-black text-slate-700">Pemain ${i + 1}</label>
+                    <select onchange="changePlayerAnimal(${i}, this.value)" class="w-full bg-white border border-slate-300 font-extrabold text-slate-700 text-sm rounded-xl py-2 px-3 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                        ${optionsHTML}
+                    </select>
+                `;
+                container.appendChild(pBox);
+            }
+        }
+
+        function changePlayerAnimal(pIndex, animIndex) {
+            selectedAnimals[pIndex] = availableAnimals[animIndex];
+        }
+
+        function backToPlayerCountStep() {
+            document.getElementById('step-animal-card').classList.add('hidden');
+            document.getElementById('step-count-card').classList.remove('hidden');
         }
 
         function startGameDirectly() {
             numPlayers = tempPlayerCount;
+            
+            // Terapkan pilihan hewan ke pemain
+            playerNames = [];
+            for(let i = 0; i < numPlayers; i++) {
+                const anim = selectedAnimals[i];
+                playerNames.push(`${anim.emoji} ${anim.name}`);
+                
+                // Update Emoji Token Papan
+                document.getElementById(`emoji-p${i}`).innerText = anim.emoji;
+                // Update Emoji Card List Pemain
+                document.getElementById(`card-emoji-p${i}`).innerText = anim.emoji;
+                document.getElementById(`card-name-p${i}`).innerText = anim.name;
+            }
+
             distribusikanKuisAcakPapan();
             executeStartGame();
         }
@@ -580,7 +664,6 @@
             return { x, y };
         }
 
-        /* RENDERING TANGGA & ULAR TERKONTROL & PRESISI DENGAN PERBAIKAN KOORDINAT */
         function drawSnakesAndLadders() {
             const svg = document.getElementById('svg-layer');
             let svgContent = '';
@@ -597,11 +680,9 @@
                 const r2x1 = pos1.x - px*w; const r2y1 = pos1.y - py*w;
                 const r2x2 = pos2.x - px*w; const r2y2 = pos2.y - py*w;
 
-                // TIANG UTAMA TANGGA
                 svgContent += `<line x1="${r1x1}" y1="${r1y1}" x2="${r1x2}" y2="${r1y2}" stroke="#78350f" stroke-width="1.2" stroke-linecap="round"/>`;
                 svgContent += `<line x1="${r2x1}" y1="${r2y1}" x2="${r2x2}" y2="${r2y2}" stroke="#78350f" stroke-width="1.2" stroke-linecap="round"/>`;
 
-                // ANAK TANGGA PRESISI
                 const stepSize = 6.5;
                 const rungCount = Math.floor(length / stepSize); 
                 for(let i = 1; i <= rungCount; i++) {
@@ -847,6 +928,8 @@
             wm.classList.remove('scale-100'); wm.classList.add('scale-0');
             setTimeout(() => {
                 mc.classList.add('hidden');
+                document.getElementById('step-animal-card').classList.add('hidden');
+                document.getElementById('step-count-card').classList.remove('hidden');
                 document.getElementById('startup-modal').classList.remove('hidden');
                 petakKuisMap = {};
                 muatMasterDataFirebase();
