@@ -386,7 +386,7 @@
             </button>
         </div>
 
-        <!-- 3. DAFTAR PEMAIN (DENGAN TOMBOL EFEK QR CODE REMOTE) -->
+        <!-- 3. DAFTAR PEMAIN -->
         <div class="w-full lg:fixed lg:top-5 lg:right-5 lg:w-64 bg-white p-3 rounded-2xl shadow-md border-2 border-emerald-100 flex flex-col gap-2 max-h-48 lg:max-h-80 overflow-y-auto z-[90]">
             <div class="flex items-center justify-between border-b pb-1 sticky top-0 bg-white z-10">
                 <h3 class="font-black text-slate-700 text-xs tracking-wide uppercase flex items-center gap-1.5">
@@ -548,6 +548,7 @@
         let audioCtx = null;
         let currentGameId = "ROOM_" + Math.random().toString(36).substring(2, 8).toUpperCase();
         let qrCodeInstance = null;
+        let lastProcessedTimestamp = 0;
 
         function getAudioContext() {
             if (!audioCtx) audioCtx = new AudioContext();
@@ -842,7 +843,7 @@
             }, 900);
         }
 
-        /* MENDENGARKAN PERINDAH FIRESTORE DARI REMOTE HP */
+        /* MENDENGARKAN PERINTAH FIRESTORE DARI REMOTE HP (DI-PERBAIKI) */
         function setupFirestoreRemoteListener() {
             if(!window.dbFirestore) return;
             const gameRef = window.fsDoc(window.dbFirestore, "game_sessions", currentGameId);
@@ -859,13 +860,20 @@
             window.fsOnSnapshot(gameRef, (snapshot) => {
                 if(snapshot.exists()) {
                     const data = snapshot.data();
-                    if(data.lastAction && data.lastAction.type === "ROLL_DICE") {
-                        if(data.lastAction.player === currentPlayer && !isMoving) {
+                    const action = data.lastAction;
+
+                    // Validasi: pastikan ada aksi dan timestamp aksi lebih baru dari aksi yang sudah diproses
+                    if(action && action.timestamp && action.timestamp > lastProcessedTimestamp) {
+                        lastProcessedTimestamp = action.timestamp;
+
+                        if(action.type === "ROLL_DICE" && action.player === currentPlayer && !isMoving) {
+                            // Reset lastAction di Firestore agar tidak dipicu ulang
+                            window.fsSetDoc(gameRef, { lastAction: null }, { merge: true });
                             rollDice3D();
-                        }
-                    } else if(data.lastAction && data.lastAction.type === "SUBMIT_ANSWER") {
-                        if(data.lastAction.player === currentPlayer && soalAktif) {
-                            checkJawabanSiswa(data.lastAction.answer);
+                        } else if(action.type === "SUBMIT_ANSWER" && action.player === currentPlayer && soalAktif) {
+                            // Reset lastAction di Firestore agar tidak dipicu ulang
+                            window.fsSetDoc(gameRef, { lastAction: null }, { merge: true });
+                            checkJawabanSiswa(action.answer);
                         }
                     }
                 }
@@ -980,7 +988,7 @@
                     const rx1 = r1x1 + (r1x2 - r1x1)*t; 
                     const ry1 = r1y1 + (r1y2 - r1y1)*t;
                     const rx2 = r2x1 + (r2x2 - r2x1)*t; 
-                    const ry2 = r2y1 + (r2y2 - r2y1)*t;
+                    const ry2 = r2y2 + (r2y2 - r2y1)*t;
                     svgContent += `<line x1="${rx1}" y1="${ry1}" x2="${rx2}" y2="${ry2}" stroke="#a16207" stroke-width="0.9" stroke-linecap="round"/>`;
                 }
             }

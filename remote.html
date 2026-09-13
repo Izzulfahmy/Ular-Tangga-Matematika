@@ -94,7 +94,7 @@
             <span>LEMPAR DADU</span>
         </button>
 
-        <!-- PANEL REMOT JAWABAN KUIS (TERHUBUNG JIKA KUIS TAMPIL DI LAYAR) -->
+        <!-- PANEL REMOTE JAWABAN KUIS -->
         <div class="w-full bg-slate-800/60 p-4 rounded-3xl border border-slate-700/50 space-y-2">
             <p class="text-xs font-black text-slate-400 uppercase tracking-wider text-center mb-2">Pilih Jawaban Kuis</p>
             <div class="grid grid-cols-2 gap-2">
@@ -143,6 +143,7 @@
         document.getElementById('game-id-tag').innerText = `ROOM: ${gameId}`;
 
         let isMyTurn = false;
+        let isRolling = false;
 
         document.addEventListener('DOMContentLoaded', () => {
             let checkFirebase = setInterval(() => {
@@ -172,6 +173,8 @@
 
         function setTurnState(active) {
             isMyTurn = active;
+            if(!active) isRolling = false; // Reset lock saat berpindah giliran
+
             const btnRoll = document.getElementById('btn-remote-roll');
             const turnBanner = document.getElementById('turn-banner');
             const turnIcon = document.getElementById('turn-icon');
@@ -181,7 +184,7 @@
             const ansBtns = ['a', 'b', 'c', 'd'].map(c => document.getElementById(`btn-ans-${c}`));
 
             if(active) {
-                btnRoll.disabled = false;
+                btnRoll.disabled = isRolling;
                 ansBtns.forEach(b => b.disabled = false);
 
                 turnBanner.className = "w-full bg-emerald-500/20 border-2 border-emerald-500/40 p-4 rounded-3xl text-center transition-all animate-pulse";
@@ -202,8 +205,10 @@
         }
 
         function sendRollDice() {
-            if(!isMyTurn) return;
+            if(!isMyTurn || isRolling) return;
+            isRolling = true;
             playPopSound();
+            
             document.getElementById('btn-remote-roll').disabled = true;
 
             const gameRef = window.fsDoc(window.dbFirestore, "game_sessions", gameId);
@@ -213,7 +218,9 @@
                     player: playerIndex,
                     timestamp: Date.now()
                 }
-            }, { merge: true });
+            }, { merge: true }).then(() => {
+                setTimeout(() => { isRolling = false; }, 1500);
+            });
         }
 
         function sendAnswer(ans) {
