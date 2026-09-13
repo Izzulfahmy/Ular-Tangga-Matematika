@@ -169,7 +169,7 @@
       transform: translateY(1px) scale(0.97);
     }
 
-    /* Penyesuaian Ukuran Gambar SVG Super Besar */
+    /* Ukuran Gambar SVG Super Besar */
     .quiz-svg-icon {
       width: 95px;
       height: 95px;
@@ -356,7 +356,7 @@
       }
     }
 
-    /* DATABASE SOAL INTERAKTIF (MURNI ASET SVG BERBASIS GAMBAR BARU) */
+    /* DATABASE SOAL INTERAKTIF */
     const quizDatabase = [
       {
         type: 'sequence',
@@ -400,15 +400,15 @@
       {
         type: 'match',
         title: 'Jodohkan Jenis Metamorfosis 🧬',
-        subtitle: 'Hubungkan gambar hewan dengan jenis metamorfosisnya!',
+        subtitle: 'Hubungkan gambar hewan dengan jenis metamorfosisnya yang tepat!',
         leftItems: [
           { id: 'meta1', svg: 'aset/latihansoal/kupukupu.svg', pair: 'pm1', bg: 'bg-purple-100/90 shadow-lg' },
           { id: 'meta2', svg: 'aset/latihansoal/belalang.svg', pair: 'pm2', bg: 'bg-lime-100/90 shadow-lg' },
           { id: 'meta3', svg: 'aset/latihansoal/nyamuk.svg', pair: 'pm1', pairAlt: 'pm1', bg: 'bg-rose-100/90 shadow-lg' }
         ],
         rightItems: [
-          { id: 'pm2', svg: 'aset/latihansoal/belalang.svg', pair: 'meta2', bg: 'bg-emerald-100/90 shadow-lg' },
-          { id: 'pm1', svg: 'aset/latihansoal/kepompong.svg', pair: 'meta1', bg: 'bg-indigo-100/90 shadow-lg' }
+          { id: 'pm2', name: 'Metamorfosis Tidak Sempurna 🌱', pair: 'meta2', bg: 'bg-emerald-500 text-white shadow-lg' },
+          { id: 'pm1', name: 'Metamorfosis Sempurna ✨', pair: 'meta1', bg: 'bg-indigo-500 text-white shadow-lg' }
         ]
       }
     ];
@@ -508,15 +508,15 @@
       renderSequenceUI();
     }
 
-    /* LOGIKA MENJODOHKAN MURNI GAMBAR SVG (TANPA TEKS/TULISAN) */
+    /* LOGIKA MENJODOHKAN */
     function renderMatchUI() {
       const qData = quizDatabase[currentQuizIndex];
       const container = document.getElementById('quizStageContainer');
 
-      let html = '<div class="grid grid-cols-2 gap-12 sm:gap-32 w-full max-w-2xl mx-auto my-4">';
+      let html = '<div class="grid grid-cols-2 gap-8 sm:gap-24 w-full max-w-3xl mx-auto my-4">';
       
-      // Kolom Kiri (Aset SVG)
-      html += '<div class="flex flex-col gap-5">';
+      // Kolom Kiri
+      html += '<div class="flex flex-col gap-4 sm:gap-5 justify-center">';
       qData.leftItems.forEach(item => {
         const isMatched = userMatches.some(m => m.left === item.id);
         const isSelected = selectedLeftMatch === item.id;
@@ -528,13 +528,18 @@
       });
       html += '</div>';
 
-      // Kolom Kanan (Aset SVG)
-      html += '<div class="flex flex-col gap-5 justify-center">';
+      // Kolom Kanan (Gambar atau Teks)
+      html += '<div class="flex flex-col gap-4 sm:gap-5 justify-center">';
       qData.rightItems.forEach(item => {
         const isMatched = userMatches.some(m => m.right === item.id && (currentQuizIndex !== 3 || userMatches.filter(x => x.right === item.id).length >= (item.id === 'pm1' ? 2 : 1)));
+        
+        const content = item.svg 
+          ? `<img src="${item.svg}" class="quiz-svg-option" />`
+          : `<span class="font-black text-sm sm:text-lg text-center leading-tight px-2">${item.name}</span>`;
+
         html += `
-          <button id="node-right-${item.id}" onclick="clickRightMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node btn-child-clean ${isMatched ? 'matched' : ''} ${item.bg} p-4 sm:p-5 rounded-3xl flex items-center justify-center shadow-xl">
-            <img src="${item.svg}" class="quiz-svg-option" />
+          <button id="node-right-${item.id}" onclick="clickRightMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node btn-child-clean ${isMatched ? 'matched' : ''} ${item.bg} p-4 sm:p-6 rounded-3xl flex items-center justify-center shadow-xl min-h-[80px]">
+            ${content}
           </button>
         `;
       });
