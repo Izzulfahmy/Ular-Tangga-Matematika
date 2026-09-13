@@ -295,14 +295,14 @@
 
         /* PENYESUAIAN GAMBAR DI MODAL AGAR FIT TANPA SCROLL */
         #quiz-modal img {
-            max-height: 48px !important;
+            max-height: 44px !important;
             width: auto !important;
             object-fit: contain !important;
         }
 
         @media (min-width: 640px) {
             #quiz-modal img {
-                max-height: 56px !important;
+                max-height: 52px !important;
             }
         }
 
@@ -606,7 +606,7 @@
         </div>
     </div>
 
-    <!-- MODAL KUIS SISWA (PENYESUAIAN UKURAN LEBIH COMPACT FIT) -->
+    <!-- MODAL KUIS SISWA (FIT COMPACT) -->
     <div id="quiz-modal" class="fixed inset-0 z-[2000] flex items-center justify-center bg-slate-900/70 p-3 hidden">
         <div class="bg-white p-4 sm:p-6 rounded-3xl shadow-2xl max-w-2xl w-full border-4 border-blue-400 relative overflow-hidden">
             <button onclick="closeQuizModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition-all">
@@ -662,7 +662,7 @@
         </div>
     </div>
 
-    <!-- LOGIKA GAME & DISTRIBUSI KUIS ACAK -->
+    <!-- LOGIKA GAME & NOTIFIKASI BANNER BERVARIASI -->
     <script>
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -686,6 +686,21 @@
             "MANTAP! Semangat belajar membawamu terbang tinggi! Teruskan prestasimu! 🎈🥳"
         ];
 
+        /* VARIASI PESAN BANNER JAWA BAN KUIS */
+        const correctAnswersMotivations = [
+            "JAWABAN TEPAT! Pengetahuanmu sungguh luar biasa! ⭐ Cerdas sekali!",
+            "HEBAT! Jawabannya Benar! Kamu makin hebat dalam memahami materi! 🎉",
+            "LUAR BIASA! Jawabanmu 100% Benar! Teruskan prestasi hebatmu! 🚀",
+            "PINAR SEKALI! Jawabannya sangat tepat! Kamu melangkah makin jauh! 🌟"
+        ];
+
+        const wrongAnswersMotivations = [
+            "Kurang tepat! Jangan berkecil hati, mari coba lagi di kesempatan berikutnya! 💪",
+            "Sayang sekali belum benar! Jangan menyerah, kamu pasti bisa di soal berikutnya! 🔥",
+            "Tetap semangat! Belajar dari kesalahan membuatmu makin pintar! 🧠✨",
+            "Ayo bangkit! Setiap kesalahan adalah tangga menuju pengetahuan baru! 🌈"
+        ];
+
         function showEventBanner(type, playerName) {
             const banner = document.getElementById('event-banner');
             const bEmoji = document.getElementById('banner-emoji');
@@ -704,6 +719,16 @@
                 bEmoji.innerText = "🐍💪";
                 bTitle.innerText = `SEMANGAT! ${playerName.toUpperCase()} TURUN ULAR!`;
                 bMsg.innerText = snakeMotivations[Math.floor(Math.random() * snakeMotivations.length)];
+            } else if (type === 'quiz_correct') {
+                banner.className = "fixed top-5 z-[30000] max-w-md w-[92%] p-4 rounded-3xl shadow-2xl border-4 banner-visible bg-emerald-600 border-emerald-300 text-white flex items-center gap-3";
+                bEmoji.innerText = "🎉⭐";
+                bTitle.innerText = `BENAR! ${playerName.toUpperCase()} MENJAWAB TEPAT!`;
+                bMsg.innerText = correctAnswersMotivations[Math.floor(Math.random() * correctAnswersMotivations.length)];
+            } else if (type === 'quiz_wrong') {
+                banner.className = "fixed top-5 z-[30000] max-w-md w-[92%] p-4 rounded-3xl shadow-2xl border-4 banner-visible bg-rose-600 border-rose-300 text-white flex items-center gap-3";
+                bEmoji.innerText = "❌💡";
+                bTitle.innerText = `OPS! JAWABAN ${playerName.toUpperCase()} BELUM TEPAT`;
+                bMsg.innerText = wrongAnswersMotivations[Math.floor(Math.random() * wrongAnswersMotivations.length)];
             }
 
             bannerTimeout = setTimeout(() => {
@@ -1204,7 +1229,6 @@
             return { x, y };
         }
 
-        /* PERBAIKAN FORMULA TANGGA SECARA RAPI BERDASARKAN PARAMETRIK (0 s/d 1) */
         function drawSnakesAndLadders() {
             const svg = document.getElementById('svg-layer');
             let svgContent = '';
@@ -1242,8 +1266,6 @@
                     const rx1 = r1x1 + (r1x2 - r1x1) * t; 
                     const ry1 = r1y1 + (r1y2 - r1y1) * t;
                     const rx2 = r2x1 + (r2x2 - r2x1) * t; 
-                    const ry2 = r2y2 + (r2y1 + (r2y2 - r2y1) * t - r2y1); 
-                    
                     const actualRy2 = r2y1 + (r2y2 - r2y1) * t;
                     svgContent += `<line x1="${rx1}" y1="${ry1}" x2="${rx2}" y2="${actualRy2}" stroke="#a16207" stroke-width="0.6" stroke-linecap="round"/>`;
                 }
@@ -1460,6 +1482,7 @@
                     playSound('correct');
                     btnT.className = "w-full py-1.5 px-3 sm:py-2 sm:px-4 bg-emerald-100 text-left rounded-xl sm:rounded-2xl border-2 border-emerald-400 font-bold text-emerald-700 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm";
                     feedback.innerHTML = "🎉 BENAR! (Mode Preview)"; feedback.className = "mt-2 text-center font-black text-xs sm:text-sm text-emerald-600 block";
+                    showEventBanner('quiz_correct', selectedAnimals[currentPlayer].name);
                 } else {
                     playSound('wrong');
                     btnT.className = "w-full py-1.5 px-3 sm:py-2 sm:px-4 bg-rose-100 text-left rounded-xl sm:rounded-2xl border-2 border-rose-400 font-bold text-rose-700 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm";
@@ -1468,6 +1491,7 @@
                     }
                     feedback.innerHTML = "❌ SALAH! (Mode Preview)"; 
                     feedback.className = "mt-2 text-center font-black text-xs sm:text-sm text-rose-600 block";
+                    showEventBanner('quiz_wrong', selectedAnimals[currentPlayer].name);
                 }
                 return;
             }
@@ -1476,7 +1500,12 @@
                 playSound('correct');
                 btnT.className = "w-full py-1.5 px-3 sm:py-2 sm:px-4 bg-emerald-100 text-left rounded-xl sm:rounded-2xl border-2 border-emerald-400 font-bold text-emerald-700 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm";
                 feedback.innerHTML = "🎉 BENAR!"; feedback.className = "mt-2 text-center font-black text-xs sm:text-sm text-emerald-600 block";
-                setTimeout(() => { document.getElementById('quiz-modal').classList.add('hidden'); checkSnakesLadders(currentPlayer, soalAktif.targetPos); }, 1200);
+                showEventBanner('quiz_correct', selectedAnimals[currentPlayer].name);
+                
+                setTimeout(() => { 
+                    document.getElementById('quiz-modal').classList.add('hidden'); 
+                    checkSnakesLadders(currentPlayer, soalAktif.targetPos); 
+                }, 1400);
             } else {
                 playSound('wrong');
                 btnT.className = "w-full py-1.5 px-3 sm:py-2 sm:px-4 bg-rose-100 text-left rounded-xl sm:rounded-2xl border-2 border-rose-400 font-bold text-rose-700 flex items-center gap-2 sm:gap-3 text-xs sm:text-sm";
@@ -1487,6 +1516,7 @@
                 let petakAsal = previousPositions[currentPlayer];
                 feedback.innerHTML = `❌ SALAH! Kembali ke petak ${petakAsal}.`; 
                 feedback.className = "mt-2 text-center font-black text-xs sm:text-sm text-rose-600 block";
+                showEventBanner('quiz_wrong', selectedAnimals[currentPlayer].name);
 
                 setTimeout(() => {
                     document.getElementById('quiz-modal').classList.add('hidden');
