@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>IPAS Kelas 3 - Siklus Hidup yang Menakjubkan</title>
   
-  <!-- Favicon Logo UNEJ -->
+  <!-- Favicon Logo UNEJ pada Tab Browser -->
   <link rel="icon" type="image/png" href="aset/logo/unej.png" />
   
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Plus Jakarta Sans & Fredoka -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
 
   <style>
+    /* Reset & Core Setup */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -30,9 +31,9 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    /* Background dari Gambar Canva Anda */
+    /* Background Gradient Ceria & Elegan */
     body {
-      background: url('aset/gambar/bg-hewan.jpg') no-repeat center bottom / cover;
+      background: radial-gradient(circle at 50% 30%, #ffffff 0%, #e0f2fe 45%, #bae6fd 100%);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -40,25 +41,43 @@
       position: relative;
     }
 
-    /* Overlay Halus Agar Teks Tetap Mudah Dibaca */
-    body::before {
-      content: "";
+    /* Elemen Dekorasi Latar Belakang Animated Waves & Circles */
+    .bg-decorations {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(255, 255, 255, 0.15);
       z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
     }
 
+    .decor-circle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(55px);
+      opacity: 0.65;
+      animation: pulseGlow 8s infinite alternate ease-in-out;
+    }
+
+    .decor-1 { width: 340px; height: 340px; background: #FFD166; top: -60px; left: -60px; }
+    .decor-2 { width: 420px; height: 420px; background: #38bdf8; bottom: -120px; right: -120px; }
+    .decor-3 { width: 280px; height: 280px; background: #ff7675; bottom: 8%; left: 4%; animation-delay: 2s; }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1) translateY(0); opacity: 0.45; }
+      100% { transform: scale(1.2) translateY(-20px); opacity: 0.75; }
+    }
+
+    /* Dashboard Main Container (Full Screen Layout) */
     .dashboard-wrapper {
       position: relative;
-      z-index: 10;
+      z-index: 2;
       width: 100%;
       height: 100%;
-      max-width: 1000px;
-      padding: 24px 20px;
+      max-width: 1100px;
+      padding: 28px 24px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -66,64 +85,83 @@
       text-align: center;
     }
 
-    /* Header Logo */
+    /* 1. Logo Header Section */
     .logo-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 20px;
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 8px 28px;
+      gap: 24px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 10px 30px;
       border-radius: 60px;
-      border: 2px solid #ffffff;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+      animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideDown {
+      0% { transform: translateY(-40px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
     }
 
     .logo-img {
-      height: 42px;
+      height: 46px;
       width: auto;
       object-fit: contain;
+      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.08));
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    /* Hero Section / Card Utama di Tengah */
+    .logo-img:hover {
+      transform: scale(1.15) translateY(-2px);
+    }
+
+    /* 2. Hero Content Section */
     .hero-section {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 24px 36px;
-      border-radius: 32px;
-      border: 2px solid rgba(255, 255, 255, 0.95);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
-      max-width: 750px;
       margin: auto 0;
+      width: 100%;
+      animation: fadeInScale 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
     }
 
+    @keyframes fadeInScale {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Subtitle Tag Ceria */
     .tag-subtitle {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-size: 0.95rem;
       font-weight: 800;
       color: #0284c7;
-      background: #e0f2fe;
-      border: 2px solid #38bdf8;
-      padding: 6px 20px;
+      background: rgba(224, 242, 254, 0.9);
+      border: 2px solid #7dd3fc;
+      padding: 6px 18px;
       border-radius: 30px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.15);
     }
 
+    /* Main Title Ceria & Kontras */
     .main-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: clamp(2rem, 3.8vw, 3rem);
+      font-size: clamp(2.2rem, 4.2vw, 3.4rem);
       font-weight: 800;
       line-height: 1.25;
-      margin-bottom: 14px;
+      margin-bottom: 18px;
       white-space: nowrap;
+      width: 100%;
+      letter-spacing: 0.5px;
     }
 
     .main-title span {
@@ -131,99 +169,184 @@
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+      filter: drop-shadow(0 4px 10px rgba(239, 68, 68, 0.25));
     }
 
+    /* Badge PPG Kontras */
     .badge-ppg {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: #fffbeb;
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
       color: #b45309;
       border: 2px solid #fcd34d;
-      padding: 6px 20px;
+      padding: 8px 24px;
       border-radius: 50px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 800;
+      box-shadow: 0 6px 16px rgba(217, 119, 6, 0.16);
+      transition: transform 0.3s ease;
+    }
+
+    .badge-ppg:hover {
+      transform: scale(1.04);
     }
 
     .badge-ppg::before {
       content: "🎓";
+      font-size: 1.1rem;
     }
 
-    /* Menu Grid Tombol */
+    /* 3. Navigation Cards Area */
     .menu-grid {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 24px;
       width: 100%;
-      max-width: 500px;
-      margin-bottom: 15px;
+      max-width: 580px;
+      margin-bottom: 10px;
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+    }
+
+    @keyframes slideUp {
+      0% { transform: translateY(40px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
     }
 
     .menu-card {
       flex: 1;
       text-decoration: none;
       background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(8px);
-      border-radius: 24px;
-      padding: 18px 14px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 28px;
+      padding: 24px 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15), inset 0 0 0 2px #ffffff;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      gap: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07),
+                  inset 0 0 0 2px rgba(255, 255, 255, 1);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       cursor: pointer;
+      position: relative;
+      overflow: hidden;
     }
 
-    .menu-card.materi { border-bottom: 5px solid #2563eb; }
-    .menu-card.ular-tangga { border-bottom: 5px solid #059669; }
+    .menu-card::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.6) 50%, transparent 55%);
+      transform: rotate(30deg) translateY(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .menu-card:hover::after {
+      transform: rotate(30deg) translateY(100%);
+    }
+
+    .menu-card.materi {
+      border-bottom: 5px solid #2563eb;
+    }
+
+    .menu-card.ular-tangga {
+      border-bottom: 5px solid #059669;
+    }
 
     .icon-wrapper {
-      width: 60px;
-      height: 60px;
-      border-radius: 18px;
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 1.9rem;
+      font-size: 2.2rem;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .materi .icon-wrapper { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); color: #fff; }
-    .ular-tangga .icon-wrapper { background: linear-gradient(135deg, #10b981 0%, #047857 100%); color: #fff; }
+    .materi .icon-wrapper {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.35);
+    }
+
+    .ular-tangga .icon-wrapper {
+      background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(16, 185, 129, 0.35);
+    }
 
     .card-label {
       font-family: 'Fredoka', sans-serif;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: 700;
       color: #0f172a;
     }
 
+    /* Hover State Interactive */
     .menu-card:hover {
-      transform: translateY(-8px) scale(1.03);
-      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12),
+                  inset 0 0 0 2px rgba(255, 255, 255, 1);
+    }
+
+    .menu-card:hover .icon-wrapper {
+      transform: scale(1.12) rotate(6deg);
+    }
+
+    .menu-card:active {
+      transform: translateY(-2px) scale(0.98);
+    }
+
+    /* Media Queries untuk Responsive Mobile */
+    @media (max-height: 700px) {
+      .dashboard-wrapper { padding: 18px 16px; }
+      .logo-container { padding: 8px 20px; gap: 16px; }
+      .logo-img { height: 38px; }
+      .tag-subtitle { font-size: 0.85rem; padding: 4px 14px; margin-bottom: 8px; }
+      .main-title { margin-bottom: 12px; }
+      .badge-ppg { font-size: 0.85rem; padding: 6px 18px; }
+      .icon-wrapper { width: 58px; height: 58px; font-size: 1.75rem; }
+      .card-label { font-size: 1.15rem; }
+      .menu-card { padding: 16px 12px; }
     }
 
     @media (max-width: 600px) {
       .main-title { white-space: normal; }
-      .hero-section { padding: 18px 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .logo-container { gap: 12px; padding: 8px 16px; }
+      .logo-img { height: 32px; }
+      .menu-grid { gap: 12px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Animated Background Glows -->
+  <div class="bg-decorations">
+    <div class="decor-circle decor-1"></div>
+    <div class="decor-circle decor-2"></div>
+    <div class="decor-circle decor-3"></div>
+  </div>
+
+  <!-- Dashboard Container (Full Screen Canvas) -->
   <main class="dashboard-wrapper">
     
-    <!-- Logo Header -->
+    <!-- 1. Top Header Logos -->
     <header class="logo-container">
-      <img src="aset/logo/tutwuri.png" alt="Kemendikbud" class="logo-img">
-      <img src="aset/logo/unej.png" alt="Universitas Jember" class="logo-img">
-      <img src="aset/logo/ppg.png" alt="PPG" class="logo-img">
-      <img src="aset/logo/fkip.png" alt="FKIP UNEJ" class="logo-img">
+      <img src="aset/logo/tutwuri.png" alt="Kemendikbud" class="logo-img" title="Kemendikbud">
+      <img src="aset/logo/unej.png" alt="Universitas Jember" class="logo-img" title="Universitas Jember">
+      <img src="aset/logo/ppg.png" alt="PPG" class="logo-img" title="PPG">
+      <img src="aset/logo/fkip.png" alt="FKIP UNEJ" class="logo-img" title="FKIP UNEJ">
     </header>
 
-    <!-- Judul Utama -->
+    <!-- 2. Central Hero Title -->
     <section class="hero-section">
       <div class="tag-subtitle">Media Pembelajaran IPAS Kelas 3</div>
       <h1 class="main-title">
@@ -234,13 +357,15 @@
       </div>
     </section>
 
-    <!-- Menu Tombol -->
+    <!-- 3. Bottom Menu Cards -->
     <nav class="menu-grid">
+      <!-- Menu Materi -->
       <a href="materi/index.html" class="menu-card materi" onclick="playClickSound(event, this.href)">
         <div class="icon-wrapper">📚</div>
         <span class="card-label">Materi</span>
       </a>
 
+      <!-- Menu Ular Tangga -->
       <a href="ulartangga.html" class="menu-card ular-tangga" onclick="playClickSound(event, this.href)">
         <div class="icon-wrapper">🎲</div>
         <span class="card-label">Ular Tangga</span>
@@ -249,27 +374,36 @@
 
   </main>
 
-  <!-- Audio Synthesizer -->
+  <!-- Audio Synthesizer (Interactive Web Sound Effect) -->
   <script>
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
 
     function initAudio() {
-      if (!audioCtx) audioCtx = new AudioContext();
+      if (!audioCtx) {
+        audioCtx = new AudioContext();
+      }
     }
 
     function playPopSound() {
       initAudio();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
+
       osc.type = 'sine';
       osc.frequency.setValueAtTime(420, audioCtx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(840, audioCtx.currentTime + 0.12);
+
       gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+
       osc.connect(gain);
       gain.connect(audioCtx.destination);
+
       osc.start();
       osc.stop(audioCtx.currentTime + 0.12);
     }
@@ -277,8 +411,29 @@
     function playClickSound(event, targetUrl) {
       event.preventDefault();
       playPopSound();
-      setTimeout(() => { window.location.href = targetUrl; }, 180);
+      setTimeout(() => {
+        window.location.href = targetUrl;
+      }, 180);
     }
+
+    // Hover Sound Effect
+    document.querySelectorAll('.menu-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        initAudio();
+        if (audioCtx && audioCtx.state === 'running') {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.06);
+        }
+      });
+    });
   </script>
 </body>
 </html>
