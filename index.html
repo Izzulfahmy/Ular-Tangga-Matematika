@@ -31,9 +31,9 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    /* Background Gradient Ceria & Elegan */
+    /* Background Gradient Nuansa Hutan & Alam */
     body {
-      background: radial-gradient(circle at 50% 30%, #ffffff 0%, #e0f2fe 45%, #bae6fd 100%);
+      background: radial-gradient(circle at 50% 30%, #ffffff 0%, #ecfdf5 45%, #d1fae5 100%);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -41,7 +41,7 @@
       position: relative;
     }
 
-    /* Elemen Dekorasi Latar Belakang Animated Waves & Circles */
+    /* Elemen Dekorasi Latar Belakang Animated Waves & Circles Nuansa Daun/Hutan */
     .bg-decorations {
       position: absolute;
       top: 0;
@@ -61,9 +61,9 @@
       animation: pulseGlow 8s infinite alternate ease-in-out;
     }
 
-    .decor-1 { width: 340px; height: 340px; background: #FFD166; top: -60px; left: -60px; }
-    .decor-2 { width: 420px; height: 420px; background: #38bdf8; bottom: -120px; right: -120px; }
-    .decor-3 { width: 280px; height: 280px; background: #f59e0b; bottom: 8%; left: 4%; animation-delay: 2s; }
+    .decor-1 { width: 340px; height: 340px; background: #fef08a; top: -60px; left: -60px; } /* Soft Yellow Sunlight */
+    .decor-2 { width: 420px; height: 420px; background: #6ee7b7; bottom: -120px; right: -120px; } /* Emerald Glow */
+    .decor-3 { width: 280px; height: 280px; background: #a7f3d0; bottom: 8%; left: 4%; animation-delay: 2s; }
 
     @keyframes pulseGlow {
       0% { transform: scale(1) translateY(0); opacity: 0.45; }
@@ -91,13 +91,13 @@
       justify-content: center;
       align-items: center;
       gap: 24px;
-      background: rgba(255, 255, 255, 0.75);
+      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       padding: 10px 30px;
       border-radius: 60px;
       border: 2px solid rgba(255, 255, 255, 0.95);
-      box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 10px 25px rgba(5, 150, 105, 0.1), 0 2px 6px rgba(0, 0, 0, 0.04);
       animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -134,25 +134,25 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
-    /* Subtitle Tag Ceria */
+    /* Subtitle Tag Hijau Hutan */
     .tag-subtitle {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       font-size: 0.95rem;
       font-weight: 800;
-      color: #0284c7;
-      background: rgba(224, 242, 254, 0.9);
-      border: 2px solid #7dd3fc;
+      color: #047857;
+      background: rgba(209, 250, 229, 0.9);
+      border: 2px solid #6ee7b7;
       padding: 6px 18px;
       border-radius: 30px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       margin-bottom: 14px;
-      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.15);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
     }
 
-    /* Main Title Kecokelatan Kontras */
+    /* Main Title Hijau Hutan Kontras & Fresh */
     .main-title {
       font-family: 'Fredoka', sans-serif;
       font-size: clamp(2.2rem, 4.2vw, 3.4rem);
@@ -165,26 +165,26 @@
     }
 
     .main-title span {
-      background: linear-gradient(135deg, #78350f 0%, #b45309 45%, #d97706 100%);
+      background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%);
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 4px 10px rgba(120, 53, 15, 0.18));
+      filter: drop-shadow(0 4px 10px rgba(6, 78, 59, 0.15));
     }
 
-    /* Badge PPG Kontras */
+    /* Badge PPG Warm Amber/Cokelat Kayu */
     .badge-ppg {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
-      color: #b45309;
+      color: #92400e;
       border: 2px solid #fcd34d;
       padding: 8px 24px;
       border-radius: 50px;
       font-size: 0.95rem;
       font-weight: 800;
-      box-shadow: 0 6px 16px rgba(217, 119, 6, 0.16);
+      box-shadow: 0 6px 16px rgba(217, 119, 6, 0.14);
       transition: transform 0.3s ease;
     }
 
@@ -225,7 +225,7 @@
       flex-direction: column;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07),
+      box-shadow: 0 12px 30px rgba(6, 78, 59, 0.08),
                   inset 0 0 0 2px rgba(255, 255, 255, 1);
       transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       cursor: pointer;
@@ -250,7 +250,7 @@
     }
 
     .menu-card.materi {
-      border-bottom: 5px solid #2563eb;
+      border-bottom: 5px solid #0284c7;
     }
 
     .menu-card.ular-tangga {
@@ -269,9 +269,9 @@
     }
 
     .materi .icon-wrapper {
-      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
       color: #ffffff;
-      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.35);
+      box-shadow: 0 10px 20px rgba(2, 132, 199, 0.35);
     }
 
     .ular-tangga .icon-wrapper {
@@ -284,13 +284,13 @@
       font-family: 'Fredoka', sans-serif;
       font-size: 1.35rem;
       font-weight: 700;
-      color: #0f172a;
+      color: #064e3b;
     }
 
     /* Hover State Interactive */
     .menu-card:hover {
       transform: translateY(-10px) scale(1.03);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12),
+      box-shadow: 0 20px 40px rgba(6, 78, 59, 0.15),
                   inset 0 0 0 2px rgba(255, 255, 255, 1);
     }
 
@@ -328,7 +328,7 @@
 </head>
 <body>
 
-  <!-- Animated Background Glows -->
+  <!-- Animated Background Glows Nuansa Daun/Hutan -->
   <div class="bg-decorations">
     <div class="decor-circle decor-1"></div>
     <div class="decor-circle decor-2"></div>
