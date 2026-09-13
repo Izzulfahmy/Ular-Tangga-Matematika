@@ -11,7 +11,7 @@
   <!-- Google Fonts: Plus Jakarta Sans & Fredoka -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700;800&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
 
   <style>
     /* Reset & Core Setup */
@@ -33,7 +33,7 @@
 
     /* Background Gradient Ceria & Elegan */
     body {
-      background: radial-gradient(circle at 50% 30%, #ffffff 0%, #e0f2fe 50%, #bae6fd 100%);
+      background: radial-gradient(circle at 50% 30%, #ffffff 0%, #e0f2fe 45%, #bae6fd 100%);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -56,18 +56,18 @@
     .decor-circle {
       position: absolute;
       border-radius: 50%;
-      filter: blur(50px);
-      opacity: 0.6;
+      filter: blur(55px);
+      opacity: 0.65;
       animation: pulseGlow 8s infinite alternate ease-in-out;
     }
 
-    .decor-1 { width: 320px; height: 320px; background: #FFD166; top: -50px; left: -50px; }
-    .decor-2 { width: 400px; height: 400px; background: #4D96FF; bottom: -100px; right: -100px; }
-    .decor-3 { width: 250px; height: 250px; background: #FF6B6B; bottom: 10%; left: 5%; animation-delay: 2s; }
+    .decor-1 { width: 340px; height: 340px; background: #FFD166; top: -60px; left: -60px; }
+    .decor-2 { width: 420px; height: 420px; background: #38bdf8; bottom: -120px; right: -120px; }
+    .decor-3 { width: 280px; height: 280px; background: #ff7675; bottom: 8%; left: 4%; animation-delay: 2s; }
 
     @keyframes pulseGlow {
-      0% { transform: scale(1) translateY(0); opacity: 0.4; }
-      100% { transform: scale(1.2) translateY(-20px); opacity: 0.7; }
+      0% { transform: scale(1) translateY(0); opacity: 0.45; }
+      100% { transform: scale(1.2) translateY(-20px); opacity: 0.75; }
     }
 
     /* Dashboard Main Container (Full Screen Layout) */
@@ -77,7 +77,7 @@
       width: 100%;
       height: 100%;
       max-width: 1100px;
-      padding: 30px 24px;
+      padding: 28px 24px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -91,13 +91,13 @@
       justify-content: center;
       align-items: center;
       gap: 24px;
-      background: rgba(255, 255, 255, 0.65);
+      background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      padding: 12px 32px;
+      padding: 10px 30px;
       border-radius: 60px;
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      box-shadow: 0 10px 25px rgba(0, 102, 204, 0.06), 0 2px 6px rgba(0, 0, 0, 0.04);
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 25px rgba(2, 132, 199, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
       animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -107,7 +107,7 @@
     }
 
     .logo-img {
-      height: 48px;
+      height: 46px;
       width: auto;
       object-fit: contain;
       filter: drop-shadow(0 3px 5px rgba(0,0,0,0.08));
@@ -134,25 +134,34 @@
       100% { transform: scale(1); opacity: 1; }
     }
 
+    /* Subtitle Tag Ceria */
     .tag-subtitle {
-      font-size: 1.05rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.95rem;
       font-weight: 800;
-      color: #2563eb;
-      letter-spacing: 2px;
+      color: #0284c7;
+      background: rgba(224, 242, 254, 0.9);
+      border: 2px solid #7dd3fc;
+      padding: 6px 18px;
+      border-radius: 30px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.15);
     }
 
+    /* Main Title Ceria & Kontras */
     .main-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: clamp(2rem, 3.8vw, 3rem);
-      font-weight: 700;
-      line-height: 1.2;
-      color: #1e293b;
-      margin-bottom: 20px;
+      font-size: clamp(2.2rem, 4.2vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.25;
+      margin-bottom: 18px;
       white-space: nowrap;
-      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       width: 100%;
+      letter-spacing: 0.5px;
     }
 
     .main-title span {
@@ -160,26 +169,32 @@
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      display: inline;
+      filter: drop-shadow(0 4px 10px rgba(239, 68, 68, 0.25));
     }
 
+    /* Badge PPG Kontras */
     .badge-ppg {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255, 255, 255, 0.85);
-      color: #d97706;
-      border: 1.5px solid #fef3c7;
-      padding: 8px 22px;
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      color: #b45309;
+      border: 2px solid #fcd34d;
+      padding: 8px 24px;
       border-radius: 50px;
       font-size: 0.95rem;
-      font-weight: 700;
-      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.12);
+      font-weight: 800;
+      box-shadow: 0 6px 16px rgba(217, 119, 6, 0.16);
+      transition: transform 0.3s ease;
+    }
+
+    .badge-ppg:hover {
+      transform: scale(1.04);
     }
 
     .badge-ppg::before {
       content: "🎓";
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
 
     /* 3. Navigation Cards Area */
@@ -201,7 +216,7 @@
     .menu-card {
       flex: 1;
       text-decoration: none;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       border-radius: 28px;
@@ -210,7 +225,7 @@
       flex-direction: column;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06),
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.07),
                   inset 0 0 0 2px rgba(255, 255, 255, 1);
       transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       cursor: pointer;
@@ -235,11 +250,11 @@
     }
 
     .menu-card.materi {
-      border-bottom: 5px solid #3b82f6;
+      border-bottom: 5px solid #2563eb;
     }
 
     .menu-card.ular-tangga {
-      border-bottom: 5px solid #10b981;
+      border-bottom: 5px solid #059669;
     }
 
     .icon-wrapper {
@@ -267,9 +282,9 @@
 
     .card-label {
       font-family: 'Fredoka', sans-serif;
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #1e293b;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #0f172a;
     }
 
     /* Hover State Interactive */
@@ -287,16 +302,16 @@
       transform: translateY(-2px) scale(0.98);
     }
 
-    /* Media Queries untuk Layar Kecil / Mobile */
+    /* Media Queries untuk Responsive Mobile */
     @media (max-height: 700px) {
       .dashboard-wrapper { padding: 18px 16px; }
       .logo-container { padding: 8px 20px; gap: 16px; }
       .logo-img { height: 38px; }
-      .tag-subtitle { font-size: 0.9rem; margin-bottom: 8px; }
+      .tag-subtitle { font-size: 0.85rem; padding: 4px 14px; margin-bottom: 8px; }
       .main-title { margin-bottom: 12px; }
-      .badge-ppg { font-size: 0.85rem; padding: 6px 16px; }
+      .badge-ppg { font-size: 0.85rem; padding: 6px 18px; }
       .icon-wrapper { width: 58px; height: 58px; font-size: 1.75rem; }
-      .card-label { font-size: 1.1rem; }
+      .card-label { font-size: 1.15rem; }
       .menu-card { padding: 16px 12px; }
     }
 
@@ -333,7 +348,7 @@
 
     <!-- 2. Central Hero Title -->
     <section class="hero-section">
-      <p class="tag-subtitle">Media Pembelajaran IPAS Kelas 3</p>
+      <div class="tag-subtitle">Media Pembelajaran IPAS Kelas 3</div>
       <h1 class="main-title">
         <span>Siklus Hidup yang Menakjubkan</span>
       </h1>
