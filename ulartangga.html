@@ -250,6 +250,16 @@
 </head>
 <body class="static-bg min-h-screen w-screen overflow-x-hidden text-slate-800 antialiased relative flex flex-col justify-center items-center p-2 sm:p-4">
 
+    <!-- NAVIGASI ATAS: TOMBOL HOME & FULLSCREEN -->
+    <div class="fixed top-3 left-3 z-[100] flex items-center gap-2">
+        <button onclick="goHome()" title="Kembali ke Menu Utama" class="toy-btn bg-white hover:bg-slate-50 text-slate-700 p-2.5 sm:p-3 rounded-2xl shadow-md border-2 border-slate-200 flex items-center justify-center text-lg sm:text-xl active:translate-y-1 transition-all">
+            🏠
+        </button>
+        <button onclick="toggleFullscreen()" id="btn-fullscreen" title="Layar Penuh" class="toy-btn bg-white hover:bg-slate-50 text-slate-700 p-2.5 sm:p-3 rounded-2xl shadow-md border-2 border-slate-200 flex items-center justify-center text-lg sm:text-xl active:translate-y-1 transition-all">
+            ⛶
+        </button>
+    </div>
+
     <!-- FULLSCREEN SETUP MODAL (MENUTUPI SELURUH PAPAN GAME) -->
     <div id="startup-modal" class="fixed inset-0 z-[10000] flex items-center justify-center bg-emerald-950/90 backdrop-blur-md p-4 overflow-y-auto">
         <div id="startup-card" class="bg-white p-6 sm:p-8 rounded-3xl sm:rounded-[2.5rem] shadow-2xl max-w-lg w-full border-4 border-emerald-400 text-center space-y-6 my-auto">
@@ -434,19 +444,15 @@
         </div>
     </div>
 
-    <!-- LOGIKA GAME & SFX INTEGRATION -->
+    <!-- LOGIKA GAME, FULLSCREEN & SFX -->
     <script>
-        /* SINTESIS EFEK SUARA WEB AUDIO API IN-LINE RINGAN */
+        /* SINTESIS EFEK SUARA WEB AUDIO API IN-LINE */
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
 
         function getAudioContext() {
-            if (!audioCtx) {
-                audioCtx = new AudioContext();
-            }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             return audioCtx;
         }
 
@@ -456,66 +462,59 @@
                 const now = ctx.currentTime;
 
                 if (type === 'click') {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(600, now);
-                    osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
-                    gain.gain.setValueAtTime(0.2, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.start(now); osc.stop(now + 0.05);
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(800, now + 0.05);
+                    gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+                    osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now + 0.05);
                 } else if (type === 'beep') {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(440, now);
-                    gain.gain.setValueAtTime(0.3, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.start(now); osc.stop(now + 0.15);
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'triangle'; osc.frequency.setValueAtTime(440, now);
+                    gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now + 0.15);
                 } else if (type === 'go') {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(880, now);
-                    gain.gain.setValueAtTime(0.4, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.start(now); osc.stop(now + 0.4);
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(880, now);
+                    gain.gain.setValueAtTime(0.4, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                    osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now + 0.4);
                 } else if (type === 'dice') {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'square';
-                    osc.frequency.setValueAtTime(200, now);
-                    osc.frequency.exponentialRampToValueAtTime(60, now + 0.1);
-                    gain.gain.setValueAtTime(0.2, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.start(now); osc.stop(now + 0.1);
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'square'; osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(60, now + 0.1);
+                    gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                    osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now + 0.1);
                 } else if (type === 'correct') {
                     const notes = [523.25, 659.25, 783.99, 1046.50];
                     notes.forEach((freq, i) => {
-                        const osc = ctx.createOscillator();
-                        const gain = ctx.createGain();
+                        const osc = ctx.createOscillator(); const gain = ctx.createGain();
                         osc.frequency.setValueAtTime(freq, now + i * 0.08);
-                        gain.gain.setValueAtTime(0.2, now + i * 0.08);
-                        gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.2);
-                        osc.connect(gain); gain.connect(ctx.destination);
-                        osc.start(now + i * 0.08); osc.stop(now + i * 0.08 + 0.2);
+                        gain.gain.setValueAtTime(0.2, now + i * 0.08); gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.2);
+                        osc.connect(gain); gain.connect(ctx.destination); osc.start(now + i * 0.08); osc.stop(now + i * 0.08 + 0.2);
                     });
                 } else if (type === 'wrong') {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.type = 'sawtooth';
-                    osc.frequency.setValueAtTime(180, now);
-                    osc.frequency.linearRampToValueAtTime(110, now + 0.3);
-                    gain.gain.setValueAtTime(0.3, now);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.start(now); osc.stop(now + 0.3);
+                    const osc = ctx.createOscillator(); const gain = ctx.createGain();
+                    osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, now); osc.frequency.linearRampToValueAtTime(110, now + 0.3);
+                    gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now + 0.3);
                 }
             } catch (e) { console.error("SFX error:", e); }
+        }
+
+        /* AKSI NAVIGASI: HOME & FULLSCREEN */
+        function goHome() {
+            playSound('click');
+            document.getElementById('startup-modal').classList.remove('hidden');
+        }
+
+        function toggleFullscreen() {
+            playSound('click');
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
         }
 
         /* PERMAINAN ULAR TANGGA */
