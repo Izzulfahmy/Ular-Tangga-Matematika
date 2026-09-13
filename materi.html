@@ -8,13 +8,16 @@
   <!-- Favicon Logo UNEJ -->
   <link rel="icon" type="image/png" href="aset/logo/unej.png" />
   
-  <!-- Google Fonts: Plus Jakarta Sans -->
+  <!-- Google Fonts: Plus Jakarta Sans & Nunito -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Canvas Confetti Library untuk Perayaan Meriah -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* Reset & Layar Penuh (No Scroll) */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -29,7 +32,7 @@
       height: 100dvh;
       overflow: hidden;
       background-color: #0f172a;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Nunito', sans-serif;
     }
 
     /* Container Canva Embed Screen-Fit */
@@ -89,265 +92,86 @@
       transform: scale(0.92);
     }
 
-    /* Posisi Spesifik Tombol */
-    .home-btn {
-      left: 24px;
-    }
+    .home-btn { left: 24px; }
+    .fullscreen-btn { right: 24px; }
+    .quiz-btn { right: 86px; }
 
-    .fullscreen-btn {
-      right: 24px;
-    }
-
-    .quiz-btn {
-      right: 86px;
-    }
-
-    /* Modal Latihan Soal Interaktif */
-    .modal-overlay {
+    /* FULLSCREEN GAME SCREEN (NO OVERLAY) */
+    #fullscreenQuizApp {
       position: fixed;
       inset: 0;
-      z-index: 100;
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(8px);
+      z-index: 500;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #064e3b 100%);
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: space-between;
       padding: 16px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      transform: scale(0.95);
     }
 
-    .modal-overlay.active {
+    #fullscreenQuizApp.active {
       opacity: 1;
       pointer-events: auto;
-    }
-
-    .modal-card {
-      background: #ffffff;
-      border-radius: 28px;
-      width: 100%;
-      max-width: 560px;
-      padding: 24px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-      border: 4 border-emerald-400;
-      position: relative;
-      transform: scale(0.9);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .modal-overlay.active .modal-card {
       transform: scale(1);
     }
 
-    .close-btn {
+    /* Canvas Garis Menjodohkan */
+    #matchCanvas {
       position: absolute;
-      top: 16px;
-      right: 16px;
-      background: #f1f5f9;
-      border: none;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #64748b;
-      font-weight: 800;
-      transition: all 0.2s;
-    }
-
-    .close-btn:hover {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-
-    .quiz-header {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .quiz-title {
-      font-size: 1.25rem;
-      font-weight: 900;
-      color: #0f172a;
-    }
-
-    .quiz-subtitle {
-      font-size: 0.85rem;
-      color: #64748b;
-      font-weight: 700;
-      margin-top: 4px;
-    }
-
-    .drop-slots-container {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-
-    .slot-box {
-      flex: 1;
-      aspect-ratio: 1 / 1.1;
-      max-width: 100px;
-      border: 2px dashed #cbd5e1;
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #f8fafc;
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: #94a3b8;
-      position: relative;
-      transition: all 0.2s;
-    }
-
-    .slot-box.filled {
-      border-style: solid;
-      border-color: #10b981;
-      background: #ecfdf5;
-    }
-
-    .stage-item {
+      inset: 0;
       width: 100%;
       height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 4px;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .match-node {
       cursor: pointer;
+      transition: all 0.2s ease;
     }
 
-    .stage-icon {
-      font-size: 1.8rem;
+    .match-node:hover {
+      transform: scale(1.05);
     }
 
-    .stage-name {
-      font-size: 0.7rem;
-      font-weight: 800;
-      color: #0f172a;
-      text-align: center;
-      margin-top: 4px;
+    .match-node.selected {
+      box-shadow: 0 0 0 4px #f59e0b;
     }
 
-    .options-pool {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 12px;
-      background: #f1f5f9;
-      border-radius: 20px;
-      min-height: 80px;
-    }
-
-    .option-chip {
-      background: #ffffff;
-      border: 2px solid #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      font-size: 0.8rem;
-      font-weight: 800;
-      color: #334155;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s;
-    }
-
-    .option-chip:hover {
-      transform: translateY(-2px);
-      border-color: #10b981;
-    }
-
-    .option-chip.selected {
-      opacity: 0.3;
+    .match-node.matched {
+      opacity: 0.6;
       pointer-events: none;
     }
 
-    .quiz-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
+    @keyframes partyPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.15) rotate(8deg); }
     }
+    .party-anim { animation: partyPulse 1.2s infinite ease-in-out; }
 
-    .btn-action {
-      flex: 1;
-      padding: 12px;
-      border-radius: 16px;
-      border: none;
-      font-weight: 900;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .btn-reset {
-      background: #f1f5f9;
-      color: #475569;
-    }
-
-    .btn-submit {
-      background: #10b981;
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-    .btn-submit:hover {
-      background: #059669;
-    }
-
-    .feedback-msg {
-      text-align: center;
-      font-weight: 800;
-      font-size: 0.85rem;
-      margin-top: 12px;
-      min-height: 20px;
-    }
-
-    .feedback-msg.correct { color: #059669; }
-    .feedback-msg.wrong { color: #e11d48; }
-
-    /* Responsive Breakpoint Mobile */
     @media (max-height: 700px), (max-width: 480px) {
-      .nav-btn {
-        top: 16px;
-        width: 42px;
-        height: 42px;
-      }
-      .nav-btn svg {
-        width: 20px;
-        height: 20px;
-      }
+      .nav-btn { top: 16px; width: 42px; height: 42px; }
+      .nav-btn svg { width: 20px; height: 20px; }
       .home-btn { left: 16px; }
       .fullscreen-btn { right: 16px; }
       .quiz-btn { right: 68px; }
-
-      .modal-card { padding: 16px; }
-      .slot-box { aspect-ratio: 1 / 1; }
-      .stage-icon { font-size: 1.4rem; }
-      .stage-name { font-size: 0.6rem; }
     }
   </style>
 </head>
-<body>
+<body class="antialiased">
 
-  <!-- Tombol Home / Rumah -->
+  <!-- Tombol Home -->
   <a href="https://izzulfahmy.github.io/Ular-Tangga-Matematika/" class="nav-btn home-btn" title="Kembali ke Beranda" onclick="playClickSound(event, this.href)">
     <svg viewBox="0 0 24 24">
       <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
     </svg>
   </a>
 
-  <!-- Tombol Gamepad / Latihan Soal (Pojok Kanan Atas - Kiri Fullscreen) -->
-  <button class="nav-btn quiz-btn" id="quizBtn" title="Latihan Soal Interaktif" onclick="openQuizModal()">
+  <!-- Tombol Gamepad / Latihan Soal Interaktif -->
+  <button class="nav-btn quiz-btn" id="quizBtn" title="Latihan Soal Interaktif Fullscreen" onclick="openFullscreenQuiz()">
     <svg viewBox="0 0 24 24">
       <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H9v2H7v-2H5v-2h2V9h2v2h2v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
     </svg>
@@ -365,27 +189,49 @@
     <iframe loading="lazy" src="https://www.canva.com/design/DAHVDRpj6kI/8GbnjjdWzKv45lK9ZJYu9Q/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
   </div>
 
-  <!-- MODAL LATIHAN SOAL INTERAKTIF -->
-  <div class="modal-overlay" id="quizModal">
-    <div class="modal-card">
-      <button class="close-btn" onclick="closeQuizModal()">✕</button>
-      
-      <div class="quiz-header">
-        <h3 class="quiz-title" id="quizTitle">Soal 1: Daur Hidup Kupu-kupu</h3>
-        <p class="quiz-subtitle">Urutkan tahapan perkembangan dengan memilih pilihan di bawah!</p>
+  <!-- MODAL FULLSCREEN LATIHAN SOAL INTERAKTIF (FULLSCREEN APP UI) -->
+  <div id="fullscreenQuizApp">
+    
+    <!-- Top Bar Navigation -->
+    <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
+      <div class="flex items-center gap-3">
+        <div class="text-3xl bg-emerald-500/20 p-2 rounded-2xl border border-emerald-500/30">🎮</div>
+        <div>
+          <h2 id="appQuizTitle" class="text-lg sm:text-2xl font-black text-white font-jakarta">Latihan Interaktif Daur Hidup</h2>
+          <p id="appQuizSubtitle" class="text-xs text-slate-400 font-bold uppercase tracking-widest">Soal 1 Dari 3</p>
+        </div>
       </div>
+      <button onclick="closeFullscreenQuiz()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-2xl text-xs sm:text-sm font-black transition-all shadow-md flex items-center gap-2">
+        <span>Tutup Latihan</span>
+        <span class="text-base">✕</span>
+      </button>
+    </div>
 
-      <div class="drop-slots-container" id="slotsContainer"></div>
+    <!-- Main Dynamic Content Area -->
+    <div class="my-auto w-full max-w-4xl mx-auto relative flex flex-col items-center justify-center p-2">
+      <canvas id="matchCanvas"></canvas>
+      <div id="quizStageContainer" class="w-full"></div>
+    </div>
 
-      <div class="options-pool" id="optionsPool"></div>
-
-      <div class="feedback-msg" id="feedbackMsg"></div>
-
-      <div class="quiz-actions">
-        <button class="btn-action btn-reset" onclick="resetCurrentQuiz()">Ulangi</button>
-        <button class="btn-action btn-submit" id="btnSubmit" onclick="submitAnswer()">Periksa Jawaban</button>
+    <!-- Bottom Actions Bar -->
+    <div class="border-t border-slate-800 pt-3 flex items-center justify-between gap-4">
+      <div id="appFeedback" class="text-sm font-black text-amber-400">Pilih dan jawab soal dengan benar!</div>
+      <div class="flex items-center gap-2">
+        <button onclick="resetCurrentQuiz()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-black rounded-xl text-xs sm:text-sm transition-all border border-slate-700">Ulangi</button>
+        <button onclick="checkAnswer()" id="btnCheckAnswer" class="px-8 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black rounded-xl text-xs sm:text-sm transition-all shadow-lg uppercase tracking-wider">Periksa Jawaban</button>
       </div>
     </div>
+
+    <!-- PERAYAAN KEMBANG API & CONFETTI 1 LAYAR FIT -->
+    <div id="celebrationOverlay" class="fixed inset-0 z-[1000] bg-slate-950/90 backdrop-blur-md hidden flex flex-col justify-center items-center p-4 text-center">
+      <div class="max-w-md w-full flex flex-col items-center bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 p-8 rounded-[3rem] border-8 border-yellow-200 shadow-2xl relative">
+        <div class="text-6xl party-anim mb-3">🎉</div>
+        <h2 class="text-3xl font-black text-slate-950 mb-2 font-jakarta uppercase tracking-wide">LUAR BIASA!</h2>
+        <p id="celebrationMsg" class="text-lg font-bold text-slate-900 mb-6 leading-snug">Kamu berhasil menyelesaikan latihan dengan sempurna!</p>
+        <button onclick="nextQuizOrClose()" id="btnNextQuiz" class="px-8 py-3.5 bg-slate-950 hover:bg-slate-900 text-amber-300 font-black rounded-2xl border-2 border-yellow-300 shadow-xl transition-all text-sm uppercase tracking-wider">Lanjut Soal Berikutnya 🚀</button>
+      </div>
+    </div>
+
   </div>
 
   <!-- Audio Synthesizer & Dynamic Logic Script -->
@@ -394,17 +240,12 @@
     let audioCtx;
 
     function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new AudioContext();
-      }
+      if (!audioCtx) audioCtx = new AudioContext();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
     function playPopSound() {
       initAudio();
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
 
@@ -422,15 +263,33 @@
       osc.stop(audioCtx.currentTime + 0.12);
     }
 
+    function playSound(type) {
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        if (type === 'correct') {
+          const notes = [523.25, 659.25, 783.99, 1046.50];
+          notes.forEach((freq, i) => {
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(freq, now + i * 0.08);
+            gain.gain.setValueAtTime(0.2, now + i * 0.08); gain.gain.exponentialRampToValueAtTime(0.01, now + i * 0.08 + 0.2);
+            osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now + i * 0.08); osc.stop(now + i * 0.08 + 0.2);
+          });
+        } else if (type === 'wrong') {
+          const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+          osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, now); osc.frequency.linearRampToValueAtTime(110, now + 0.3);
+          gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.connect(gain); gain.connect(audioCtx.destination); osc.start(now); osc.stop(now + 0.3);
+        }
+      } catch (e) {}
+    }
+
     function playClickSound(event, targetUrl) {
       event.preventDefault();
       playPopSound();
-      setTimeout(() => {
-        window.location.href = targetUrl;
-      }, 180);
+      setTimeout(() => { window.location.href = targetUrl; }, 180);
     }
 
-    /* Logic Toggle Fullscreen */
     function toggleFullScreen() {
       playPopSound();
       const fsBtn = document.getElementById('fsBtn');
@@ -440,143 +299,310 @@
       const exitPath = 'M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z';
 
       if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-        if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-        } else if (document.documentElement.msRequestFullscreen) {
-          document.documentElement.msRequestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) {
-          document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-          document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-        }
+        if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
         fsIcon.querySelector('path').setAttribute('d', exitPath);
         fsBtn.title = "Keluar Layar Penuh";
       } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        }
+        if (document.exitFullscreen) document.exitFullscreen();
         fsIcon.querySelector('path').setAttribute('d', enterPath);
         fsBtn.title = "Layar Penuh";
       }
     }
 
-    /* DATA SOAL INTERAKTIF */
-    const quizData = [
+    /* DATABASE SOAL INTERAKTIF FULLSCREEN */
+    const quizDatabase = [
       {
-        id: 1,
-        title: "Soal 1: Daur Hidup Kupu-kupu 🦋",
+        type: 'sequence',
+        title: 'Mengurutkan Daur Hidup Kupu-kupu 🦋',
+        subtitle: 'Klik/Pilih urutan yang tepat dari tahap awal hingga akhir!',
         correctOrder: ['egg', 'caterpillar', 'pupa', 'butterfly'],
-        stages: [
-          { id: 'egg', name: 'Telur', icon: '🥚' },
-          { id: 'caterpillar', name: 'Ulat', icon: '🐛' },
-          { id: 'pupa', name: 'Kepompong', icon: '🟤' },
-          { id: 'butterfly', name: 'Kupu-kupu', icon: '🦋' }
+        items: [
+          { id: 'egg', name: '1. Telur', icon: '🥚' },
+          { id: 'caterpillar', name: '2. Ulat', icon: '🐛' },
+          { id: 'pupa', name: '3. Kepompong', icon: '🟤' },
+          { id: 'butterfly', name: '4. Kupu-kupu', icon: '🦋' }
         ]
       },
       {
-        id: 2,
-        title: "Soal 2: Daur Hidup Katak 🐸",
+        type: 'sequence',
+        title: 'Mengurutkan Daur Hidup Katak 🐸',
+        subtitle: 'Urutkan metamorfosis katak dengan tepat!',
         correctOrder: ['frog_egg', 'tadpole', 'froglet', 'adult_frog'],
-        stages: [
-          { id: 'frog_egg', name: 'Telur', icon: '⚪' },
-          { id: 'tadpole', name: 'Berudu', icon: '🐟' },
-          { id: 'froglet', name: 'Katak Muda', icon: '🐸' },
-          { id: 'adult_frog', name: 'Katak Dewasa', icon: '🐸' }
+        items: [
+          { id: 'frog_egg', name: '1. Telur', icon: '⚪' },
+          { id: 'tadpole', name: '2. Berudu', icon: '🐟' },
+          { id: 'froglet', name: '3. Katak Muda', icon: '🐸' },
+          { id: 'adult_frog', name: '4. Katak Dewasa', icon: '🐸' }
+        ]
+      },
+      {
+        type: 'match',
+        title: 'Menjodohkan Hewan & Hasil Metamorfosis 🔗',
+        subtitle: 'Klik satu item di kiri, lalu klik pasangannya yang sesuai di kanan!',
+        leftItems: [
+          { id: 'm1', name: 'Kupu-kupu', icon: '🦋', pair: 'p1' },
+          { id: 'm2', name: 'Katak', icon: '🐸', pair: 'p2' },
+          { id: 'm3', name: 'Ayam', icon: '🐔', pair: 'p3' }
+        ],
+        rightItems: [
+          { id: 'p3', name: 'Bertelur di Darat', icon: '🥚', pair: 'm3' },
+          { id: 'p1', name: 'Ulat & Kepompong', icon: '🐛', pair: 'm1' },
+          { id: 'p2', name: 'Berudu di Air', icon: '🐟', pair: 'm2' }
         ]
       }
     ];
 
     let currentQuizIndex = 0;
-    let currentAnswers = [];
+    let sequenceAnswers = [];
+    let selectedLeftMatch = null;
+    let userMatches = [];
 
-    function openQuizModal() {
+    function openFullscreenQuiz() {
       playPopSound();
       currentQuizIndex = 0;
       loadQuiz(currentQuizIndex);
-      document.getElementById('quizModal').classList.add('active');
+      document.getElementById('fullscreenQuizApp').classList.add('active');
     }
 
-    function closeQuizModal() {
+    function closeFullscreenQuiz() {
       playPopSound();
-      document.getElementById('quizModal').classList.remove('active');
+      document.getElementById('fullscreenQuizApp').classList.remove('active');
+      document.getElementById('celebrationOverlay').classList.add('hidden');
     }
 
     function loadQuiz(index) {
-      const quiz = quizData[index];
-      currentAnswers = new Array(quiz.stages.length).fill(null);
-      
-      document.getElementById('quizTitle').innerText = quiz.title;
-      document.getElementById('feedbackMsg').innerText = '';
-      document.getElementById('feedbackMsg').className = 'feedback-msg';
-      document.getElementById('btnSubmit').innerText = 'Periksa Jawaban';
+      const qData = quizDatabase[index];
+      document.getElementById('appQuizTitle').innerText = qData.title;
+      document.getElementById('appQuizSubtitle').innerText = `Soal ${index + 1} Dari ${quizDatabase.length} • ${qData.subtitle}`;
+      document.getElementById('appFeedback').innerText = 'Pilih dan selesaikan tantangan!';
+      document.getElementById('appFeedback').className = 'text-sm font-black text-amber-400';
 
-      renderSlots();
-      renderOptions();
+      const container = document.getElementById('quizStageContainer');
+      container.innerHTML = '';
+      clearCanvas();
+
+      if (qData.type === 'sequence') {
+        sequenceAnswers = new Array(qData.items.length).fill(null);
+        renderSequenceUI();
+      } else if (qData.type === 'match') {
+        selectedLeftMatch = null;
+        userMatches = [];
+        renderMatchUI();
+      }
     }
 
-    function renderSlots() {
-      const quiz = quizData[currentQuizIndex];
-      const container = document.getElementById('slotsContainer');
-      container.innerHTML = '';
+    /* LOGIKA MENGURUTKAN (SEQUENCE) */
+    function renderSequenceUI() {
+      const qData = quizDatabase[currentQuizIndex];
+      const container = document.getElementById('quizStageContainer');
 
-      for (let i = 0; i < quiz.stages.length; i++) {
-        const slot = document.createElement('div');
-        slot.className = `slot-box ${currentAnswers[i] ? 'filled' : ''}`;
-        
-        if (currentAnswers[i]) {
-          const stage = quiz.stages.find(s => s.id === currentAnswers[i]);
-          slot.innerHTML = `
-            <div class="stage-item" onclick="removeAnswer(${i})">
-              <span class="stage-icon">${stage.icon}</span>
-              <span class="stage-name">${stage.name}</span>
+      let slotsHTML = '<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">';
+      for(let i=0; i<qData.items.length; i++) {
+        const filledId = sequenceAnswers[i];
+        if (filledId) {
+          const item = qData.items.find(x => x.id === filledId);
+          slotsHTML += `
+            <div onclick="removeSequenceAnswer(${i})" class="bg-emerald-500/20 border-2 border-emerald-400 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-500/30 transition-all">
+              <span class="text-4xl mb-1">${item.icon}</span>
+              <span class="text-xs font-black text-emerald-300">${item.name}</span>
             </div>
           `;
         } else {
-          slot.innerHTML = `<span>Tahap ${i + 1}</span>`;
+          slotsHTML += `
+            <div class="border-2 border-dashed border-slate-600 rounded-2xl p-4 flex flex-col items-center justify-center text-slate-500 font-black text-xs min-h-[100px]">
+              Tahap ${i+1}
+            </div>
+          `;
         }
-        container.appendChild(slot);
+      }
+      slotsHTML += '</div>';
+
+      let optionsHTML = '<div class="flex flex-wrap gap-3 justify-center bg-slate-900/80 p-4 rounded-3xl border border-slate-700">';
+      const shuffled = [...qData.items].sort((a,b) => a.id.localeCompare(b.id));
+      shuffled.forEach(item => {
+        const isSelected = sequenceAnswers.includes(item.id);
+        optionsHTML += `
+          <button onclick="selectSequenceOption('${item.id}')" ${isSelected ? 'disabled' : ''} class="px-4 py-3 rounded-xl border ${isSelected ? 'opacity-30 border-slate-700 bg-slate-800' : 'bg-slate-800 hover:bg-slate-700 border-slate-600 text-white'} font-black text-xs sm:text-sm flex items-center gap-2 transition-all">
+            <span class="text-2xl">${item.icon}</span>
+            <span>${item.name}</span>
+          </button>
+        `;
+      });
+      optionsHTML += '</div>';
+
+      container.innerHTML = slotsHTML + optionsHTML;
+    }
+
+    function selectSequenceOption(id) {
+      playPopSound();
+      const emptyIdx = sequenceAnswers.indexOf(null);
+      if (emptyIdx !== -1) {
+        sequenceAnswers[emptyIdx] = id;
+        renderSequenceUI();
       }
     }
 
-    function renderOptions() {
-      const quiz = quizData[currentQuizIndex];
-      const pool = document.getElementById('optionsPool');
-      pool.innerHTML = '';
+    function removeSequenceAnswer(idx) {
+      playPopSound();
+      sequenceAnswers[idx] = null;
+      renderSequenceUI();
+    }
 
-      // Acak urutan pilihan
-      const shuffled = [...quiz.stages].sort((a, b) => a.id.localeCompare(b.id));
+    /* LOGIKA MENJODOHKAN (MATCHING) */
+    function renderMatchUI() {
+      const qData = quizDatabase[currentQuizIndex];
+      const container = document.getElementById('quizStageContainer');
 
-      shuffled.forEach(stage => {
-        const isSelected = currentAnswers.includes(stage.id);
-        const chip = document.createElement('div');
-        chip.className = `option-chip ${isSelected ? 'selected' : ''}`;
-        chip.innerHTML = `<span>${stage.icon}</span> <span>${stage.name}</span>`;
-        chip.onclick = () => selectOption(stage.id);
-        pool.appendChild(chip);
+      let html = '<div class="grid grid-cols-2 gap-12 sm:gap-24 w-full max-w-2xl mx-auto my-4">';
+      
+      // Kolom Kiri
+      html += '<div class="flex flex-col gap-4">';
+      qData.leftItems.forEach(item => {
+        const isMatched = userMatches.some(m => m.left === item.id);
+        const isSelected = selectedLeftMatch === item.id;
+        html += `
+          <button id="node-left-${item.id}" onclick="clickLeftMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node ${isSelected ? 'selected' : ''} ${isMatched ? 'matched' : ''} bg-slate-800 border-2 ${isSelected ? 'border-amber-400' : 'border-slate-600'} text-white p-3 sm:p-4 rounded-2xl flex items-center gap-3 font-black text-xs sm:text-sm">
+            <span class="text-3xl">${item.icon}</span>
+            <span>${item.name}</span>
+          </button>
+        `;
+      });
+      html += '</div>';
+
+      // Kolom Kanan
+      html += '<div class="flex flex-col gap-4">';
+      qData.rightItems.forEach(item => {
+        const isMatched = userMatches.some(m => m.right === item.id);
+        html += `
+          <button id="node-right-${item.id}" onclick="clickRightMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node ${isMatched ? 'matched' : ''} bg-slate-800 border-2 border-slate-600 text-white p-3 sm:p-4 rounded-2xl flex items-center gap-3 font-black text-xs sm:text-sm">
+            <span class="text-3xl">${item.icon}</span>
+            <span>${item.name}</span>
+          </button>
+        `;
+      });
+      html += '</div></div>';
+
+      container.innerHTML = html;
+      setTimeout(drawMatchLines, 50);
+    }
+
+    function clickLeftMatch(id) {
+      playPopSound();
+      selectedLeftMatch = id;
+      renderMatchUI();
+    }
+
+    function clickRightMatch(rightId) {
+      if (!selectedLeftMatch) {
+        document.getElementById('appFeedback').innerText = 'Pilih item sebelah kiri terlebih dahulu!';
+        return;
+      }
+      playPopSound();
+      userMatches.push({ left: selectedLeftMatch, right: rightId });
+      selectedLeftMatch = null;
+      renderMatchUI();
+    }
+
+    function clearCanvas() {
+      const canvas = document.getElementById('matchCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawMatchLines() {
+      const canvas = document.getElementById('matchCanvas');
+      const app = document.getElementById('fullscreenQuizApp');
+      canvas.width = app.clientWidth;
+      canvas.height = app.clientHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      userMatches.forEach(m => {
+        const leftEl = document.getElementById(`node-left-${m.left}`);
+        const rightEl = document.getElementById(`node-right-${m.right}`);
+        if (leftEl && rightEl) {
+          const rLeft = leftEl.getBoundingClientRect();
+          const rRight = rightEl.getBoundingClientRect();
+          const rApp = app.getBoundingClientRect();
+
+          const x1 = rLeft.right - rApp.left;
+          const y1 = rLeft.top + rLeft.height / 2 - rApp.top;
+          const x2 = rRight.left - rApp.left;
+          const y2 = rRight.top + rRight.height / 2 - rApp.top;
+
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.strokeStyle = '#10b981';
+          ctx.lineWidth = 4;
+          ctx.stroke();
+        }
       });
     }
 
-    function selectOption(stageId) {
-      playPopSound();
-      const emptySlotIndex = currentAnswers.indexOf(null);
-      if (emptySlotIndex !== -1) {
-        currentAnswers[emptySlotIndex] = stageId;
-        renderSlots();
-        renderOptions();
+    /* PERIKSA JAWABAN & PERAYAAN MERIAH 1 LAYAR */
+    function checkAnswer() {
+      const qData = quizDatabase[currentQuizIndex];
+      let isCorrect = false;
+
+      if (qData.type === 'sequence') {
+        if (sequenceAnswers.includes(null)) {
+          document.getElementById('appFeedback').innerText = 'Lengkapi semua urutan terlebih dahulu!';
+          document.getElementById('appFeedback').className = 'text-sm font-black text-rose-400';
+          playSound('wrong');
+          return;
+        }
+        isCorrect = sequenceAnswers.every((ans, idx) => ans === qData.correctOrder[idx]);
+      } else if (qData.type === 'match') {
+        if (userMatches.length < qData.leftItems.length) {
+          document.getElementById('appFeedback').innerText = 'Jodohkan semua pasangan terlebih dahulu!';
+          document.getElementById('appFeedback').className = 'text-sm font-black text-rose-400';
+          playSound('wrong');
+          return;
+        }
+        isCorrect = userMatches.every(m => {
+          const itemLeft = qData.leftItems.find(x => x.id === m.left);
+          return itemLeft && itemLeft.pair === m.right;
+        });
+      }
+
+      if (isCorrect) {
+        playSound('correct');
+        triggerFullCelebration();
+      } else {
+        playSound('wrong');
+        document.getElementById('appFeedback').innerText = '❌ Jawaban belum tepat! Mari coba lagi.';
+        document.getElementById('appFeedback').className = 'text-sm font-black text-rose-400';
       }
     }
 
-    function removeAnswer(slotIndex) {
+    function triggerFullCelebration() {
+      // Efek Confetti Kembang Api Meriah
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+      setTimeout(() => confetti({ particleCount: 150, angle: 60, spread: 100, origin: { x: 0 } }), 200);
+      setTimeout(() => confetti({ particleCount: 150, angle: 120, spread: 100, origin: { x: 1 } }), 400);
+
+      const overlay = document.getElementById('celebrationOverlay');
+      const btnNext = document.getElementById('btnNextQuiz');
+
+      if (currentQuizIndex < quizDatabase.length - 1) {
+        btnNext.innerText = 'Lanjut Soal Berikutnya 🚀';
+      } else {
+        btnNext.innerText = 'Selesai & Tutup 🏆';
+      }
+
+      overlay.classList.remove('hidden');
+    }
+
+    function nextQuizOrClose() {
       playPopSound();
-      currentAnswers[slotIndex] = null;
-      renderSlots();
-      renderOptions();
+      document.getElementById('celebrationOverlay').classList.add('hidden');
+      if (currentQuizIndex < quizDatabase.length - 1) {
+        currentQuizIndex++;
+        loadQuiz(currentQuizIndex);
+      } else {
+        closeFullscreenQuiz();
+      }
     }
 
     function resetCurrentQuiz() {
@@ -584,54 +610,10 @@
       loadQuiz(currentQuizIndex);
     }
 
-    function submitAnswer() {
-      playPopSound();
-      const quiz = quizData[currentQuizIndex];
-      const feedback = document.getElementById('feedbackMsg');
-
-      if (currentAnswers.includes(null)) {
-        feedback.innerText = 'Isi semua urutan tahapan terlebih dahulu!';
-        feedback.className = 'feedback-msg wrong';
-        return;
+    window.addEventListener('resize', () => {
+      if (document.getElementById('fullscreenQuizApp').classList.contains('active')) {
+        drawMatchLines();
       }
-
-      const isCorrect = currentAnswers.every((ans, idx) => ans === quiz.correctOrder[idx]);
-
-      if (isCorrect) {
-        feedback.innerText = '🎉 Luar Biasa! Urutan Kamu Benar!';
-        feedback.className = 'feedback-msg correct';
-        
-        setTimeout(() => {
-          if (currentQuizIndex < quizData.length - 1) {
-            currentQuizIndex++;
-            loadQuiz(currentQuizIndex);
-          } else {
-            feedback.innerText = '🏆 Selamat! Kamu telah menyelesaikan semua latihan daur hidup!';
-          }
-        }, 1500);
-      } else {
-        feedback.innerText = '❌ Urutan masih kurang tepat. Coba periksa kembali!';
-        feedback.className = 'feedback-msg wrong';
-      }
-    }
-
-    // Hover Sound Effect
-    document.querySelectorAll('.nav-btn').forEach(card => {
-      card.addEventListener('mouseenter', () => {
-        initAudio();
-        if (audioCtx && audioCtx.state === 'running') {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          osc.type = 'triangle';
-          osc.frequency.setValueAtTime(320, audioCtx.currentTime);
-          gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.06);
-        }
-      });
     });
   </script>
 </body>
