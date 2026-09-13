@@ -123,7 +123,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       margin: auto 0;
+      width: 100%;
       animation: fadeInScale 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
     }
 
@@ -133,23 +135,24 @@
     }
 
     .tag-subtitle {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 800;
       color: #2563eb;
       letter-spacing: 2px;
       text-transform: uppercase;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
     .main-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: 2.8rem;
+      font-size: clamp(2rem, 3.8vw, 3rem);
       font-weight: 700;
-      line-height: 1.25;
+      line-height: 1.2;
       color: #1e293b;
-      margin-bottom: 16px;
-      max-width: 850px;
+      margin-bottom: 20px;
+      white-space: nowrap;
       text-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      width: 100%;
     }
 
     .main-title span {
@@ -157,7 +160,7 @@
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      display: inline-block;
+      display: inline;
     }
 
     .badge-ppg {
@@ -289,18 +292,21 @@
       .dashboard-wrapper { padding: 18px 16px; }
       .logo-container { padding: 8px 20px; gap: 16px; }
       .logo-img { height: 38px; }
-      .tag-subtitle { font-size: 0.9rem; }
-      .main-title { font-size: 2rem; margin-bottom: 10px; }
+      .tag-subtitle { font-size: 0.9rem; margin-bottom: 8px; }
+      .main-title { margin-bottom: 12px; }
       .badge-ppg { font-size: 0.85rem; padding: 6px 16px; }
       .icon-wrapper { width: 58px; height: 58px; font-size: 1.75rem; }
       .card-label { font-size: 1.1rem; }
       .menu-card { padding: 16px 12px; }
     }
 
+    @media (max-width: 600px) {
+      .main-title { white-space: normal; }
+    }
+
     @media (max-width: 480px) {
       .logo-container { gap: 12px; padding: 8px 16px; }
       .logo-img { height: 32px; }
-      .main-title { font-size: 1.8rem; }
       .menu-grid { gap: 12px; }
     }
   </style>
@@ -329,7 +335,7 @@
     <section class="hero-section">
       <p class="tag-subtitle">Media Pembelajaran IPAS Kelas 3</p>
       <h1 class="main-title">
-        <span>Siklus Hidup</span><br>yang Menakjubkan
+        <span>Siklus Hidup yang Menakjubkan</span>
       </h1>
       <div class="badge-ppg">
         PPG Calon Guru Gelombang 1 Tahun 2026
@@ -344,7 +350,7 @@
         <span class="card-label">Materi</span>
       </a>
 
-      <!-- Menu Ular Tangga (Dialihkan ke ulartangga.html) -->
+      <!-- Menu Ular Tangga -->
       <a href="ulartangga.html" class="menu-card ular-tangga" onclick="playClickSound(event, this.href)">
         <div class="icon-wrapper">🎲</div>
         <span class="card-label">Ular Tangga</span>
