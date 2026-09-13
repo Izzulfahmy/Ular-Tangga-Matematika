@@ -85,7 +85,7 @@
       text-align: center;
     }
 
-    /* Tombol Fullscreen Icon (Pojok Kanan Atas) */
+    /* Tombol Fullscreen Icon SVG (Pojok Kanan Atas) */
     .fullscreen-btn {
       position: absolute;
       top: 28px;
@@ -103,9 +103,15 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      font-size: 1.4rem;
       color: #047857;
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .fullscreen-btn svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+      transition: transform 0.3s ease;
     }
 
     .fullscreen-btn:hover {
@@ -339,7 +345,8 @@
     /* Media Queries */
     @media (max-height: 700px) {
       .dashboard-wrapper { padding: 18px 16px; }
-      .fullscreen-btn { top: 18px; right: 16px; width: 44px; height: 44px; font-size: 1.2rem; }
+      .fullscreen-btn { top: 18px; right: 16px; width: 44px; height: 44px; }
+      .fullscreen-btn svg { width: 20px; height: 20px; }
       .logo-container { padding: 8px 20px; gap: 16px; }
       .logo-img { height: 38px; }
       .tag-subtitle { font-size: 0.85rem; padding: 4px 14px; margin-bottom: 8px; }
@@ -355,7 +362,8 @@
     }
 
     @media (max-width: 480px) {
-      .fullscreen-btn { top: 14px; right: 12px; width: 40px; height: 40px; font-size: 1.1rem; }
+      .fullscreen-btn { top: 14px; right: 12px; width: 40px; height: 40px; }
+      .fullscreen-btn svg { width: 18px; height: 18px; }
       .logo-container { gap: 12px; padding: 8px 16px; }
       .logo-img { height: 32px; }
       .menu-grid { gap: 12px; }
@@ -374,9 +382,12 @@
   <!-- Dashboard Container -->
   <main class="dashboard-wrapper">
     
-    <!-- Tombol Fullscreen Icon (Pojok Kanan Atas) -->
+    <!-- Tombol Fullscreen Icon SVG -->
     <button class="fullscreen-btn" id="fsBtn" title="Layar Penuh" onclick="toggleFullScreen()">
-      ⛶
+      <svg id="fsIcon" viewBox="0 0 24 24">
+        <!-- Vektor Fullscreen -->
+        <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+      </svg>
     </button>
     
     <!-- 1. Top Header Logos -->
@@ -457,11 +468,15 @@
       }, 180);
     }
 
-    /* Logic Toggle Fullscreen */
+    /* Logic Toggle Fullscreen + Dynamic SVG Switch */
     function toggleFullScreen() {
       playPopSound();
       const fsBtn = document.getElementById('fsBtn');
+      const fsIcon = document.getElementById('fsIcon');
       
+      const enterPath = 'M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z';
+      const exitPath = 'M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z';
+
       if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
         if (document.documentElement.requestFullscreen) {
           document.documentElement.requestFullscreen();
@@ -472,7 +487,7 @@
         } else if (document.documentElement.webkitRequestFullscreen) {
           document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
         }
-        fsBtn.innerHTML = "⛶";
+        fsIcon.querySelector('path').setAttribute('d', exitPath);
         fsBtn.title = "Keluar Layar Penuh";
       } else {
         if (document.exitFullscreen) {
@@ -484,7 +499,7 @@
         } else if (document.webkitExitFullscreen) {
           document.webkitExitFullscreen();
         }
-        fsBtn.innerHTML = "⛶";
+        fsIcon.querySelector('path').setAttribute('d', enterPath);
         fsBtn.title = "Layar Penuh";
       }
     }
