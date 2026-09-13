@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Tarik Tambang Matematika - Media Pembelajaran</title>
+  <title>IPAS Kelas 3 - Siklus Hidup yang Menakjubkan</title>
   
   <!-- Favicon Logo UNEJ pada Tab Browser -->
   <link rel="icon" type="image/png" href="aset/logo/unej.png" />
@@ -70,7 +70,7 @@
       100% { transform: scale(1.2) translateY(-20px); opacity: 0.7; }
     }
 
-    /* Dashboard Main Container (Full Screen Layout without Frame) */
+    /* Dashboard Main Container (Full Screen Layout) */
     .dashboard-wrapper {
       position: relative;
       z-index: 2;
@@ -136,18 +136,19 @@
       font-size: 1.1rem;
       font-weight: 800;
       color: #2563eb;
-      letter-spacing: 3px;
+      letter-spacing: 2px;
       text-transform: uppercase;
       margin-bottom: 8px;
     }
 
     .main-title {
       font-family: 'Fredoka', sans-serif;
-      font-size: 3.2rem;
+      font-size: 2.8rem;
       font-weight: 700;
-      line-height: 1.1;
+      line-height: 1.25;
       color: #1e293b;
       margin-bottom: 16px;
+      max-width: 850px;
       text-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
@@ -156,6 +157,7 @@
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      display: inline-block;
     }
 
     .badge-ppg {
@@ -287,8 +289,8 @@
       .dashboard-wrapper { padding: 18px 16px; }
       .logo-container { padding: 8px 20px; gap: 16px; }
       .logo-img { height: 38px; }
-      .tag-subtitle { font-size: 0.95rem; }
-      .main-title { font-size: 2.4rem; margin-bottom: 10px; }
+      .tag-subtitle { font-size: 0.9rem; }
+      .main-title { font-size: 2rem; margin-bottom: 10px; }
       .badge-ppg { font-size: 0.85rem; padding: 6px 16px; }
       .icon-wrapper { width: 58px; height: 58px; font-size: 1.75rem; }
       .card-label { font-size: 1.1rem; }
@@ -298,7 +300,7 @@
     @media (max-width: 480px) {
       .logo-container { gap: 12px; padding: 8px 16px; }
       .logo-img { height: 32px; }
-      .main-title { font-size: 2.1rem; }
+      .main-title { font-size: 1.8rem; }
       .menu-grid { gap: 12px; }
     }
   </style>
@@ -325,8 +327,10 @@
 
     <!-- 2. Central Hero Title -->
     <section class="hero-section">
-      <p class="tag-subtitle">Media Pembelajaran</p>
-      <h1 class="main-title">Tarik Tambang<br><span>Matematika</span></h1>
+      <p class="tag-subtitle">Media Pembelajaran IPAS Kelas 3</p>
+      <h1 class="main-title">
+        <span>Siklus Hidup</span><br>yang Menakjubkan
+      </h1>
       <div class="badge-ppg">
         PPG Calon Guru Gelombang 1 2026
       </div>
@@ -340,8 +344,8 @@
         <span class="card-label">Materi</span>
       </a>
 
-      <!-- Menu Ular Tangga -->
-      <a href="UT/index.html" class="menu-card ular-tangga" onclick="playClickSound(event, this.href)">
+      <!-- Menu Ular Tangga (Dialihkan ke ulartangga.html) -->
+      <a href="ulartangga.html" class="menu-card ular-tangga" onclick="playClickSound(event, this.href)">
         <div class="icon-wrapper">🎲</div>
         <span class="card-label">Ular Tangga</span>
       </a>
@@ -391,7 +395,7 @@
       }, 180);
     }
 
-    // Subtle Hover Sound Effect
+    // Hover Sound Effect
     document.querySelectorAll('.menu-card').forEach(card => {
       card.addEventListener('mouseenter', () => {
         initAudio();
