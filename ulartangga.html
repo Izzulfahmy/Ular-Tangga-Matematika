@@ -325,13 +325,21 @@
                 <div class="text-4xl bg-emerald-500/20 p-2.5 rounded-2xl border border-emerald-500/30">🎲</div>
                 <div>
                     <h1 class="text-2xl sm:text-4xl font-black font-jakarta tracking-tight text-white flex items-center gap-2">
-                        Ular Tangga Edukasi <span class="text-xs bg-emerald-500 text-slate-950 font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-widest">PRO</span>
+                        Ular Tangga Edukasi
                     </h1>
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Pengaturan Sesi & Karakter Pemain</p>
                 </div>
             </div>
-            <div class="hidden sm:block text-right">
-                <span class="text-xs text-emerald-400 font-black uppercase tracking-widest">Universitas Jember</span>
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:block text-right">
+                    <span class="text-xs text-emerald-400 font-black uppercase tracking-widest">Universitas Jember</span>
+                </div>
+                <!-- TOMBOL NAVIGASI HOME KEMBALI KE INDEX.HTML -->
+                <a href="index.html" class="nav-btn-custom" title="Kembali ke Beranda Utama (index.html)">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                </a>
             </div>
         </div>
 
@@ -524,6 +532,20 @@
 
     </div>
 
+    <!-- MODAL EVENT BANNER (MOTIVASI ULAR / TANGGA) -->
+    <div id="event-modal" class="fixed inset-0 z-[15000] flex items-center justify-center bg-slate-900/80 backdrop-blur-md p-4 hidden">
+        <div id="event-card" class="bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[3rem] shadow-2xl max-w-sm w-full text-center border-4 transform transition-all duration-300 scale-90">
+            <div id="event-emoji" class="text-6xl sm:text-7xl mb-3 animate-bounce">🪜</div>
+            <h3 id="event-title" class="text-2xl sm:text-3xl font-black font-jakarta mb-2">HEBAT! NAIK TANGGA!</h3>
+            <p id="event-message" class="text-sm sm:text-base font-bold text-slate-600 mb-6 leading-relaxed">
+                Kata motivasi akan muncul di sini...
+            </p>
+            <button onclick="closeEventModal()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-xl text-base transition-all shadow-lg active:scale-95">
+                Lanjutkan Permainan! 🚀
+            </button>
+        </div>
+    </div>
+
     <!-- MODAL QR CODE POP-UP -->
     <div id="qr-modal" class="fixed inset-0 z-[12000] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4 hidden">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-xs w-full text-center relative border-4 border-emerald-400">
@@ -597,6 +619,21 @@
         let currentGameId = "ROOM_" + Math.random().toString(36).substring(2, 8).toUpperCase();
         let qrCodeInstance = null;
         let lastProcessedTimestamp = 0;
+        let eventCallback = null;
+
+        const ladderMessages = [
+            "Luar biasa! Usaha pantang menyerah membawamu melompat lebih tinggi! 🪜✨",
+            "Kerja bagus! Semangat belajar membuatmu terus meluncur ke puncak! 🚀⭐",
+            "Hebat sekali! Setiap langkah kecil membawamu menuju kejayaan! 🎉🌈",
+            "Mantap! Kamu membuktikan bahwa kerja keras selalu membuahkan hasil! 💪🌟"
+        ];
+
+        const snakeMessages = [
+            "Jangan berkecil hati! Kegagalan adalah awal dari kebangkitan yang lebih kuat! 🐍💪",
+            "Tetap semangat! Orang hebat adalah mereka yang bangkit setelah terjatuh! 🌈✨",
+            "Jangan menyerah! Setiap tantangan akan membuatmu semakin bijaksana dan kuat! 🔥🦁",
+            "Terus berjuang! Perjalanan belum selesai, tunjukkan kemampuan terbaikmu! ✨🚀"
+        ];
 
         function getAudioContext() {
             if (!audioCtx) audioCtx = new AudioContext();
@@ -660,6 +697,44 @@
                     osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now + 0.3);
                 }
             } catch (e) { console.error("SFX error:", e); }
+        }
+
+        /* BANNER EVENT MOTIVASI ULAR / TANGGA */
+        function showEventBanner(type, callback) {
+            eventCallback = callback;
+            const modal = document.getElementById('event-modal');
+            const card = document.getElementById('event-card');
+            const emojiEl = document.getElementById('event-emoji');
+            const titleEl = document.getElementById('event-title');
+            const msgEl = document.getElementById('event-message');
+
+            if (type === 'ladder') {
+                playSound('correct');
+                emojiEl.innerText = "🪜";
+                titleEl.innerText = "HEBAT! NAIK TANGGA!";
+                titleEl.className = "text-2xl sm:text-3xl font-black font-jakarta mb-2 text-emerald-600";
+                card.className = "bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[3rem] shadow-2xl max-w-sm w-full text-center border-4 border-emerald-400 transform transition-all duration-300 scale-100";
+                msgEl.innerText = ladderMessages[Math.floor(Math.random() * ladderMessages.length)];
+            } else {
+                playSound('wrong');
+                emojiEl.innerText = "🐍";
+                titleEl.innerText = "TETAP SEMANGAT!";
+                titleEl.className = "text-2xl sm:text-3xl font-black font-jakarta mb-2 text-rose-600";
+                card.className = "bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[3rem] shadow-2xl max-w-sm w-full text-center border-4 border-rose-400 transform transition-all duration-300 scale-100";
+                msgEl.innerText = snakeMessages[Math.floor(Math.random() * snakeMessages.length)];
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeEventModal() {
+            playSound('click');
+            document.getElementById('event-modal').classList.add('hidden');
+            if (eventCallback) {
+                const cb = eventCallback;
+                eventCallback = null;
+                cb();
+            }
         }
 
         /* LOGIKA TAMPILKAN POP-UP QR CODE DINAMIS */
@@ -1285,10 +1360,21 @@
 
         function checkSnakesLadders(pIndex, pos) {
             if (pos === 100) { triggerWin(pIndex); return; }
+
             if (ladders[pos]) {
-                playerPositions[pIndex] = ladders[pos]; updatePlayerPosition(pIndex, ladders[pos]); setTimeout(nextTurn, 1000);
+                const destination = ladders[pos];
+                showEventBanner('ladder', () => {
+                    playerPositions[pIndex] = destination;
+                    updatePlayerPosition(pIndex, destination);
+                    setTimeout(nextTurn, 1000);
+                });
             } else if (snakes[pos]) {
-                playerPositions[pIndex] = snakes[pos]; updatePlayerPosition(pIndex, snakes[pos]); setTimeout(nextTurn, 1000);
+                const destination = snakes[pos];
+                showEventBanner('snake', () => {
+                    playerPositions[pIndex] = destination;
+                    updatePlayerPosition(pIndex, destination);
+                    setTimeout(nextTurn, 1000);
+                });
             } else {
                 setTimeout(nextTurn, 400);
             }
