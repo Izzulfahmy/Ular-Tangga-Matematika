@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ular Tangga Seru! 🐍🪜 (50 Petak)</title>
+    <title>Ular Tangga Seru! 🐍🪜</title>
     
     <!-- Favicon Logo UNEJ -->
     <link rel="icon" href="aset/logo/unej.png" type="image/png">
@@ -40,15 +40,14 @@
 
         .board-wrapper {
             width: 100%;
-            max-width: min(100vw - 16px, calc((100vh - 120px) * 2)); 
+            max-width: min(100vw - 16px, calc(100vh - 120px)); 
             position: relative;
             margin: auto;
         }
 
-        /* Rasio papan disesuaikan 10 kolom x 5 baris (2:1) */
         .board-container {
             width: 100%;
-            aspect-ratio: 2 / 1;
+            aspect-ratio: 1 / 1;
             position: relative;
             z-index: 10;
         }
@@ -66,7 +65,7 @@
             position: absolute;
             top: 2px;
             left: 4px;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             opacity: 0.7;
         }
 
@@ -81,8 +80,8 @@
         }
 
         @media (min-width: 640px) {
-            .cell-number { font-size: 0.85rem; top: 4px; left: 6px; }
-            .cell { border-radius: 10px; }
+            .cell-number { font-size: 0.8rem; top: 4px; left: 6px; }
+            .cell { border-radius: 12px; }
             .quiz-dot { width: 10px; height: 10px; top: 6px; right: 6px; }
         }
 
@@ -341,7 +340,7 @@
         </button>
     </div>
 
-    <!-- PENGATURAN PERMAINAN FULLSCREEN FULL-PAGE -->
+    <!-- PENGATURAN PERMAINAN FULLSCREEN FULL-PAGE (PRO LAYOUT) -->
     <div id="startup-modal" class="fixed inset-0 z-[10000] bg-slate-900 text-slate-100 flex flex-col justify-between p-4 sm:p-8 antialiased overflow-hidden">
         
         <!-- HEADER PENGATURAN -->
@@ -350,7 +349,7 @@
                 <div class="text-4xl bg-emerald-500/20 p-2.5 rounded-2xl border border-emerald-500/30">🎲</div>
                 <div>
                     <h1 class="text-2xl sm:text-4xl font-black font-jakarta tracking-tight text-white flex items-center gap-2">
-                        Ular Tangga Edukasi (50 Petak)
+                        Ular Tangga Edukasi
                     </h1>
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Pengaturan Sesi & Karakter Pemain</p>
                 </div>
@@ -437,14 +436,14 @@
     </div>
 
     <!-- MAIN WRAPPER TERSTRUKTUR FULLSCREEN PAPAN -->
-    <div class="w-full max-w-2xl flex flex-col items-center gap-3 my-auto py-2">
+    <div class="w-full max-w-xl flex flex-col items-center gap-3 my-auto py-2">
 
-        <!-- 1. PAPAN PERMAINAN 50 PETAK (5 BARIS X 10 KOLOM) -->
+        <!-- 1. PAPAN PERMAINAN -->
         <div class="board-wrapper flex justify-center items-center">
             <div class="board-container bg-white p-1 sm:p-2 rounded-2xl sm:rounded-[2rem] shadow-lg border-2 sm:border-4 border-white">
                 <div class="w-full h-full bg-slate-50 rounded-xl overflow-hidden border border-slate-200 relative">
                     <svg id="svg-layer" class="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
-                    <div id="board-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-5 p-0.5 w-full h-full border-t border-l border-slate-300/60"></div>
+                    <div id="board-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-10 p-0.5 w-full h-full border-t border-l border-slate-300/60"></div>
 
                     <div id="tokens-container">
                         <div id="player-token-0" class="player-token hidden"><div id="token-emoji-0" class="token-emoji">🐰</div><div class="token-base base-0"></div></div>
@@ -617,7 +616,7 @@
         <div class="bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border-4 border-yellow-300 shadow-2xl text-center transform scale-0 transition-transform duration-300 max-w-sm w-full" id="win-modal">
             <div class="text-5xl sm:text-7xl mb-2 sm:mb-4">🏆</div>
             <h2 id="win-title" class="text-2xl sm:text-4xl font-black mb-2 font-jakarta">SELAMAT!</h2>
-            <p id="win-desc" class="text-xs sm:text-lg font-bold text-slate-600 mb-4 sm:mb-6">Kamu berhasil mencapai garis akhir (50).</p>
+            <p id="win-desc" class="text-xs sm:text-lg font-bold text-slate-600 mb-4 sm:mb-6">Kamu berhasil mencapai garis akhir (100).</p>
             <button onclick="resetGame()" class="px-6 py-2.5 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-black rounded-xl border-2 border-yellow-600 shadow-md transition-all pointer-events-auto text-xs sm:text-base">
                 Main Lagi!
             </button>
@@ -808,7 +807,7 @@
             }
         }
 
-        /* PERMAINAN ULAR TANGGA 50 PETAK */
+        /* PERMAINAN ULAR TANGGA */
         const availableAnimals = [
             { name: 'Kelinci', emoji: '🐰' },
             { name: 'Kambing', emoji: '🐐' },
@@ -822,10 +821,8 @@
             { name: 'Serigala', emoji: '🐺' }
         ];
 
-        /* ULAR DAN TANGGA DISESUAIKAN UNTUK 50 PETAK (4 ULAR, 4 TANGGA) */
-        const ladders = { 3: 11, 8: 19, 16: 27, 31: 46 };
-        const snakes = { 22: 9, 36: 18, 43: 29, 49: 35 };
-        
+        const ladders = { 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
+        const snakes = { 17: 7, 54: 34, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 99: 78 };
         const cellColors = ['bg-red-50 text-red-500', 'bg-blue-50 text-blue-500', 'bg-emerald-50 text-emerald-500', 'bg-yellow-50 text-yellow-600', 'bg-purple-50 text-purple-500', 'bg-pink-50 text-pink-500'];
 
         let tempPlayerCount = 1; 
@@ -888,7 +885,7 @@
             renderAnimalSelectionControls();
         }
 
-        /* RENDERING SELEKSI KARAKTER */
+        /* RENDERING SELEKSI KARAKTER DENGAN DESIGN FULLSCREEN BARU */
         function renderAnimalSelectionControls() {
             const tabsContainer = document.getElementById('player-tabs-container');
             const gridContainer = document.getElementById('animals-catalog-grid');
@@ -896,10 +893,12 @@
             tabsContainer.innerHTML = '';
             gridContainer.innerHTML = '';
 
+            // Update Label Header Pemain Aktif
             document.getElementById('active-player-label-title').innerText = `Pemain ${activePlayerTab + 1}:`;
             document.getElementById('active-player-label-name').innerText = `${selectedAnimals[activePlayerTab].emoji} ${selectedAnimals[activePlayerTab].name}`;
             document.getElementById('active-player-label-emoji').innerText = selectedAnimals[activePlayerTab].emoji;
 
+            // Render Tab Switcher Pemain
             for (let i = 0; i < tempPlayerCount; i++) {
                 const isTabActive = activePlayerTab === i;
                 const tabBtn = document.createElement('button');
@@ -917,6 +916,7 @@
                 tabsContainer.appendChild(tabBtn);
             }
 
+            // Render Katalog 10 Hewan Lengkap di Grid Layar Utama
             availableAnimals.forEach(animal => {
                 const isSelectedByCurrentPlayer = selectedAnimals[activePlayerTab].name === animal.name;
                 const cardBtn = document.createElement('button');
@@ -978,6 +978,7 @@
             }, 900);
         }
 
+        /* MENDENGARKAN PERINTAH FIRESTORE DARI REMOTE HP */
         function setupFirestoreRemoteListener() {
             if(!window.dbFirestore) return;
             const gameRef = window.fsDoc(window.dbFirestore, "game_sessions", currentGameId);
@@ -1016,13 +1017,13 @@
             if (bankSoalGlobal.length === 0) return;
 
             let petakTersedia = [];
-            for(let i = 2; i <= 48; i++) {
+            for(let i = 2; i <= 98; i++) {
                 if(!ladders[i] && !snakes[i]) {
                     petakTersedia.push(i);
                 }
             }
             if(petakTersedia.length < bankSoalGlobal.length) {
-                for(let i = 2; i <= 48; i++) {
+                for(let i = 2; i <= 98; i++) {
                     if(!petakTersedia.includes(i)) petakTersedia.push(i);
                 }
             }
@@ -1068,11 +1069,10 @@
             updateTurnUI();
         }
 
-        /* MEMBANGUN PAPAN 50 PETAK (5 BARIS X 10 KOLOM) */
         function buildBoard() {
             const grid = document.getElementById('board-grid');
             grid.innerHTML = '';
-            for (let row = 4; row >= 0; row--) {
+            for (let row = 9; row >= 0; row--) {
                 for (let col = 0; col < 10; col++) {
                     let num = (row % 2 === 0) ? (row * 10) + col + 1 : (row * 10) + (9 - col) + 1; 
                     const cell = document.createElement('div');
@@ -1084,13 +1084,11 @@
             }
         }
 
-        /* KALKULASI KOORDINAT PRESISI UNTUK PAPAN 5 BARIS X 10 KOLOM */
         function getCoordinates(num) {
             let row = Math.floor((num - 1) / 10);
             let col = (num - 1) % 10;
             if (row % 2 !== 0) col = 9 - col;
-            let x = (col * 10) + 5; 
-            let y = 90 - (row * 20); 
+            let x = (col * 10) + 5; let y = 95 - (row * 10);
             return { x, y };
         }
 
@@ -1124,14 +1122,14 @@
                 svgContent += `<line x1="${r1x1}" y1="${r1y1}" x2="${r1x2}" y2="${r1y2}" stroke="#78350f" stroke-width="0.8" stroke-linecap="round"/>`;
                 svgContent += `<line x1="${r2x1}" y1="${r2y1}" x2="${r2x2}" y2="${r2y2}" stroke="#78350f" stroke-width="0.8" stroke-linecap="round"/>`;
 
-                const stepSpacing = 5.5;
+                const stepSpacing = 4.5;
                 const rungCount = Math.floor(length / stepSpacing); 
                 for(let i = 1; i <= rungCount; i++) {
                     const t = i / (rungCount + 1);
                     const rx1 = r1x1 + (r1x2 - r1x1) * t; 
                     const ry1 = r1y1 + (r1y2 - r1y1) * t;
                     const rx2 = r2x1 + (r2x2 - r2x1) * t; 
-                    const ry2 = r2y2 + (r2y2 - r2y1) * t;
+                    const ry2 = r2y1 + (r2y2 - r2y1) * t;
                     svgContent += `<line x1="${rx1}" y1="${ry1}" x2="${rx2}" y2="${ry2}" stroke="#a16207" stroke-width="0.6" stroke-linecap="round"/>`;
                 }
             }
@@ -1152,7 +1150,7 @@
                 const length = Math.sqrt(dx*dx + dy*dy);
                 const px = -dy/length; 
                 const py = dx/length;
-                const curve = length > 30 ? 10 : 5; 
+                const curve = length > 30 ? 12 : 6; 
                 
                 const cx1 = hPos.x + dx*0.3 + px*curve; 
                 const cy1 = hPos.y + dy*0.3 + py*curve;
@@ -1296,7 +1294,7 @@
                         previousPositions[currentPlayer] = cPos; 
 
                         let tPos = cPos + result;
-                        if (tPos > 50) { setTimeout(nextTurn, 800); return; }
+                        if (tPos > 100) { setTimeout(nextTurn, 800); return; }
                         
                         moveTokenStepByStep(currentPlayer, cPos, tPos, 300, () => pemicuEvaluasiPetakLangkah(tPos));
                     }, 600);
@@ -1360,7 +1358,7 @@
         }
 
         function checkSnakesLadders(pIndex, pos) {
-            if (pos === 50) { triggerWin(pIndex); return; }
+            if (pos === 100) { triggerWin(pIndex); return; }
             if (ladders[pos]) {
                 playSound('correct');
                 showEventBanner('ladder', selectedAnimals[pIndex].name);
@@ -1379,7 +1377,7 @@
         }
 
         function nextTurn() {
-            if(playerPositions.includes(50)) return;
+            if(playerPositions.includes(100)) return;
             currentPlayer = (currentPlayer + 1) % numPlayers; updateTurnUI();
             isMoving = false; document.getElementById('btn-roll').disabled = false;
         }
@@ -1388,7 +1386,7 @@
             playSound('correct');
             const mc = document.getElementById('confetti-container'); const wm = document.getElementById('win-modal');
             document.getElementById('win-title').innerHTML = `${selectedAnimals[pIndex].emoji} ${selectedAnimals[pIndex].name} MENANG!`;
-            document.getElementById('win-desc').innerHTML = `<b>${selectedAnimals[pIndex].name}</b> berhasil sampai petak 50!`;
+            document.getElementById('win-desc').innerHTML = `<b>${selectedAnimals[pIndex].name}</b> berhasil sampai petak 100!`;
             mc.classList.remove('hidden');
             setTimeout(() => { wm.classList.remove('scale-0'); wm.classList.add('scale-100'); }, 50);
         }
