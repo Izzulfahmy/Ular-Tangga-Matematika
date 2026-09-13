@@ -14,6 +14,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- QRCode.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -228,7 +231,7 @@
         }
         .animate-pop { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-        /* Styling Tombol Floating Glassmorphism Baru */
+        /* Styling Tombol Floating Glassmorphism */
         .nav-btn-custom {
             width: 48px;
             height: 48px;
@@ -265,21 +268,15 @@
         }
 
         @media (max-width: 480px) {
-            .nav-btn-custom {
-                width: 40px;
-                height: 40px;
-            }
-            .nav-btn-custom svg {
-                width: 18px;
-                height: 18px;
-            }
+            .nav-btn-custom { width: 40px; height: 40px; }
+            .nav-btn-custom svg { width: 18px; height: 18px; }
         }
     </style>
 
     <!-- Firebase SDK Setup -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC3hRtUyDs8_zTLT-977eYtgcf74yvVu9w",
@@ -297,20 +294,21 @@
         window.dbFirestore = db;
         window.fsCollection = collection;
         window.fsGetDocs = getDocs;
+        window.fsDoc = doc;
+        window.fsSetDoc = setDoc;
+        window.fsOnSnapshot = onSnapshot;
     </script>
 </head>
 <body class="static-bg min-h-screen w-screen overflow-x-hidden text-slate-800 antialiased relative flex flex-col justify-center items-center p-2 sm:p-4">
 
-    <!-- NAVIGASI KIRI ATAS: TOMBOL HOME & FULLSCREEN (DESAIN GLASSMORPHISM SVG) -->
+    <!-- NAVIGASI KIRI ATAS: TOMBOL HOME & FULLSCREEN -->
     <div class="fixed top-4 left-4 z-[100] flex items-center gap-3">
-        <!-- Tombol Home SVG -->
         <button onclick="goHome()" class="nav-btn-custom" title="Kembali ke Beranda / Menu Utama">
             <svg viewBox="0 0 24 24">
                 <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
             </svg>
         </button>
 
-        <!-- Tombol Fullscreen SVG -->
         <button onclick="toggleFullScreen()" id="fsBtn" class="nav-btn-custom" title="Layar Penuh">
             <svg id="fsIcon" viewBox="0 0 24 24">
                 <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
@@ -318,7 +316,7 @@
         </button>
     </div>
 
-    <!-- FULLSCREEN SETUP MODAL (MENUTUPI SELURUH PAPAN GAME) -->
+    <!-- FULLSCREEN SETUP MODAL -->
     <div id="startup-modal" class="fixed inset-0 z-[10000] flex items-center justify-center bg-emerald-950/90 backdrop-blur-md p-4 overflow-y-auto">
         <div id="startup-card" class="bg-white p-6 sm:p-8 rounded-3xl sm:rounded-[2.5rem] shadow-2xl max-w-lg w-full border-4 border-emerald-400 text-center space-y-6 my-auto">
             <div>
@@ -327,7 +325,6 @@
                 <p class="text-xs font-extrabold text-slate-400 mt-1 uppercase tracking-wider">Pengaturan Permainan</p>
             </div>
             
-            <!-- SELEKSI JUMLAH PEMAIN -->
             <div class="space-y-2">
                 <label class="block text-xs font-black text-slate-500 uppercase tracking-wider">1. Pilih Jumlah Pemain</label>
                 <div class="grid grid-cols-4 gap-2">
@@ -338,11 +335,9 @@
                 </div>
             </div>
 
-            <!-- SELEKSI AVATAR / HEWAN UNTUK TIAP PEMAIN -->
             <div class="space-y-3 text-left">
                 <label class="block text-xs font-black text-slate-500 uppercase tracking-wider text-center">2. Pilih Hewan Pion Pemain</label>
                 <div id="animal-selection-container" class="space-y-2 max-h-56 overflow-y-auto pr-1">
-                    <!-- Dynamic rendering via JS -->
                 </div>
             </div>
 
@@ -391,16 +386,17 @@
             </button>
         </div>
 
-        <!-- 3. DAFTAR PEMAIN -->
-        <div class="w-full lg:fixed lg:top-5 lg:right-5 lg:w-56 bg-white p-3 rounded-2xl shadow-md border-2 border-emerald-100 flex flex-col gap-2 max-h-48 lg:max-h-80 overflow-y-auto z-[90]">
+        <!-- 3. DAFTAR PEMAIN (DENGAN TOMBOL EFEK QR CODE REMOTE) -->
+        <div class="w-full lg:fixed lg:top-5 lg:right-5 lg:w-64 bg-white p-3 rounded-2xl shadow-md border-2 border-emerald-100 flex flex-col gap-2 max-h-48 lg:max-h-80 overflow-y-auto z-[90]">
             <div class="flex items-center justify-between border-b pb-1 sticky top-0 bg-white z-10">
                 <h3 class="font-black text-slate-700 text-xs tracking-wide uppercase flex items-center gap-1.5">
                     <span>👥</span> Daftar Pemain
                 </h3>
-                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Petak</span>
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Aksi / Petak</span>
             </div>
 
             <div class="flex flex-col gap-1.5">
+                <!-- PEMAIN 1 -->
                 <div id="card-p0" class="bg-white p-2 rounded-xl border border-blue-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
                         <div id="card-emoji-0" class="w-7 h-7 rounded-lg bg-blue-100 border border-blue-400 flex items-center justify-center font-black text-sm">🐰</div>
@@ -409,11 +405,17 @@
                             <div class="text-[9px] font-bold text-blue-500 uppercase leading-none" id="card-name-0">Kelinci</div>
                         </div>
                     </div>
-                    <div class="bg-blue-50 border border-blue-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
-                        <div class="text-xs font-black text-blue-600 leading-none" id="pos-p0">1</div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="showQRCode(0)" title="Scan Remote HP Pemain 1" class="w-7 h-7 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-300 flex items-center justify-center text-blue-600 transition-all active:scale-95">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                        </button>
+                        <div class="bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-lg text-center min-w-[28px]">
+                            <div class="text-xs font-black text-blue-600 leading-none" id="pos-p0">1</div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- PEMAIN 2 -->
                 <div id="card-p1" class="bg-white p-2 rounded-xl border border-red-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
                         <div id="card-emoji-1" class="w-7 h-7 rounded-lg bg-red-100 border border-red-400 flex items-center justify-center font-black text-sm">🐐</div>
@@ -422,11 +424,17 @@
                             <div class="text-[9px] font-bold text-red-500 uppercase leading-none" id="card-name-1">Kambing</div>
                         </div>
                     </div>
-                    <div class="bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
-                        <div class="text-xs font-black text-red-600 leading-none" id="pos-p1">1</div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="showQRCode(1)" title="Scan Remote HP Pemain 2" class="w-7 h-7 rounded-lg bg-red-50 hover:bg-red-100 border border-red-300 flex items-center justify-center text-red-600 transition-all active:scale-95">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                        </button>
+                        <div class="bg-red-50 border border-red-200 px-2 py-0.5 rounded-lg text-center min-w-[28px]">
+                            <div class="text-xs font-black text-red-600 leading-none" id="pos-p1">1</div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- PEMAIN 3 -->
                 <div id="card-p2" class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
                         <div id="card-emoji-2" class="w-7 h-7 rounded-lg bg-emerald-100 border border-emerald-400 flex items-center justify-center font-black text-sm">🐸</div>
@@ -435,11 +443,17 @@
                             <div class="text-[9px] font-bold text-emerald-500 uppercase leading-none" id="card-name-2">Katak</div>
                         </div>
                     </div>
-                    <div class="bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
-                        <div class="text-xs font-black text-emerald-600 leading-none" id="pos-p2">1</div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="showQRCode(2)" title="Scan Remote HP Pemain 3" class="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-600 transition-all active:scale-95">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                        </button>
+                        <div class="bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-lg text-center min-w-[28px]">
+                            <div class="text-xs font-black text-emerald-600 leading-none" id="pos-p2">1</div>
+                        </div>
                     </div>
                 </div>
 
+                <!-- PEMAIN 4 -->
                 <div id="card-p3" class="bg-white p-2 rounded-xl border border-yellow-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
                         <div id="card-emoji-3" class="w-7 h-7 rounded-lg bg-yellow-100 border border-yellow-400 flex items-center justify-center font-black text-sm">🐱</div>
@@ -448,13 +462,39 @@
                             <div class="text-[9px] font-bold text-yellow-600 uppercase leading-none" id="card-name-3">Kucing</div>
                         </div>
                     </div>
-                    <div class="bg-yellow-50 border border-yellow-200 px-2.5 py-0.5 rounded-lg text-center min-w-[32px]">
-                        <div class="text-xs font-black text-yellow-600 leading-none" id="pos-p3">1</div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="showQRCode(3)" title="Scan Remote HP Pemain 4" class="w-7 h-7 rounded-lg bg-yellow-50 hover:bg-yellow-100 border border-yellow-300 flex items-center justify-center text-yellow-600 transition-all active:scale-95">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/></svg>
+                        </button>
+                        <div class="bg-yellow-50 border border-yellow-200 px-2 py-0.5 rounded-lg text-center min-w-[28px]">
+                            <div class="text-xs font-black text-yellow-600 leading-none" id="pos-p3">1</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+    </div>
+
+    <!-- MODAL QR CODE POP-UP -->
+    <div id="qr-modal" class="fixed inset-0 z-[12000] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4 hidden">
+        <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-xs w-full text-center relative border-4 border-emerald-400">
+            <button onclick="closeQRCodeModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 p-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+
+            <div class="text-3xl mb-1" id="qr-modal-emoji">📱</div>
+            <h3 class="text-xl font-black text-slate-800" id="qr-modal-title">Remote Pemain</h3>
+            <p class="text-xs text-slate-500 font-bold mt-0.5">Scan QR Code ini dengan kamera HP untuk mengontrol permainan.</p>
+
+            <div class="my-4 flex justify-center bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-inner">
+                <div id="qrcode-box" class="flex justify-center"></div>
+            </div>
+
+            <button onclick="closeQRCodeModal()" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-black rounded-xl text-sm transition-all shadow-md">
+                Tutup
+            </button>
+        </div>
     </div>
 
     <!-- MODAL KUIS SISWA -->
@@ -502,11 +542,12 @@
         </div>
     </div>
 
-    <!-- LOGIKA GAME, EFEK SUARA & FULLSCREEN MODERN -->
+    <!-- LOGIKA GAME, EFEK SUARA & REMOTE FIRESTORE -->
     <script>
-        /* SINTESIS EFEK SUARA WEB AUDIO API IN-LINE */
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
+        let currentGameId = "ROOM_" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        let qrCodeInstance = null;
 
         function getAudioContext() {
             if (!audioCtx) audioCtx = new AudioContext();
@@ -572,7 +613,38 @@
             } catch (e) { console.error("SFX error:", e); }
         }
 
-        /* AKSI NAVIGASI HOME & FULLSCREEN MODERN WITH SVG SWITCH */
+        /* LOGIKA TAMPILKAN POP-UP QR CODE DINAMIS */
+        function showQRCode(playerIdx) {
+            playSound('click');
+            const modal = document.getElementById('qr-modal');
+            const qrBox = document.getElementById('qrcode-box');
+            
+            document.getElementById('qr-modal-emoji').innerText = selectedAnimals[playerIdx].emoji;
+            document.getElementById('qr-modal-title').innerText = `Remote ${selectedAnimals[playerIdx].name}`;
+
+            qrBox.innerHTML = '';
+            
+            // Format URL Remote HP
+            const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+            const remoteUrl = `${baseUrl}/remote.html?gameId=${currentGameId}&player=${playerIdx}`;
+
+            qrCodeInstance = new QRCode(qrBox, {
+                text: remoteUrl,
+                width: 180,
+                height: 180,
+                colorDark : "#064e3b",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeQRCodeModal() {
+            playSound('click');
+            document.getElementById('qr-modal').classList.add('hidden');
+        }
+
         function goHome() {
             playSound('click');
             document.getElementById('startup-modal').classList.remove('hidden');
@@ -613,7 +685,7 @@
             }
         }
 
-        // Hover Sound Effect pada tombol navigasi
+        // Hover SFX
         document.querySelectorAll('.nav-btn-custom').forEach(btn => {
             btn.addEventListener('mouseenter', () => {
                 const ctx = getAudioContext();
@@ -735,6 +807,7 @@
             playSound('click');
             numPlayers = tempPlayerCount;
             distribusikanKuisAcakPapan();
+            setupFirestoreRemoteListener();
 
             const modal = document.getElementById('startup-modal');
             const countdownOverlay = document.getElementById('countdown-overlay');
@@ -767,6 +840,36 @@
                     executeStartGame();
                 }
             }, 900);
+        }
+
+        /* MENDENGARKAN PERINDAH FIRESTORE DARI REMOTE HP */
+        function setupFirestoreRemoteListener() {
+            if(!window.dbFirestore) return;
+            const gameRef = window.fsDoc(window.dbFirestore, "game_sessions", currentGameId);
+            
+            // Inisialisasi room sesi di Firestore
+            window.fsSetDoc(gameRef, {
+                currentPlayer: 0,
+                status: "active",
+                lastAction: null,
+                timestamp: Date.now()
+            }, { merge: true });
+
+            // Listen real-time command
+            window.fsOnSnapshot(gameRef, (snapshot) => {
+                if(snapshot.exists()) {
+                    const data = snapshot.data();
+                    if(data.lastAction && data.lastAction.type === "ROLL_DICE") {
+                        if(data.lastAction.player === currentPlayer && !isMoving) {
+                            rollDice3D();
+                        }
+                    } else if(data.lastAction && data.lastAction.type === "SUBMIT_ANSWER") {
+                        if(data.lastAction.player === currentPlayer && soalAktif) {
+                            checkJawabanSiswa(data.lastAction.answer);
+                        }
+                    }
+                }
+            });
         }
 
         function distribusikanKuisAcakPapan() {
@@ -931,6 +1034,14 @@
                         card.classList.remove('card-active', 'ring-2', playerRingClasses[i]);
                     }
                 }
+            }
+
+            // Sync giliran ke Firestore
+            if(window.dbFirestore && currentGameId) {
+                window.fsSetDoc(window.fsDoc(window.dbFirestore, "game_sessions", currentGameId), {
+                    currentPlayer: currentPlayer,
+                    timestamp: Date.now()
+                }, { merge: true });
             }
         }
 
