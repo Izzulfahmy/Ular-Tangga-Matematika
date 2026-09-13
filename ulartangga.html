@@ -38,10 +38,10 @@
             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #f0fdfa 100%);
         }
 
-        /* Ukuran papan disesuaikan agar lebih lebar & responsif */
+        /* PERLEBARAN UKURAN PAPAN */
         .board-wrapper {
             width: 100%;
-            max-width: min(100vw - 24px, calc(100vh - 100px)); 
+            max-width: min(100vw - 16px, calc(100vh - 80px)); 
             position: relative;
             margin: auto;
         }
@@ -67,7 +67,7 @@
             top: 2px;
             left: 4px;
             font-size: 0.65rem;
-            opacity: 0.75;
+            opacity: 0.7;
         }
 
         .quiz-dot {
@@ -232,7 +232,6 @@
         }
         .animate-pop { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-        /* Styling Tombol Floating Glassmorphism */
         .nav-btn-custom {
             width: 48px;
             height: 48px;
@@ -273,7 +272,6 @@
             .nav-btn-custom svg { width: 18px; height: 18px; }
         }
 
-        /* Banner Motivasi Top Toast Animation */
         #event-banner {
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
         }
@@ -287,6 +285,13 @@
             opacity: 1;
             pointer-events: auto;
         }
+
+        /* ANIMASI CELEBRATION WINNER FULLSCREEN */
+        @keyframes trophyBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+        .trophy-anim { animation: trophyBounce 1.5s infinite ease-in-out; }
     </style>
 
     <!-- Firebase SDK Setup -->
@@ -315,7 +320,7 @@
         window.fsOnSnapshot = onSnapshot;
     </script>
 </head>
-<body class="static-bg min-h-screen w-screen overflow-x-hidden text-slate-800 antialiased relative flex flex-col justify-center items-center p-2 sm:p-4">
+<body class="static-bg min-h-screen w-screen overflow-x-hidden text-slate-800 antialiased relative flex flex-col justify-center items-center p-1 sm:p-2">
 
     <!-- BANNER MOTIVASI OTOMATIS (TOP TOAST NOTIFIKASI) -->
     <div id="event-banner" class="fixed top-5 z-[30000] max-w-md w-[92%] p-4 rounded-3xl shadow-2xl border-4 banner-hidden transition-all duration-500 flex items-center gap-3">
@@ -341,7 +346,7 @@
         </button>
     </div>
 
-    <!-- PENGATURAN PERMAINAN FULLSCREEN FULL-PAGE (PRO LAYOUT) -->
+    <!-- PENGATURAN PERMAINAN FULLSCREEN FULL-PAGE -->
     <div id="startup-modal" class="fixed inset-0 z-[10000] bg-slate-900 text-slate-100 flex flex-col justify-between p-4 sm:p-8 antialiased overflow-hidden">
         
         <!-- HEADER PENGATURAN -->
@@ -355,7 +360,7 @@
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Pengaturan Sesi & Karakter Pemain</p>
                 </div>
             </div>
-            <!-- TOMBOL KEMBALI KE BERANDA (INDEX.HTML) -->
+            <!-- TOMBOL KEMBALI KE BERANDA -->
             <div class="flex items-center gap-3">
                 <a href="index.html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shadow-md">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -369,13 +374,12 @@
             </div>
         </div>
 
-        <!-- AREA UTAMA SPLIT PANEL (KIRI CONTROLS & KANAN AVATAR GRID) -->
+        <!-- AREA UTAMA SPLIT PANEL -->
         <div class="my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-center py-4">
             
-            <!-- PANEL KIRI: JUMLAH PEMAIN & TAB SELEKSI (4 COL) -->
+            <!-- PANEL KIRI: JUMLAH PEMAIN & TAB SELEKSI -->
             <div class="lg:col-span-4 bg-slate-800/80 backdrop-blur-md p-5 rounded-3xl border border-slate-700/80 shadow-2xl space-y-6">
                 
-                <!-- 1. SELEKSI JUMLAH PEMAIN -->
                 <div class="space-y-2">
                     <label class="block text-xs font-black text-emerald-400 uppercase tracking-widest">1. Pilih Jumlah Pemain</label>
                     <div class="grid grid-cols-4 gap-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-700">
@@ -386,13 +390,11 @@
                     </div>
                 </div>
 
-                <!-- 2. PILIH PEMAIN AKTIF (TAB SWITCHER) -->
                 <div class="space-y-2">
                     <label class="block text-xs font-black text-emerald-400 uppercase tracking-widest">2. Pilih Pemain Yang Diatur</label>
                     <div id="player-tabs-container" class="grid grid-cols-2 gap-2"></div>
                 </div>
 
-                <!-- STATUS SELEKSI PEMAIN AKTIF -->
                 <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-700 flex items-center justify-between">
                     <div>
                         <span id="active-player-label-title" class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Karakter Saat Ini:</span>
@@ -403,20 +405,19 @@
 
             </div>
 
-            <!-- PANEL KANAN: KATALOG HEWAN FULLSCREEN GRID (8 COL) -->
+            <!-- PANEL KANAN: KATALOG HEWAN GRID -->
             <div class="lg:col-span-8 bg-slate-800/80 backdrop-blur-md p-6 rounded-3xl border border-slate-700/80 shadow-2xl space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
                     <label class="block text-xs font-black text-emerald-400 uppercase tracking-widest">3. Pilih Hewan Pion Untuk Pemain Aktif</label>
                     <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Klik Langsung Karakter</span>
                 </div>
 
-                <!-- KATALOG 10 HEWAN DENGAN AVATAR BESAR DAN CERIA -->
                 <div id="animals-catalog-grid" class="grid grid-cols-2 sm:grid-cols-5 gap-3"></div>
             </div>
 
         </div>
 
-        <!-- FOOTER BAR FULLSCREEN: TOMBOL START GAME -->
+        <!-- FOOTER BAR -->
         <div class="border-t border-slate-800 pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p class="text-xs text-slate-500 font-bold tracking-wider uppercase">
                 Siap untuk belajar sambil bermain dengan menyenangkan! ✨
@@ -436,13 +437,13 @@
         </div>
     </div>
 
-    <!-- MAIN WRAPPER TERSTRUKTUR FULLSCREEN PAPAN (DIPERLEBAR KE MAX-W-3XL) -->
-    <div class="w-full max-w-3xl flex flex-col items-center gap-3 my-auto py-2">
+    <!-- MAIN WRAPPER PAPAN UTAMA -->
+    <div class="w-full max-w-5xl flex flex-col items-center gap-3 my-auto py-1">
 
-        <!-- 1. PAPAN PERMAINAN (DIPERBESAR) -->
+        <!-- 1. PAPAN PERMAINAN DENGAN UKURAN LEBIH BANYAK MEMENUHI LAYAR -->
         <div class="board-wrapper flex justify-center items-center">
-            <div class="board-container bg-white p-1.5 sm:p-3 rounded-2xl sm:rounded-[2.5rem] shadow-xl border-2 sm:border-4 border-white">
-                <div class="w-full h-full bg-slate-50 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 relative">
+            <div class="board-container bg-white p-1 sm:p-2 rounded-2xl sm:rounded-[2rem] shadow-xl border-2 sm:border-4 border-white">
+                <div class="w-full h-full bg-slate-50 rounded-xl overflow-hidden border border-slate-200 relative">
                     <svg id="svg-layer" class="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
                     <div id="board-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-10 p-0.5 w-full h-full border-t border-l border-slate-300/60"></div>
 
@@ -458,7 +459,7 @@
 
         <!-- 2. TOMBOL LEMPAR DADU -->
         <div class="w-full lg:fixed lg:bottom-5 lg:right-5 lg:w-auto z-[90]">
-            <button id="btn-roll" onclick="rollDice3D()" class="toy-btn w-full lg:w-auto bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl py-3.5 lg:py-3 px-5 lg:px-6 shadow-xl active:translate-y-1 transition-all text-sm tracking-wider uppercase border border-brand-600 flex items-center justify-center gap-3">
+            <button id="btn-roll" onclick="rollDice3D()" class="toy-btn w-full lg:w-auto bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl py-3 lg:py-2.5 px-4 lg:px-5 shadow-md active:translate-y-1 transition-all text-sm tracking-wider uppercase border border-brand-600 flex items-center justify-center gap-3">
                 <div id="mini-dice-visual" class="w-8 h-8 lg:w-9 lg:h-9 bg-white border border-slate-200 rounded-xl flex items-center justify-center p-0.5 shrink-0">
                     <div class="mini-dice-grid">
                         <div class="col-start-2 row-start-2 mini-pip-red"></div>
@@ -612,14 +613,24 @@
         </div>
     </div>
 
-    <!-- WIN MODAL LAYER -->
-    <div id="confetti-container" class="fixed inset-0 pointer-events-none z-[9999] hidden flex justify-center items-center p-4">
-        <div class="bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border-4 border-yellow-300 shadow-2xl text-center transform scale-0 transition-transform duration-300 max-w-sm w-full" id="win-modal">
-            <div class="text-5xl sm:text-7xl mb-2 sm:mb-4">🏆</div>
-            <h2 id="win-title" class="text-2xl sm:text-4xl font-black mb-2 font-jakarta">SELAMAT!</h2>
-            <p id="win-desc" class="text-xs sm:text-lg font-bold text-slate-600 mb-4 sm:mb-6">Kamu berhasil mencapai garis akhir (100).</p>
-            <button onclick="resetGame()" class="px-6 py-2.5 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-black rounded-xl border-2 border-yellow-600 shadow-md transition-all pointer-events-auto text-xs sm:text-base">
-                Main Lagi!
+    <!-- PERAYAAN FINISH MERIAH FULL-SCREEN OVERLAY -->
+    <div id="confetti-container" class="fixed inset-0 z-[40000] bg-slate-950/90 backdrop-blur-md hidden flex flex-col justify-center items-center p-4 text-center">
+        <div class="transform scale-0 transition-transform duration-500 max-w-xl w-full flex flex-col items-center bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 p-8 sm:p-12 rounded-[3rem] border-8 border-yellow-200 shadow-[0_0_80px_rgba(245,158,11,0.6)] relative overflow-hidden" id="win-modal">
+            
+            <!-- EFEK KEMBANG API EMOJI -->
+            <div class="absolute -top-4 -left-4 text-6xl animate-bounce">🎆</div>
+            <div class="absolute -top-4 -right-4 text-6xl animate-bounce">✨</div>
+            <div class="absolute -bottom-4 -left-4 text-6xl animate-bounce">🎉</div>
+            <div class="absolute -bottom-4 -right-4 text-6xl animate-bounce">🥳</div>
+
+            <div class="text-7xl sm:text-9xl mb-4 trophy-anim drop-shadow-2xl">🏆</div>
+            <h2 id="win-title" class="text-3xl sm:text-5xl font-black text-slate-950 mb-3 font-jakarta tracking-wide uppercase">SELAMAT!</h2>
+            <p id="win-desc" class="text-base sm:text-2xl font-black text-slate-900 mb-8 leading-snug">
+                Pemain berhasil menaklukkan papan dan mencapai Garis Finish!
+            </p>
+            <button onclick="resetGame()" class="toy-btn px-10 py-4 bg-slate-950 hover:bg-slate-900 text-amber-300 font-black rounded-2xl border-4 border-yellow-300 shadow-2xl transition-all text-lg sm:text-xl uppercase tracking-wider flex items-center gap-3">
+                <span>MAIN LAGI!</span>
+                <span class="text-2xl">🔄</span>
             </button>
         </div>
     </div>
@@ -733,11 +744,32 @@
                     osc.type = 'sawtooth'; osc.frequency.setValueAtTime(180, now); osc.frequency.linearRampToValueAtTime(110, now + 0.3);
                     gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                     osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now + 0.3);
+                } else if (type === 'fanfare') {
+                    /* SUARA SELEBRASI FINISH MERIAH */
+                    const fanfareNotes = [
+                        { f: 523.25, d: 0.15, t: 0 },
+                        { f: 659.25, d: 0.15, t: 0.15 },
+                        { f: 783.99, d: 0.15, t: 0.30 },
+                        { f: 1046.50, d: 0.45, t: 0.45 },
+                        { f: 880.00, d: 0.20, t: 0.90 },
+                        { f: 1046.50, d: 0.60, t: 1.10 }
+                    ];
+                    fanfareNotes.forEach(note => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(note.f, now + note.t);
+                        gain.gain.setValueAtTime(0.4, now + note.t);
+                        gain.gain.exponentialRampToValueAtTime(0.01, now + note.t + note.d);
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.start(now + note.t);
+                        osc.stop(now + note.t + note.d);
+                    });
                 }
             } catch (e) { console.error("SFX error:", e); }
         }
 
-        /* LOGIKA TAMPILKAN POP-UP QR CODE DINAMIS */
         function showQRCode(playerIdx) {
             playSound('click');
             const modal = document.getElementById('qr-modal');
@@ -822,12 +854,9 @@
             { name: 'Serigala', emoji: '🐺' }
         ];
 
-        // TANGGA (LADDERS)
+        /* TANGGA DAN ULAR (HANYA 4 ULAR DENGAN PENURUNAN DEKAT) */
         const ladders = { 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
-        
-        // ULAR (SNAKES) - HANYA 4 ULAR AGAR DURASI DILAKUKAN LEBIH CEPAT!
-        const snakes = { 17: 7, 62: 19, 87: 24, 99: 78 };
-        
+        const snakes = { 17: 10, 54: 42, 75: 62, 98: 85 };
         const cellColors = ['bg-red-50 text-red-500', 'bg-blue-50 text-blue-500', 'bg-emerald-50 text-emerald-500', 'bg-yellow-50 text-yellow-600', 'bg-purple-50 text-purple-500', 'bg-pink-50 text-pink-500'];
 
         let tempPlayerCount = 1; 
@@ -890,7 +919,6 @@
             renderAnimalSelectionControls();
         }
 
-        /* RENDERING SELEKSI KARAKTER DENGAN DESIGN FULLSCREEN BARU */
         function renderAnimalSelectionControls() {
             const tabsContainer = document.getElementById('player-tabs-container');
             const gridContainer = document.getElementById('animals-catalog-grid');
@@ -898,12 +926,10 @@
             tabsContainer.innerHTML = '';
             gridContainer.innerHTML = '';
 
-            // Update Label Header Pemain Aktif
             document.getElementById('active-player-label-title').innerText = `Pemain ${activePlayerTab + 1}:`;
             document.getElementById('active-player-label-name').innerText = `${selectedAnimals[activePlayerTab].emoji} ${selectedAnimals[activePlayerTab].name}`;
             document.getElementById('active-player-label-emoji').innerText = selectedAnimals[activePlayerTab].emoji;
 
-            // Render Tab Switcher Pemain
             for (let i = 0; i < tempPlayerCount; i++) {
                 const isTabActive = activePlayerTab === i;
                 const tabBtn = document.createElement('button');
@@ -921,7 +947,6 @@
                 tabsContainer.appendChild(tabBtn);
             }
 
-            // Render Katalog 10 Hewan Lengkap di Grid Layar Utama
             availableAnimals.forEach(animal => {
                 const isSelectedByCurrentPlayer = selectedAnimals[activePlayerTab].name === animal.name;
                 const cardBtn = document.createElement('button');
@@ -983,7 +1008,6 @@
             }, 900);
         }
 
-        /* MENDENGARKAN PERINTAH FIRESTORE DARI REMOTE HP */
         function setupFirestoreRemoteListener() {
             if(!window.dbFirestore) return;
             const gameRef = window.fsDoc(window.dbFirestore, "game_sessions", currentGameId);
@@ -1298,8 +1322,11 @@
                         let cPos = playerPositions[currentPlayer]; 
                         previousPositions[currentPlayer] = cPos; 
 
+                        /* LOGIKA BARU: APABILA TOTAL LANGKAH > 100, TETAP DIANGGAP LANGSUNG KETETAPKAN PETAK FINISH (100) */
                         let tPos = cPos + result;
-                        if (tPos > 100) { setTimeout(nextTurn, 800); return; }
+                        if (tPos > 100) {
+                            tPos = 100;
+                        }
                         
                         moveTokenStepByStep(currentPlayer, cPos, tPos, 300, () => pemicuEvaluasiPetakLangkah(tPos));
                     }, 600);
@@ -1308,6 +1335,11 @@
         }
 
         function pemicuEvaluasiPetakLangkah(targetPos) {
+            if (targetPos >= 100) {
+                triggerWin(currentPlayer);
+                return;
+            }
+
             if(petakKuisMap[targetPos]) {
                 soalAktif = petakKuisMap[targetPos];
                 soalAktif.targetPos = targetPos;
@@ -1363,7 +1395,7 @@
         }
 
         function checkSnakesLadders(pIndex, pos) {
-            if (pos === 100) { triggerWin(pIndex); return; }
+            if (pos >= 100) { triggerWin(pIndex); return; }
             if (ladders[pos]) {
                 playSound('correct');
                 showEventBanner('ladder', selectedAnimals[pIndex].name);
@@ -1382,24 +1414,33 @@
         }
 
         function nextTurn() {
-            if(playerPositions.includes(100)) return;
+            if(playerPositions.some(p => p >= 100)) return;
             currentPlayer = (currentPlayer + 1) % numPlayers; updateTurnUI();
             isMoving = false; document.getElementById('btn-roll').disabled = false;
         }
 
+        /* PERAYAAN FINISH FULL SCREEN MERIAH + EFEK SUARA SELEBRASI */
         function triggerWin(pIndex) {
-            playSound('correct');
-            const mc = document.getElementById('confetti-container'); const wm = document.getElementById('win-modal');
-            document.getElementById('win-title').innerHTML = `${selectedAnimals[pIndex].emoji} ${selectedAnimals[pIndex].name} MENANG!`;
-            document.getElementById('win-desc').innerHTML = `<b>${selectedAnimals[pIndex].name}</b> berhasil sampai petak 100!`;
+            playSound('fanfare');
+            const mc = document.getElementById('confetti-container'); 
+            const wm = document.getElementById('win-modal');
+            
+            document.getElementById('win-title').innerHTML = `${selectedAnimals[pIndex].emoji} ${selectedAnimals[pIndex].name} JUARA 1!`;
+            document.getElementById('win-desc').innerHTML = `Luar biasa! <b>${selectedAnimals[pIndex].name}</b> berhasil mendarat di garis Finish petak 100! 🥳🎉`;
+            
             mc.classList.remove('hidden');
-            setTimeout(() => { wm.classList.remove('scale-0'); wm.classList.add('scale-100'); }, 50);
+            setTimeout(() => { 
+                wm.classList.remove('scale-0'); 
+                wm.classList.add('scale-100'); 
+            }, 50);
         }
 
         function resetGame() {
             playSound('click');
-            const mc = document.getElementById('confetti-container'); const wm = document.getElementById('win-modal');
-            wm.classList.remove('scale-100'); wm.classList.add('scale-0');
+            const mc = document.getElementById('confetti-container'); 
+            const wm = document.getElementById('win-modal');
+            wm.classList.remove('scale-100'); 
+            wm.classList.add('scale-0');
             setTimeout(() => {
                 mc.classList.add('hidden');
                 document.getElementById('startup-modal').classList.remove('hidden');
