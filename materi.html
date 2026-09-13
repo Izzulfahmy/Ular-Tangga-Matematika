@@ -93,7 +93,7 @@
     .fullscreen-btn { right: 24px; color: #7c3aed; }
     .quiz-btn { right: 88px; color: #ea580c; }
 
-    /* FULLSCREEN GAME SCREEN CERIA (NO OVERLAY & NO BORDER) */
+    /* FULLSCREEN GAME SCREEN CERIA */
     #fullscreenQuizApp {
       position: fixed;
       inset: 0;
@@ -115,7 +115,7 @@
       transform: scale(1);
     }
 
-    /* Canvas Garis Menjodohkan Warna-Warni */
+    /* Canvas Garis Menjodohkan */
     #matchCanvas {
       position: absolute;
       inset: 0;
@@ -131,18 +131,18 @@
     }
 
     .match-node:hover {
-      transform: scale(1.05) translateY(-2px);
+      transform: scale(1.08) translateY(-3px);
     }
 
     .match-node.selected {
-      box-shadow: 0 0 0 6px #facc15, 0 12px 24px rgba(0,0,0,0.25);
-      transform: scale(1.06);
+      box-shadow: 0 0 0 6px #facc15, 0 14px 28px rgba(0,0,0,0.3);
+      transform: scale(1.1);
     }
 
     .match-node.matched {
-      opacity: 0.5;
+      opacity: 0.4;
       pointer-events: none;
-      filter: grayscale(40%);
+      filter: grayscale(50%);
     }
 
     /* Animasi Gelembung Ceria */
@@ -169,29 +169,29 @@
       transform: translateY(1px) scale(0.97);
     }
 
-    /* Ukuran Gambar SVG yang Lebih Besar Karena Tanpa Teks */
+    /* Penyesuaian Ukuran Gambar SVG Super Besar */
     .quiz-svg-icon {
-      width: 76px;
-      height: 76px;
+      width: 95px;
+      height: 95px;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.2));
+    }
+
+    .quiz-svg-option {
+      width: 75px;
+      height: 75px;
       object-fit: contain;
       filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
     }
 
-    .quiz-svg-option {
-      width: 60px;
-      height: 60px;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
-    }
-
     @media (min-width: 640px) {
       .quiz-svg-icon {
-        width: 96px;
-        height: 96px;
+        width: 125px;
+        height: 125px;
       }
       .quiz-svg-option {
-        width: 72px;
-        height: 72px;
+        width: 95px;
+        height: 95px;
       }
     }
 
@@ -201,8 +201,8 @@
       .home-btn { left: 16px; }
       .fullscreen-btn { right: 16px; }
       .quiz-btn { right: 70px; }
-      .quiz-svg-icon { width: 60px; height: 60px; }
-      .quiz-svg-option { width: 48px; height: 48px; }
+      .quiz-svg-icon { width: 75px; height: 75px; }
+      .quiz-svg-option { width: 60px; height: 60px; }
     }
   </style>
 </head>
@@ -253,7 +253,7 @@
     </div>
 
     <!-- Main Dynamic Content Area -->
-    <div class="my-auto w-full max-w-4xl mx-auto relative flex flex-col items-center justify-center p-2">
+    <div class="my-auto w-full max-w-5xl mx-auto relative flex flex-col items-center justify-center p-2">
       <canvas id="matchCanvas"></canvas>
       <div id="quizStageContainer" class="w-full"></div>
     </div>
@@ -261,7 +261,7 @@
     <!-- Bottom Actions Bar Clean -->
     <div class="bg-white/90 backdrop-blur-md p-3 sm:p-4 rounded-3xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3">
       <div id="appFeedback" class="text-sm sm:text-base font-black text-amber-600 text-center sm:text-left">
-        Pilih dan urutkan gambar dengan benar ya! 🌟
+        Pilih dan pasangkan gambar dengan benar ya! 🌟
       </div>
       <div class="flex items-center gap-2 w-full sm:w-auto">
         <button onclick="resetCurrentQuiz()" class="btn-child-clean flex-1 sm:flex-none px-5 py-2.5 bg-amber-400 hover:bg-amber-500 text-slate-900 font-black rounded-2xl text-xs sm:text-sm transition-all shadow-md">Ulangi 🔄</button>
@@ -356,7 +356,7 @@
       }
     }
 
-    /* DATABASE SOAL INTERAKTIF (ASET SVG LOKAL KUPU & KATAK TANPA TEKS & TANPA BORDER) */
+    /* DATABASE SOAL INTERAKTIF (MURNI ASET SVG BERBASIS GAMBAR BARU) */
     const quizDatabase = [
       {
         type: 'sequence',
@@ -385,30 +385,30 @@
       {
         type: 'match',
         title: 'Jodohkan Pasangan Hewan 🔗',
-        subtitle: 'Klik item di kiri, lalu klik pasangannya yang cocok di kanan!',
+        subtitle: 'Hubungkan gambar hewan di kiri dengan pasangannya yang sesuai di kanan!',
         leftItems: [
-          { id: 'm1', name: 'Kupu-kupu', icon: '🦋', pair: 'p1', bg: 'bg-pink-500 text-white shadow-lg' },
-          { id: 'm2', name: 'Katak', icon: '🐸', pair: 'p2', bg: 'bg-emerald-500 text-white shadow-lg' },
-          { id: 'm3', name: 'Ayam', icon: '🐔', pair: 'p3', bg: 'bg-amber-500 text-white shadow-lg' }
+          { id: 'm1', svg: 'aset/latihansoal/kupukupu.svg', pair: 'p1', bg: 'bg-pink-100/90 shadow-lg' },
+          { id: 'm2', svg: 'aset/latihansoal/katak.svg', pair: 'p2', bg: 'bg-emerald-100/90 shadow-lg' },
+          { id: 'm3', svg: 'aset/latihansoal/ayam.svg', pair: 'p3', bg: 'bg-amber-100/90 shadow-lg' }
         ],
         rightItems: [
-          { id: 'p3', name: 'Bertelur di Darat', icon: '🥚', pair: 'm3', bg: 'bg-yellow-400 text-slate-900 shadow-lg' },
-          { id: 'p1', name: 'Ulat & Kepompong', icon: '🐛', pair: 'm1', bg: 'bg-purple-500 text-white shadow-lg' },
-          { id: 'p2', name: 'Berudu di Air', icon: '🐟', pair: 'm2', bg: 'bg-cyan-500 text-white shadow-lg' }
+          { id: 'p3', svg: 'aset/latihansoal/telur.svg', pair: 'm3', bg: 'bg-yellow-100/90 shadow-lg' },
+          { id: 'p1', svg: 'aset/latihansoal/kepompong.svg', pair: 'm1', bg: 'bg-purple-100/90 shadow-lg' },
+          { id: 'p2', svg: 'aset/latihansoal/berudu.svg', pair: 'm2', bg: 'bg-cyan-100/90 shadow-lg' }
         ]
       },
       {
         type: 'match',
         title: 'Jodohkan Jenis Metamorfosis 🧬',
-        subtitle: 'Hubungkan hewan dengan jenis metamorfosisnya yang tepat!',
+        subtitle: 'Hubungkan gambar hewan dengan jenis metamorfosisnya!',
         leftItems: [
-          { id: 'meta1', name: 'Kupu-kupu', icon: '🦋', pair: 'pm1', bg: 'bg-purple-500 text-white shadow-lg' },
-          { id: 'meta2', name: 'Kecoak', icon: '🪳', pair: 'pm2', bg: 'bg-orange-500 text-white shadow-lg' },
-          { id: 'meta3', name: 'Nyamuk', icon: '🦟', pair: 'pm1', pairAlt: 'pm1', bg: 'bg-rose-500 text-white shadow-lg' }
+          { id: 'meta1', svg: 'aset/latihansoal/kupukupu.svg', pair: 'pm1', bg: 'bg-purple-100/90 shadow-lg' },
+          { id: 'meta2', svg: 'aset/latihansoal/belalang.svg', pair: 'pm2', bg: 'bg-lime-100/90 shadow-lg' },
+          { id: 'meta3', svg: 'aset/latihansoal/nyamuk.svg', pair: 'pm1', pairAlt: 'pm1', bg: 'bg-rose-100/90 shadow-lg' }
         ],
         rightItems: [
-          { id: 'pm2', name: 'Metamorfosis Tidak Sempurna', icon: '🌱', pair: 'meta2', bg: 'bg-lime-400 text-slate-900 shadow-lg' },
-          { id: 'pm1', name: 'Metamorfosis Sempurna (Pupa)', icon: '✨', pair: 'meta1', bg: 'bg-indigo-500 text-white shadow-lg' }
+          { id: 'pm2', svg: 'aset/latihansoal/belalang.svg', pair: 'meta2', bg: 'bg-emerald-100/90 shadow-lg' },
+          { id: 'pm1', svg: 'aset/latihansoal/kepompong.svg', pair: 'meta1', bg: 'bg-indigo-100/90 shadow-lg' }
         ]
       }
     ];
@@ -452,24 +452,24 @@
       }
     }
 
-    /* LOGIKA MENGURUTKAN (MURNI GAMBAR TANPA TEKS TAHAPAN) */
+    /* LOGIKA MENGURUTKAN GAMBAR BESAR */
     function renderSequenceUI() {
       const qData = quizDatabase[currentQuizIndex];
       const container = document.getElementById('quizStageContainer');
 
-      let slotsHTML = '<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">';
+      let slotsHTML = '<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-8">';
       for(let i=0; i<qData.items.length; i++) {
         const filledId = sequenceAnswers[i];
         if (filledId) {
           const item = qData.items.find(x => x.id === filledId);
           slotsHTML += `
-            <div onclick="removeSequenceAnswer(${i})" class="btn-child-clean ${item.color} rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-center cursor-pointer min-h-[120px] sm:min-h-[140px]">
+            <div onclick="removeSequenceAnswer(${i})" class="btn-child-clean ${item.color} rounded-3xl p-4 sm:p-6 flex flex-col items-center justify-center cursor-pointer min-h-[140px] sm:min-h-[180px]">
               <img src="${item.svg}" class="quiz-svg-icon float-anim" />
             </div>
           `;
         } else {
           slotsHTML += `
-            <div class="bg-white/30 backdrop-blur-md rounded-3xl p-4 flex flex-col items-center justify-center text-white font-black text-base min-h-[120px] sm:min-h-[140px] shadow-inner">
+            <div class="bg-white/30 backdrop-blur-md rounded-3xl p-4 flex flex-col items-center justify-center text-white font-black text-lg min-h-[140px] sm:min-h-[180px] shadow-inner">
               Tahap ${i+1}
             </div>
           `;
@@ -477,13 +477,13 @@
       }
       slotsHTML += '</div>';
 
-      let optionsHTML = '<div class="flex flex-wrap gap-4 justify-center bg-white/90 backdrop-blur-md p-4 sm:p-5 rounded-3xl shadow-xl">';
+      let optionsHTML = '<div class="flex flex-wrap gap-5 justify-center bg-white/90 backdrop-blur-md p-5 sm:p-6 rounded-3xl shadow-xl">';
       const shuffled = [...qData.items].sort((a,b) => a.id.localeCompare(b.id));
       shuffled.forEach(item => {
         const isSelected = sequenceAnswers.includes(item.id);
 
         optionsHTML += `
-          <button onclick="selectSequenceOption('${item.id}')" ${isSelected ? 'disabled' : ''} class="btn-child-clean ${isSelected ? 'opacity-30 bg-slate-200 shadow-none' : `${item.color} hover:scale-105`} rounded-2xl p-3 flex items-center justify-center">
+          <button onclick="selectSequenceOption('${item.id}')" ${isSelected ? 'disabled' : ''} class="btn-child-clean ${isSelected ? 'opacity-30 bg-slate-200 shadow-none' : `${item.color} hover:scale-105`} rounded-2xl p-4 flex items-center justify-center">
             <img src="${item.svg}" class="quiz-svg-option" />
           </button>
         `;
@@ -508,35 +508,33 @@
       renderSequenceUI();
     }
 
-    /* LOGIKA MENJODOHKAN (MATCHING) TANPA BORDER */
+    /* LOGIKA MENJODOHKAN MURNI GAMBAR SVG (TANPA TEKS/TULISAN) */
     function renderMatchUI() {
       const qData = quizDatabase[currentQuizIndex];
       const container = document.getElementById('quizStageContainer');
 
-      let html = '<div class="grid grid-cols-2 gap-10 sm:gap-24 w-full max-w-2xl mx-auto my-2">';
+      let html = '<div class="grid grid-cols-2 gap-12 sm:gap-32 w-full max-w-2xl mx-auto my-4">';
       
-      // Kolom Kiri
-      html += '<div class="flex flex-col gap-3.5">';
+      // Kolom Kiri (Aset SVG)
+      html += '<div class="flex flex-col gap-5">';
       qData.leftItems.forEach(item => {
         const isMatched = userMatches.some(m => m.left === item.id);
         const isSelected = selectedLeftMatch === item.id;
         html += `
-          <button id="node-left-${item.id}" onclick="clickLeftMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node btn-child-clean ${isSelected ? 'selected' : ''} ${isMatched ? 'matched' : ''} ${item.bg} p-3 sm:p-4 rounded-3xl flex items-center gap-3 font-black text-xs sm:text-sm">
-            <span class="text-3xl sm:text-4xl filter drop-shadow">${item.icon}</span>
-            <span>${item.name}</span>
+          <button id="node-left-${item.id}" onclick="clickLeftMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node btn-child-clean ${isSelected ? 'selected' : ''} ${isMatched ? 'matched' : ''} ${item.bg} p-4 sm:p-5 rounded-3xl flex items-center justify-center shadow-xl">
+            <img src="${item.svg}" class="quiz-svg-option" />
           </button>
         `;
       });
       html += '</div>';
 
-      // Kolom Kanan
-      html += '<div class="flex flex-col gap-3.5 justify-center">';
+      // Kolom Kanan (Aset SVG)
+      html += '<div class="flex flex-col gap-5 justify-center">';
       qData.rightItems.forEach(item => {
         const isMatched = userMatches.some(m => m.right === item.id && (currentQuizIndex !== 3 || userMatches.filter(x => x.right === item.id).length >= (item.id === 'pm1' ? 2 : 1)));
         html += `
-          <button id="node-right-${item.id}" onclick="clickRightMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node btn-child-clean ${isMatched ? 'matched' : ''} ${item.bg} p-3 sm:p-4 rounded-3xl flex items-center gap-3 font-black text-xs sm:text-sm">
-            <span class="text-3xl sm:text-4xl filter drop-shadow">${item.icon}</span>
-            <span>${item.name}</span>
+          <button id="node-right-${item.id}" onclick="clickRightMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node btn-child-clean ${isMatched ? 'matched' : ''} ${item.bg} p-4 sm:p-5 rounded-3xl flex items-center justify-center shadow-xl">
+            <img src="${item.svg}" class="quiz-svg-option" />
           </button>
         `;
       });
@@ -554,7 +552,7 @@
 
     function clickRightMatch(rightId) {
       if (!selectedLeftMatch) {
-        document.getElementById('appFeedback').innerText = 'Pilih item sebelah kiri dulu ya!';
+        document.getElementById('appFeedback').innerText = 'Pilih gambar sebelah kiri dulu ya!';
         return;
       }
       playPopSound();
@@ -594,7 +592,7 @@
           ctx.moveTo(x1, y1);
           ctx.lineTo(x2, y2);
           ctx.strokeStyle = '#facc15';
-          ctx.lineWidth = 6;
+          ctx.lineWidth = 7;
           ctx.lineCap = 'round';
           ctx.stroke();
         }
