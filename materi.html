@@ -11,7 +11,7 @@
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
 
   <style>
     /* Reset & Layar Penuh (No Scroll) */
@@ -98,6 +98,223 @@
       right: 24px;
     }
 
+    .quiz-btn {
+      right: 86px;
+    }
+
+    /* Modal Latihan Soal Interaktif */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: 28px;
+      width: 100%;
+      max-width: 560px;
+      padding: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border: 4 border-emerald-400;
+      position: relative;
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #f1f5f9;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-weight: 800;
+      transition: all 0.2s;
+    }
+
+    .close-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .quiz-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .quiz-title {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    .quiz-subtitle {
+      font-size: 0.85rem;
+      color: #64748b;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .drop-slots-container {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .slot-box {
+      flex: 1;
+      aspect-ratio: 1 / 1.1;
+      max-width: 100px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #94a3b8;
+      position: relative;
+      transition: all 0.2s;
+    }
+
+    .slot-box.filled {
+      border-style: solid;
+      border-color: #10b981;
+      background: #ecfdf5;
+    }
+
+    .stage-item {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    .stage-icon {
+      font-size: 1.8rem;
+    }
+
+    .stage-name {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #0f172a;
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .options-pool {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 12px;
+      background: #f1f5f9;
+      border-radius: 20px;
+      min-height: 80px;
+    }
+
+    .option-chip {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      padding: 8px 12px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: #334155;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s;
+    }
+
+    .option-chip:hover {
+      transform: translateY(-2px);
+      border-color: #10b981;
+    }
+
+    .option-chip.selected {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .quiz-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn-action {
+      flex: 1;
+      padding: 12px;
+      border-radius: 16px;
+      border: none;
+      font-weight: 900;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-reset {
+      background: #f1f5f9;
+      color: #475569;
+    }
+
+    .btn-submit {
+      background: #10b981;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-submit:hover {
+      background: #059669;
+    }
+
+    .feedback-msg {
+      text-align: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      margin-top: 12px;
+      min-height: 20px;
+    }
+
+    .feedback-msg.correct { color: #059669; }
+    .feedback-msg.wrong { color: #e11d48; }
+
     /* Responsive Breakpoint Mobile */
     @media (max-height: 700px), (max-width: 480px) {
       .nav-btn {
@@ -111,19 +328,32 @@
       }
       .home-btn { left: 16px; }
       .fullscreen-btn { right: 16px; }
+      .quiz-btn { right: 68px; }
+
+      .modal-card { padding: 16px; }
+      .slot-box { aspect-ratio: 1 / 1; }
+      .stage-icon { font-size: 1.4rem; }
+      .stage-name { font-size: 0.6rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Tombol Home / Rumah (Tautan Ke Beranda Utama Repositori) -->
+  <!-- Tombol Home / Rumah -->
   <a href="https://izzulfahmy.github.io/Ular-Tangga-Matematika/" class="nav-btn home-btn" title="Kembali ke Beranda" onclick="playClickSound(event, this.href)">
     <svg viewBox="0 0 24 24">
       <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
     </svg>
   </a>
 
-  <!-- Tombol Fullscreen Icon SVG (Pojok Kanan Atas) -->
+  <!-- Tombol Gamepad / Latihan Soal (Pojok Kanan Atas - Kiri Fullscreen) -->
+  <button class="nav-btn quiz-btn" id="quizBtn" title="Latihan Soal Interaktif" onclick="openQuizModal()">
+    <svg viewBox="0 0 24 24">
+      <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H9v2H7v-2H5v-2h2V9h2v2h2v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+    </svg>
+  </button>
+
+  <!-- Tombol Fullscreen Icon SVG -->
   <button class="nav-btn fullscreen-btn" id="fsBtn" title="Layar Penuh" onclick="toggleFullScreen()">
     <svg id="fsIcon" viewBox="0 0 24 24">
       <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
@@ -133,6 +363,29 @@
   <!-- Container Embed Canva PPT Full Screen -->
   <div class="canva-embed-container">
     <iframe loading="lazy" src="https://www.canva.com/design/DAHVDRpj6kI/8GbnjjdWzKv45lK9ZJYu9Q/view?embed" allowfullscreen="allowfullscreen" allow="fullscreen"></iframe>
+  </div>
+
+  <!-- MODAL LATIHAN SOAL INTERAKTIF -->
+  <div class="modal-overlay" id="quizModal">
+    <div class="modal-card">
+      <button class="close-btn" onclick="closeQuizModal()">✕</button>
+      
+      <div class="quiz-header">
+        <h3 class="quiz-title" id="quizTitle">Soal 1: Daur Hidup Kupu-kupu</h3>
+        <p class="quiz-subtitle">Urutkan tahapan perkembangan dengan memilih pilihan di bawah!</p>
+      </div>
+
+      <div class="drop-slots-container" id="slotsContainer"></div>
+
+      <div class="options-pool" id="optionsPool"></div>
+
+      <div class="feedback-msg" id="feedbackMsg"></div>
+
+      <div class="quiz-actions">
+        <button class="btn-action btn-reset" onclick="resetCurrentQuiz()">Ulangi</button>
+        <button class="btn-action btn-submit" id="btnSubmit" onclick="submitAnswer()">Periksa Jawaban</button>
+      </div>
+    </div>
   </div>
 
   <!-- Audio Synthesizer & Dynamic Logic Script -->
@@ -177,7 +430,7 @@
       }, 180);
     }
 
-    /* Logic Toggle Fullscreen + Dynamic SVG Switch */
+    /* Logic Toggle Fullscreen */
     function toggleFullScreen() {
       playPopSound();
       const fsBtn = document.getElementById('fsBtn');
@@ -210,6 +463,155 @@
         }
         fsIcon.querySelector('path').setAttribute('d', enterPath);
         fsBtn.title = "Layar Penuh";
+      }
+    }
+
+    /* DATA SOAL INTERAKTIF */
+    const quizData = [
+      {
+        id: 1,
+        title: "Soal 1: Daur Hidup Kupu-kupu 🦋",
+        correctOrder: ['egg', 'caterpillar', 'pupa', 'butterfly'],
+        stages: [
+          { id: 'egg', name: 'Telur', icon: '🥚' },
+          { id: 'caterpillar', name: 'Ulat', icon: '🐛' },
+          { id: 'pupa', name: 'Kepompong', icon: '🟤' },
+          { id: 'butterfly', name: 'Kupu-kupu', icon: '🦋' }
+        ]
+      },
+      {
+        id: 2,
+        title: "Soal 2: Daur Hidup Katak 🐸",
+        correctOrder: ['frog_egg', 'tadpole', 'froglet', 'adult_frog'],
+        stages: [
+          { id: 'frog_egg', name: 'Telur', icon: '⚪' },
+          { id: 'tadpole', name: 'Berudu', icon: '🐟' },
+          { id: 'froglet', name: 'Katak Muda', icon: '🐸' },
+          { id: 'adult_frog', name: 'Katak Dewasa', icon: '🐸' }
+        ]
+      }
+    ];
+
+    let currentQuizIndex = 0;
+    let currentAnswers = [];
+
+    function openQuizModal() {
+      playPopSound();
+      currentQuizIndex = 0;
+      loadQuiz(currentQuizIndex);
+      document.getElementById('quizModal').classList.add('active');
+    }
+
+    function closeQuizModal() {
+      playPopSound();
+      document.getElementById('quizModal').classList.remove('active');
+    }
+
+    function loadQuiz(index) {
+      const quiz = quizData[index];
+      currentAnswers = new Array(quiz.stages.length).fill(null);
+      
+      document.getElementById('quizTitle').innerText = quiz.title;
+      document.getElementById('feedbackMsg').innerText = '';
+      document.getElementById('feedbackMsg').className = 'feedback-msg';
+      document.getElementById('btnSubmit').innerText = 'Periksa Jawaban';
+
+      renderSlots();
+      renderOptions();
+    }
+
+    function renderSlots() {
+      const quiz = quizData[currentQuizIndex];
+      const container = document.getElementById('slotsContainer');
+      container.innerHTML = '';
+
+      for (let i = 0; i < quiz.stages.length; i++) {
+        const slot = document.createElement('div');
+        slot.className = `slot-box ${currentAnswers[i] ? 'filled' : ''}`;
+        
+        if (currentAnswers[i]) {
+          const stage = quiz.stages.find(s => s.id === currentAnswers[i]);
+          slot.innerHTML = `
+            <div class="stage-item" onclick="removeAnswer(${i})">
+              <span class="stage-icon">${stage.icon}</span>
+              <span class="stage-name">${stage.name}</span>
+            </div>
+          `;
+        } else {
+          slot.innerHTML = `<span>Tahap ${i + 1}</span>`;
+        }
+        container.appendChild(slot);
+      }
+    }
+
+    function renderOptions() {
+      const quiz = quizData[currentQuizIndex];
+      const pool = document.getElementById('optionsPool');
+      pool.innerHTML = '';
+
+      // Acak urutan pilihan
+      const shuffled = [...quiz.stages].sort((a, b) => a.id.localeCompare(b.id));
+
+      shuffled.forEach(stage => {
+        const isSelected = currentAnswers.includes(stage.id);
+        const chip = document.createElement('div');
+        chip.className = `option-chip ${isSelected ? 'selected' : ''}`;
+        chip.innerHTML = `<span>${stage.icon}</span> <span>${stage.name}</span>`;
+        chip.onclick = () => selectOption(stage.id);
+        pool.appendChild(chip);
+      });
+    }
+
+    function selectOption(stageId) {
+      playPopSound();
+      const emptySlotIndex = currentAnswers.indexOf(null);
+      if (emptySlotIndex !== -1) {
+        currentAnswers[emptySlotIndex] = stageId;
+        renderSlots();
+        renderOptions();
+      }
+    }
+
+    function removeAnswer(slotIndex) {
+      playPopSound();
+      currentAnswers[slotIndex] = null;
+      renderSlots();
+      renderOptions();
+    }
+
+    function resetCurrentQuiz() {
+      playPopSound();
+      loadQuiz(currentQuizIndex);
+    }
+
+    function submitAnswer() {
+      playPopSound();
+      const quiz = quizData[currentQuizIndex];
+      const feedback = document.getElementById('feedbackMsg');
+
+      if (currentAnswers.includes(null)) {
+        feedback.innerText = 'Isi semua urutan tahapan terlebih dahulu!';
+        feedback.className = 'feedback-msg wrong';
+        return;
+      }
+
+      const isCorrect = currentAnswers.every((ans, idx) => ans === quiz.correctOrder[idx]);
+
+      if (isCorrect) {
+        feedback.innerText = '🎉 Luar Biasa! Urutan Kamu Benar!';
+        feedback.className = 'feedback-msg correct';
+        
+        setTimeout(() => {
+          if (currentQuizIndex < quizData.length - 1) {
+            currentQuizIndex++;
+            loadQuiz(currentQuizIndex);
+          } else {
+            feedback.innerText = '🏆 Selamat! Kamu telah menyelesaikan semua latihan daur hidup!';
+          }
+        }, 1500);
+      } else {
+        feedback.innerText = '❌ Urutan masih kurang tepat. Coba periksa kembali!';
+        feedback.className = 'feedback-msg wrong';
       }
     }
 
