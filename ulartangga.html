@@ -16,6 +16,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- QRCode.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <!-- LOAD FILE SOAL.JS -->
+    <script src="soal.js"></script>
 
     <script>
         tailwind.config = {
@@ -69,20 +72,30 @@
             opacity: 0.7;
         }
 
+        /* INDIKATOR TITIK MERAH KUIS */
         .quiz-dot {
             position: absolute;
             top: 4px;
             right: 4px;
-            width: 8px;
-            height: 8px;
+            width: 9px;
+            height: 9px;
             background-color: #ef4444;
+            border: 1.5px solid #ffffff;
             border-radius: 50%;
+            box-shadow: 0 0 5px rgba(239, 68, 68, 0.8);
+            z-index: 15;
+            animation: pulseDot 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
         }
 
         @media (min-width: 640px) {
             .cell-number { font-size: 0.85rem; top: 4px; left: 6px; }
             .cell { border-radius: 12px; }
-            .quiz-dot { width: 10px; height: 10px; top: 6px; right: 6px; }
+            .quiz-dot { width: 12px; height: 12px; top: 6px; right: 6px; }
         }
 
         .player-token {
@@ -285,7 +298,6 @@
             pointer-events: auto;
         }
 
-        /* ANIMASI DEKORASI CELEBRATION WINNER */
         @keyframes trophyBounce {
             0%, 100% { transform: translateY(0) scale(1); }
             50% { transform: translateY(-15px) scale(1.08); }
@@ -327,7 +339,7 @@
 </head>
 <body class="static-bg min-h-screen w-screen overflow-x-hidden text-slate-800 antialiased relative flex flex-col justify-center items-center p-1 sm:p-2">
 
-    <!-- BANNER MOTIVASI OTOMATIS (TOP TOAST NOTIFIKASI) -->
+    <!-- BANNER MOTIVASI OTOMATIS -->
     <div id="event-banner" class="fixed top-5 z-[30000] max-w-md w-[92%] p-4 rounded-3xl shadow-2xl border-4 banner-hidden transition-all duration-500 flex items-center gap-3">
         <div id="banner-emoji" class="text-4xl shrink-0 bg-white/20 p-2 rounded-2xl">🚀</div>
         <div class="flex-1">
@@ -336,7 +348,7 @@
         </div>
     </div>
 
-    <!-- NAVIGASI KIRI ATAS: TOMBOL HOME & FULLSCREEN -->
+    <!-- NAVIGASI KIRI ATAS -->
     <div class="fixed top-4 left-4 z-[100] flex items-center gap-3">
         <button onclick="goHome()" class="nav-btn-custom" title="Kembali ke Pengaturan Sesi">
             <svg viewBox="0 0 24 24">
@@ -351,10 +363,9 @@
         </button>
     </div>
 
-    <!-- PENGATURAN PERMAINAN FULLSCREEN FULL-PAGE -->
+    <!-- PENGATURAN PERMAINAN FULLSCREEN -->
     <div id="startup-modal" class="fixed inset-0 z-[10000] bg-slate-900 text-slate-100 flex flex-col justify-between p-4 sm:p-8 antialiased overflow-hidden">
         
-        <!-- HEADER PENGATURAN -->
         <div class="flex items-center justify-between border-b border-slate-800 pb-4">
             <div class="flex items-center gap-3">
                 <div class="text-4xl bg-emerald-500/20 p-2.5 rounded-2xl border border-emerald-500/30">🎲</div>
@@ -365,7 +376,6 @@
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Pengaturan Sesi & Karakter Pemain</p>
                 </div>
             </div>
-            <!-- TOMBOL KEMBALI KE BERANDA -->
             <div class="flex items-center gap-3">
                 <a href="index.html" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 shadow-md">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -379,12 +389,8 @@
             </div>
         </div>
 
-        <!-- AREA UTAMA SPLIT PANEL -->
         <div class="my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-center py-4">
-            
-            <!-- PANEL KIRI: JUMLAH PEMAIN & TAB SELEKSI -->
             <div class="lg:col-span-4 bg-slate-800/80 backdrop-blur-md p-5 rounded-3xl border border-slate-700/80 shadow-2xl space-y-6">
-                
                 <div class="space-y-2">
                     <label class="block text-xs font-black text-emerald-400 uppercase tracking-widest">1. Pilih Jumlah Pemain</label>
                     <div class="grid grid-cols-4 gap-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-700">
@@ -407,22 +413,17 @@
                     </div>
                     <span class="text-3xl" id="active-player-label-emoji">🐰</span>
                 </div>
-
             </div>
 
-            <!-- PANEL KANAN: KATALOG HEWAN GRID -->
             <div class="lg:col-span-8 bg-slate-800/80 backdrop-blur-md p-6 rounded-3xl border border-slate-700/80 shadow-2xl space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
                     <label class="block text-xs font-black text-emerald-400 uppercase tracking-widest">3. Pilih Hewan Pion Untuk Pemain Aktif</label>
                     <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Klik Langsung Karakter</span>
                 </div>
-
                 <div id="animals-catalog-grid" class="grid grid-cols-2 sm:grid-cols-5 gap-3"></div>
             </div>
-
         </div>
 
-        <!-- FOOTER BAR -->
         <div class="border-t border-slate-800 pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p class="text-xs text-slate-500 font-bold tracking-wider uppercase">
                 Siap untuk belajar sambil bermain dengan menyenangkan! ✨
@@ -432,20 +433,17 @@
                 <span class="text-2xl">🚀</span>
             </button>
         </div>
-
     </div>
 
-    <!-- OVERLAY COUNTDOWN FULLSCREEN -->
+    <!-- OVERLAY COUNTDOWN -->
     <div id="countdown-overlay" class="fixed inset-0 z-[20000] flex items-center justify-center bg-slate-900/90 hidden">
         <div id="countdown-number" class="text-8xl sm:text-9xl font-black text-amber-400 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] animate-pop font-jakarta">
             3
         </div>
     </div>
 
-    <!-- MAIN WRAPPER PAPAN UTAMA -->
+    <!-- PAPAN UTAMA -->
     <div class="w-full max-w-5xl flex flex-col items-center gap-3 my-auto py-1">
-
-        <!-- 1. PAPAN PERMAINAN DENGAN UKURAN LEBIH BANYAK MEMENUHI LAYAR -->
         <div class="board-wrapper flex justify-center items-center">
             <div class="board-container bg-white p-1 sm:p-2 rounded-2xl sm:rounded-[2rem] shadow-xl border-2 sm:border-4 border-white">
                 <div class="w-full h-full bg-slate-50 rounded-xl overflow-hidden border border-slate-200 relative">
@@ -462,7 +460,6 @@
             </div>
         </div>
 
-        <!-- 2. TOMBOL LEMPAR DADU -->
         <div class="w-full lg:fixed lg:bottom-5 lg:right-5 lg:w-auto z-[90]">
             <button id="btn-roll" onclick="rollDice3D()" class="toy-btn w-full lg:w-auto bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl py-3 lg:py-2.5 px-4 lg:px-5 shadow-md active:translate-y-1 transition-all text-sm tracking-wider uppercase border border-brand-600 flex items-center justify-center gap-3">
                 <div id="mini-dice-visual" class="w-8 h-8 lg:w-9 lg:h-9 bg-white border border-slate-200 rounded-xl flex items-center justify-center p-0.5 shrink-0">
@@ -474,7 +471,6 @@
             </button>
         </div>
 
-        <!-- 3. DAFTAR PEMAIN -->
         <div class="w-full lg:fixed lg:top-5 lg:right-5 lg:w-64 bg-white p-3 rounded-2xl shadow-md border-2 border-emerald-100 flex flex-col gap-2 max-h-48 lg:max-h-80 overflow-y-auto z-[90]">
             <div class="flex items-center justify-between border-b pb-1 sticky top-0 bg-white z-10">
                 <h3 class="font-black text-slate-700 text-xs tracking-wide uppercase flex items-center gap-1.5">
@@ -484,7 +480,6 @@
             </div>
 
             <div class="flex flex-col gap-1.5">
-                <!-- PEMAIN 1 -->
                 <div id="card-p0" class="bg-white p-2 rounded-xl border border-blue-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
                         <div id="card-emoji-0" class="w-7 h-7 rounded-lg bg-blue-100 border border-blue-400 flex items-center justify-center font-black text-sm">🐰</div>
@@ -503,7 +498,6 @@
                     </div>
                 </div>
 
-                <!-- PEMAIN 2 -->
                 <div id="card-p1" class="bg-white p-2 rounded-xl border border-red-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
                         <div id="card-emoji-1" class="w-7 h-7 rounded-lg bg-red-100 border border-red-400 flex items-center justify-center font-black text-sm">🐐</div>
@@ -522,7 +516,6 @@
                     </div>
                 </div>
 
-                <!-- PEMAIN 3 -->
                 <div id="card-p2" class="bg-white p-2 rounded-xl border border-emerald-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
                         <div id="card-emoji-2" class="w-7 h-7 rounded-lg bg-emerald-100 border border-emerald-400 flex items-center justify-center font-black text-sm">🐸</div>
@@ -541,7 +534,6 @@
                     </div>
                 </div>
 
-                <!-- PEMAIN 4 -->
                 <div id="card-p3" class="bg-white p-2 rounded-xl border border-yellow-200 flex items-center justify-between transition-all duration-200 hidden">
                     <div class="flex items-center gap-2">
                         <div id="card-emoji-3" class="w-7 h-7 rounded-lg bg-yellow-100 border border-yellow-400 flex items-center justify-center font-black text-sm">🐱</div>
@@ -561,24 +553,20 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- MODAL QR CODE POP-UP -->
+    <!-- MODAL QR CODE -->
     <div id="qr-modal" class="fixed inset-0 z-[12000] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4 hidden">
         <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-xs w-full text-center relative border-4 border-emerald-400">
             <button onclick="closeQRCodeModal()" class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 p-1">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
-
             <div class="text-3xl mb-1" id="qr-modal-emoji">📱</div>
             <h3 class="text-xl font-black text-slate-800" id="qr-modal-title">Remote Pemain</h3>
             <p class="text-xs text-slate-500 font-bold mt-0.5">Scan QR Code ini dengan kamera HP untuk mengontrol permainan.</p>
-
             <div class="my-4 flex justify-center bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-inner">
                 <div id="qrcode-box" class="flex justify-center"></div>
             </div>
-
             <button onclick="closeQRCodeModal()" class="w-full py-2.5 bg-brand-500 hover:bg-brand-600 text-white font-black rounded-xl text-sm transition-all shadow-md">
                 Tutup
             </button>
@@ -603,7 +591,7 @@
         </div>
     </div>
 
-    <!-- DICE VIEWPORT OVERLAY -->
+    <!-- DICE OVERLAY -->
     <div id="dice-3d-overlay" class="fixed inset-0 z-[1000] perspective-1000 pointer-events-none flex items-center justify-center opacity-0 hidden transition-opacity duration-200">
         <div id="dice-wrapper" class="flex flex-col items-center">
             <div id="dice-cube" class="dice-cube shadow-lg rounded-2xl">
@@ -618,11 +606,9 @@
         </div>
     </div>
 
-    <!-- PERAYAAN FINISH MERIAH FULL-SCREEN OVERLAY (DENGAN REVISI PERSEPI EMOJI TAPAK TAMBAH UTUH) -->
+    <!-- PERAYAAN FINISH FULL SCREEN OVERLAY -->
     <div id="confetti-container" class="fixed inset-0 z-[40000] bg-slate-950/90 backdrop-blur-md hidden flex flex-col justify-center items-center p-4 text-center">
         <div class="transform scale-0 transition-transform duration-500 max-w-xl w-full flex flex-col items-center bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 p-8 sm:p-12 rounded-[3rem] border-8 border-yellow-200 shadow-[0_0_80px_rgba(245,158,11,0.6)] relative" id="win-modal">
-            
-            <!-- EFEK EMOJI KEMBANG API & SELEBRASI DI SETIAP POJOK DENGAN ANIMASI -->
             <div class="absolute top-4 left-4 text-5xl sm:text-6xl party-anim">🎆</div>
             <div class="absolute top-4 right-4 text-5xl sm:text-6xl party-anim">✨</div>
             <div class="absolute bottom-4 left-4 text-5xl sm:text-6xl party-anim">🎉</div>
@@ -640,7 +626,7 @@
         </div>
     </div>
 
-    <!-- LOGIKA GAME, EFEK SUARA & REMOTE FIRESTORE -->
+    <!-- LOGIKA GAME & DISTRIBUSI KUIS ACAK -->
     <script>
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -886,6 +872,10 @@
         let petakKuisMap = {};
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Menggunakan bankSoal dari soal.js jika tersedia, atau sync Firestore
+            if (typeof bankSoal !== 'undefined' && Array.isArray(bankSoal)) {
+                bankSoalGlobal = bankSoal;
+            }
             buildBoard();
             drawSnakesAndLadders();
             muatMasterDataFirebase();
@@ -894,16 +884,21 @@
 
         async function muatMasterDataFirebase() {
             try {
-                const querySnapshot = await window.fsGetDocs(window.fsCollection(window.dbFirestore, "ular_tangga"));
-                bankSoalGlobal = [];
-                querySnapshot.forEach((doc) => {
-                    let d = doc.data(); d.id = doc.id;
-                    if(d.soal && d.soal.trim() !== '') {
-                        bankSoalGlobal.push(d);
+                if(window.fsGetDocs && window.dbFirestore) {
+                    const querySnapshot = await window.fsGetDocs(window.fsCollection(window.dbFirestore, "ular_tangga"));
+                    let tempSoalFS = [];
+                    querySnapshot.forEach((doc) => {
+                        let d = doc.data(); d.id = doc.id;
+                        if(d.soal && d.soal.trim() !== '') {
+                            tempSoalFS.push(d);
+                        }
+                    });
+                    if (tempSoalFS.length > 0) {
+                        bankSoalGlobal = tempSoalFS;
                     }
-                });
+                }
             } catch (err) {
-                console.error("Gagal sinkron database:", err);
+                console.log("Menggunakan bank soal lokal dari soal.js");
             }
         }
 
@@ -1043,6 +1038,7 @@
             });
         }
 
+        /* FUNGSI UNTUK MENGACAK DAN MENYESUAIKAN PETAK DENGAN TITIK MERAH */
         function distribusikanKuisAcakPapan() {
             petakKuisMap = {};
             buildBoard(); 
@@ -1050,28 +1046,28 @@
             if (bankSoalGlobal.length === 0) return;
 
             let petakTersedia = [];
-            for(let i = 2; i <= 98; i++) {
+            // Hindari petak awal (1), petak akhir (100), petak tangga, dan petak ular
+            for(let i = 2; i <= 99; i++) {
                 if(!ladders[i] && !snakes[i]) {
                     petakTersedia.push(i);
                 }
             }
-            if(petakTersedia.length < bankSoalGlobal.length) {
-                for(let i = 2; i <= 98; i++) {
-                    if(!petakTersedia.includes(i)) petakTersedia.push(i);
-                }
-            }
 
+            // Acak urutan petak secara acak
             petakTersedia.sort(() => Math.random() - 0.5);
 
+            // Petakan 30 soal ke petak yang sudah diacak
             bankSoalGlobal.forEach((soal, index) => {
                 if (index < petakTersedia.length) {
                     let nomorPetakTerpilih = petakTersedia[index];
                     petakKuisMap[nomorPetakTerpilih] = soal;
 
+                    // Tambahkan tanda titik merah pada pojok kanan atas petak
                     const cellEl = document.getElementById(`cell-${nomorPetakTerpilih}`);
                     if(cellEl) {
                         const dot = document.createElement('div');
                         dot.className = "quiz-dot";
+                        dot.title = "Petak Soal Kuis";
                         cellEl.appendChild(dot);
                     }
                 }
