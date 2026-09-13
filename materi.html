@@ -8,7 +8,7 @@
   <!-- Favicon Logo UNEJ -->
   <link rel="icon" type="image/png" href="aset/logo/unej.png" />
   
-  <!-- Google Fonts: Plus Jakarta Sans & Fredoka (Font Ceria Anak-anak) -->
+  <!-- Google Fonts: Plus Jakarta Sans & Fredoka -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;700;900&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
@@ -61,8 +61,7 @@
       height: 52px;
       border-radius: 50%;
       background: #ffffff;
-      border: 3px solid #fde047;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -83,8 +82,7 @@
       transform: scale(1.15) rotate(8deg);
       background: #fef08a;
       color: #0284c7;
-      border-color: #38bdf8;
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
     }
 
     .nav-btn:active {
@@ -93,9 +91,9 @@
 
     .home-btn { left: 24px; color: #059669; }
     .fullscreen-btn { right: 24px; color: #7c3aed; }
-    .quiz-btn { right: 88px; color: #ea580c; border-color: #fb923c; }
+    .quiz-btn { right: 88px; color: #ea580c; }
 
-    /* FULLSCREEN GAME SCREEN CERIA (NO OVERLAY) */
+    /* FULLSCREEN GAME SCREEN CERIA (NO OVERLAY & NO BORDER) */
     #fullscreenQuizApp {
       position: fixed;
       inset: 0;
@@ -137,7 +135,7 @@
     }
 
     .match-node.selected {
-      box-shadow: 0 0 0 6px #facc15, 0 10px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 0 0 6px #facc15, 0 12px 24px rgba(0,0,0,0.25);
       transform: scale(1.06);
     }
 
@@ -150,7 +148,7 @@
     /* Animasi Gelembung Ceria */
     @keyframes floatBubble {
       0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(5deg); }
+      50% { transform: translateY(-8px) rotate(4deg); }
     }
     .float-anim { animation: floatBubble 3s infinite ease-in-out; }
 
@@ -160,14 +158,30 @@
     }
     .party-anim { animation: partyPulse 1.2s infinite ease-in-out; }
 
-    /* Tombol 3D Ceria Anak-anak */
-    .btn-child-3d {
-      border-bottom-width: 5px;
-      transition: all 0.15s ease;
+    /* Tombol Clean Seamless (Tanpa Border) */
+    .btn-child-clean {
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .btn-child-3d:active {
-      transform: translateY(3px);
-      border-bottom-width: 2px;
+    .btn-child-clean:hover {
+      transform: translateY(-3px) scale(1.03);
+    }
+    .btn-child-clean:active {
+      transform: translateY(1px) scale(0.97);
+    }
+
+    /* Penyesuaian Responsif Ukuran Gambar SVG */
+    .quiz-svg-icon {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+    }
+
+    @media (min-width: 640px) {
+      .quiz-svg-icon {
+        width: 80px;
+        height: 80px;
+      }
     }
 
     @media (max-height: 700px), (max-width: 480px) {
@@ -176,6 +190,7 @@
       .home-btn { left: 16px; }
       .fullscreen-btn { right: 16px; }
       .quiz-btn { right: 70px; }
+      .quiz-svg-icon { width: 52px; height: 52px; }
     }
   </style>
 </head>
@@ -210,16 +225,16 @@
   <!-- MODAL FULLSCREEN LATIHAN SOAL INTERAKTIF CERIA -->
   <div id="fullscreenQuizApp">
     
-    <!-- Top Bar Navigation Ceria -->
-    <div class="flex items-center justify-between bg-white/90 backdrop-blur-md p-3 sm:p-4 rounded-3xl border-4 border-yellow-300 shadow-xl">
+    <!-- Top Bar Navigation Clean -->
+    <div class="flex items-center justify-between bg-white/90 backdrop-blur-md p-3 sm:p-4 rounded-3xl shadow-xl">
       <div class="flex items-center gap-3">
-        <div class="text-3xl sm:text-4xl bg-yellow-300 p-2 rounded-2xl border-2 border-yellow-400 float-anim">🎈</div>
+        <div class="text-3xl sm:text-4xl bg-yellow-300 p-2 rounded-2xl float-anim shadow-sm">🎈</div>
         <div>
           <h2 id="appQuizTitle" class="text-lg sm:text-2xl font-black text-slate-800 tracking-wide">Latihan Interaktif Daur Hidup</h2>
-          <p id="appQuizSubtitle" class="text-xs sm:text-sm font-bold text-sky-600 uppercase tracking-wider">Soal 1 Dari 3</p>
+          <p id="appQuizSubtitle" class="text-xs sm:text-sm font-bold text-sky-600 uppercase tracking-wider">Soal 1 Dari 4</p>
         </div>
       </div>
-      <button onclick="closeFullscreenQuiz()" class="btn-child-3d px-4 py-2 bg-rose-500 hover:bg-rose-400 text-white border-b-4 border-rose-700 rounded-2xl text-xs sm:text-sm font-black transition-all shadow-md flex items-center gap-1.5">
+      <button onclick="closeFullscreenQuiz()" class="btn-child-clean px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl text-xs sm:text-sm font-black transition-all shadow-md flex items-center gap-1.5">
         <span>Tutup</span>
         <span class="text-base">✖</span>
       </button>
@@ -231,24 +246,24 @@
       <div id="quizStageContainer" class="w-full"></div>
     </div>
 
-    <!-- Bottom Actions Bar Ceria -->
-    <div class="bg-white/90 backdrop-blur-md p-3 sm:p-4 rounded-3xl border-4 border-emerald-300 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+    <!-- Bottom Actions Bar Clean -->
+    <div class="bg-white/90 backdrop-blur-md p-3 sm:p-4 rounded-3xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3">
       <div id="appFeedback" class="text-sm sm:text-base font-black text-amber-600 text-center sm:text-left">
-        Pilih dan jawab soal dengan benar ya! 🌟
+        Pilih dan urutkan gambar dengan benar ya! 🌟
       </div>
       <div class="flex items-center gap-2 w-full sm:w-auto">
-        <button onclick="resetCurrentQuiz()" class="btn-child-3d flex-1 sm:flex-none px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-900 border-b-4 border-amber-600 font-black rounded-2xl text-xs sm:text-sm transition-all shadow-md">Ulangi 🔄</button>
-        <button onclick="checkAnswer()" id="btnCheckAnswer" class="btn-child-3d flex-1 sm:flex-none px-8 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white border-b-4 border-emerald-700 font-black rounded-2xl text-xs sm:text-sm transition-all shadow-lg uppercase tracking-wider">Periksa Jawaban 🚀</button>
+        <button onclick="resetCurrentQuiz()" class="btn-child-clean flex-1 sm:flex-none px-5 py-2.5 bg-amber-400 hover:bg-amber-500 text-slate-900 font-black rounded-2xl text-xs sm:text-sm transition-all shadow-md">Ulangi 🔄</button>
+        <button onclick="checkAnswer()" id="btnCheckAnswer" class="btn-child-clean flex-1 sm:flex-none px-8 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-2xl text-xs sm:text-sm transition-all shadow-lg uppercase tracking-wider">Periksa Jawaban 🚀</button>
       </div>
     </div>
 
     <!-- PERAYAAN KEMBANG API & CONFETTI CERIA 1 LAYAR FIT -->
     <div id="celebrationOverlay" class="fixed inset-0 z-[1000] bg-slate-900/85 backdrop-blur-md hidden flex flex-col justify-center items-center p-4 text-center">
-      <div class="max-w-md w-full flex flex-col items-center bg-gradient-to-b from-yellow-300 via-amber-400 to-orange-500 p-8 rounded-[3rem] border-8 border-white shadow-2xl relative">
+      <div class="max-w-md w-full flex flex-col items-center bg-gradient-to-b from-yellow-300 via-amber-400 to-orange-500 p-8 rounded-[3rem] shadow-2xl relative">
         <div class="text-7xl party-anim mb-3 drop-shadow-md">🏆</div>
         <h2 class="text-3xl sm:text-4xl font-black text-slate-900 mb-2 uppercase tracking-wide">HEBAT BANGET!</h2>
         <p id="celebrationMsg" class="text-base sm:text-lg font-black text-slate-800 mb-6 leading-relaxed">Kamu berhasil menyelesaikan latihan dengan sempurna! 🎉</p>
-        <button onclick="nextQuizOrClose()" id="btnNextQuiz" class="btn-child-3d w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-black rounded-2xl border-b-4 border-emerald-700 shadow-xl transition-all text-base uppercase tracking-wider">Lanjut Soal Berikutnya 🚀</button>
+        <button onclick="nextQuizOrClose()" id="btnNextQuiz" class="btn-child-clean w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black rounded-2xl shadow-xl transition-all text-base uppercase tracking-wider">Lanjut Soal Berikutnya 🚀</button>
       </div>
     </div>
 
@@ -329,30 +344,30 @@
       }
     }
 
-    /* DATABASE SOAL INTERAKTIF FULLSCREEN CERIA */
+    /* DATABASE SOAL INTERAKTIF (ASET SVG LOKAL SOAL 1 TANPA BORDER) */
     const quizDatabase = [
       {
         type: 'sequence',
         title: 'Urutan Daur Hidup Kupu-kupu 🦋',
-        subtitle: 'Susun urutan pertumbuhan kupu-kupu dari awal!',
+        subtitle: 'Susun urutan gambar pertumbuhan kupu-kupu dari awal sampai akhir!',
         correctOrder: ['egg', 'caterpillar', 'pupa', 'butterfly'],
         items: [
-          { id: 'egg', name: '1. Telur', icon: '🥚', color: 'bg-amber-100 border-amber-300 text-amber-800' },
-          { id: 'caterpillar', name: '2. Ulat', icon: '🐛', color: 'bg-emerald-100 border-emerald-300 text-emerald-800' },
-          { id: 'pupa', name: '3. Kepompong', icon: '🟤', color: 'bg-orange-100 border-orange-300 text-orange-800' },
-          { id: 'butterfly', name: '4. Kupu-kupu', icon: '🦋', color: 'bg-pink-100 border-pink-300 text-pink-800' }
+          { id: 'egg', name: 'Telur', svg: 'aset/latihansoal/telurkupu.svg', color: 'bg-amber-100/90 text-amber-900 shadow-lg' },
+          { id: 'caterpillar', name: 'Ulat', svg: 'aset/latihansoal/ulatkupu.svg', color: 'bg-emerald-100/90 text-emerald-900 shadow-lg' },
+          { id: 'pupa', name: 'Kepompong', svg: 'aset/latihansoal/kepompong.svg', color: 'bg-orange-100/90 text-orange-900 shadow-lg' },
+          { id: 'butterfly', name: 'Kupu-kupu', svg: 'aset/latihansoal/kupukupu.svg', color: 'bg-pink-100/90 text-pink-900 shadow-lg' }
         ]
       },
       {
         type: 'sequence',
         title: 'Urutan Daur Hidup Katak 🐸',
-        subtitle: 'Susun tahapan metamorfosis katak dengan tepat!',
+        subtitle: 'Susun tahapan metamorfosis katak dari awal sampai akhir!',
         correctOrder: ['frog_egg', 'tadpole', 'froglet', 'adult_frog'],
         items: [
-          { id: 'frog_egg', name: '1. Telur', icon: '⚪', color: 'bg-slate-100 border-slate-300 text-slate-800' },
-          { id: 'tadpole', name: '2. Berudu', icon: '🐟', color: 'bg-sky-100 border-sky-300 text-sky-800' },
-          { id: 'froglet', name: '3. Katak Muda', icon: '🐸', color: 'bg-teal-100 border-teal-300 text-teal-800' },
-          { id: 'adult_frog', name: '4. Katak Dewasa', icon: '🐸', color: 'bg-green-100 border-green-300 text-green-800' }
+          { id: 'frog_egg', name: 'Telur', icon: '⚪', color: 'bg-slate-100/90 text-slate-900 shadow-lg' },
+          { id: 'tadpole', name: 'Berudu', icon: '🐟', color: 'bg-sky-100/90 text-sky-900 shadow-lg' },
+          { id: 'froglet', name: 'Katak Muda', icon: '🐸', color: 'bg-teal-100/90 text-teal-900 shadow-lg' },
+          { id: 'adult_frog', name: 'Katak Dewasa', icon: '🐸', color: 'bg-green-100/90 text-green-900 shadow-lg' }
         ]
       },
       {
@@ -360,14 +375,28 @@
         title: 'Jodohkan Pasangan Hewan 🔗',
         subtitle: 'Klik item di kiri, lalu klik pasangannya yang cocok di kanan!',
         leftItems: [
-          { id: 'm1', name: 'Kupu-kupu', icon: '🦋', pair: 'p1', bg: 'bg-pink-400 border-pink-600' },
-          { id: 'm2', name: 'Katak', icon: '🐸', pair: 'p2', bg: 'bg-emerald-400 border-emerald-600' },
-          { id: 'm3', name: 'Ayam', icon: '🐔', pair: 'p3', bg: 'bg-amber-400 border-amber-600' }
+          { id: 'm1', name: 'Kupu-kupu', icon: '🦋', pair: 'p1', bg: 'bg-pink-500 text-white shadow-lg' },
+          { id: 'm2', name: 'Katak', icon: '🐸', pair: 'p2', bg: 'bg-emerald-500 text-white shadow-lg' },
+          { id: 'm3', name: 'Ayam', icon: '🐔', pair: 'p3', bg: 'bg-amber-500 text-white shadow-lg' }
         ],
         rightItems: [
-          { id: 'p3', name: 'Bertelur di Darat', icon: '🥚', pair: 'm3', bg: 'bg-yellow-400 border-yellow-600' },
-          { id: 'p1', name: 'Ulat & Kepompong', icon: '🐛', pair: 'm1', bg: 'bg-purple-400 border-purple-600' },
-          { id: 'p2', name: 'Berudu di Air', icon: '🐟', pair: 'm2', bg: 'bg-cyan-400 border-cyan-600' }
+          { id: 'p3', name: 'Bertelur di Darat', icon: '🥚', pair: 'm3', bg: 'bg-yellow-400 text-slate-900 shadow-lg' },
+          { id: 'p1', name: 'Ulat & Kepompong', icon: '🐛', pair: 'm1', bg: 'bg-purple-500 text-white shadow-lg' },
+          { id: 'p2', name: 'Berudu di Air', icon: '🐟', pair: 'm2', bg: 'bg-cyan-500 text-white shadow-lg' }
+        ]
+      },
+      {
+        type: 'match',
+        title: 'Jodohkan Jenis Metamorfosis 🧬',
+        subtitle: 'Hubungkan hewan dengan jenis metamorfosisnya yang tepat!',
+        leftItems: [
+          { id: 'meta1', name: 'Kupu-kupu', icon: '🦋', pair: 'pm1', bg: 'bg-purple-500 text-white shadow-lg' },
+          { id: 'meta2', name: 'Kecoak', icon: '🪳', pair: 'pm2', bg: 'bg-orange-500 text-white shadow-lg' },
+          { id: 'meta3', name: 'Nyamuk', icon: '🦟', pair: 'pm1', pairAlt: 'pm1', bg: 'bg-rose-500 text-white shadow-lg' }
+        ],
+        rightItems: [
+          { id: 'pm2', name: 'Metamorfosis Tidak Sempurna', icon: '🌱', pair: 'meta2', bg: 'bg-lime-400 text-slate-900 shadow-lg' },
+          { id: 'pm1', name: 'Metamorfosis Sempurna (Pupa)', icon: '✨', pair: 'meta1', bg: 'bg-indigo-500 text-white shadow-lg' }
         ]
       }
     ];
@@ -411,7 +440,7 @@
       }
     }
 
-    /* LOGIKA MENGURUTKAN (SEQUENCE) CERIA */
+    /* LOGIKA MENGURUTKAN (TANPA BORDER APAPUN) */
     function renderSequenceUI() {
       const qData = quizDatabase[currentQuizIndex];
       const container = document.getElementById('quizStageContainer');
@@ -421,15 +450,19 @@
         const filledId = sequenceAnswers[i];
         if (filledId) {
           const item = qData.items.find(x => x.id === filledId);
+          const iconContent = item.svg 
+            ? `<img src="${item.svg}" alt="${item.name}" class="quiz-svg-icon mb-1 float-anim" />`
+            : `<span class="text-4xl sm:text-5xl mb-1 filter drop-shadow-md float-anim">${item.icon}</span>`;
+
           slotsHTML += `
-            <div onclick="removeSequenceAnswer(${i})" class="btn-child-3d ${item.color} border-4 rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-center cursor-pointer shadow-lg">
-              <span class="text-4xl sm:text-5xl mb-1 filter drop-shadow-md float-anim">${item.icon}</span>
+            <div onclick="removeSequenceAnswer(${i})" class="btn-child-clean ${item.color} rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-center cursor-pointer">
+              ${iconContent}
               <span class="text-xs sm:text-sm font-black text-center">${item.name}</span>
             </div>
           `;
         } else {
           slotsHTML += `
-            <div class="border-4 border-dashed border-white/80 bg-white/30 backdrop-blur-sm rounded-3xl p-4 flex flex-col items-center justify-center text-white font-black text-sm min-h-[110px] shadow-inner">
+            <div class="bg-white/30 backdrop-blur-md rounded-3xl p-4 flex flex-col items-center justify-center text-white font-black text-sm min-h-[110px] shadow-inner">
               Tahap ${i+1}
             </div>
           `;
@@ -437,13 +470,17 @@
       }
       slotsHTML += '</div>';
 
-      let optionsHTML = '<div class="flex flex-wrap gap-3 justify-center bg-white/90 backdrop-blur-md p-4 sm:p-5 rounded-3xl border-4 border-sky-300 shadow-xl">';
+      let optionsHTML = '<div class="flex flex-wrap gap-3 justify-center bg-white/90 backdrop-blur-md p-4 sm:p-5 rounded-3xl shadow-xl">';
       const shuffled = [...qData.items].sort((a,b) => a.id.localeCompare(b.id));
       shuffled.forEach(item => {
         const isSelected = sequenceAnswers.includes(item.id);
+        const optionVisual = item.svg 
+          ? `<img src="${item.svg}" alt="${item.name}" class="w-8 h-8 object-contain" />`
+          : `<span class="text-2xl">${item.icon}</span>`;
+
         optionsHTML += `
-          <button onclick="selectSequenceOption('${item.id}')" ${isSelected ? 'disabled' : ''} class="btn-child-3d ${isSelected ? 'opacity-30 bg-slate-200 border-slate-400 text-slate-500' : `${item.color} hover:scale-105`} border-3 rounded-2xl px-4 py-2.5 font-black text-xs sm:text-sm flex items-center gap-2 shadow-md">
-            <span class="text-2xl">${item.icon}</span>
+          <button onclick="selectSequenceOption('${item.id}')" ${isSelected ? 'disabled' : ''} class="btn-child-clean ${isSelected ? 'opacity-30 bg-slate-200 text-slate-500 shadow-none' : `${item.color} hover:scale-105`} rounded-2xl px-4 py-2.5 font-black text-xs sm:text-sm flex items-center gap-2">
+            ${optionVisual}
             <span>${item.name}</span>
           </button>
         `;
@@ -468,7 +505,7 @@
       renderSequenceUI();
     }
 
-    /* LOGIKA MENJODOHKAN (MATCHING) CERIA */
+    /* LOGIKA MENJODOHKAN (MATCHING) TANPA BORDER */
     function renderMatchUI() {
       const qData = quizDatabase[currentQuizIndex];
       const container = document.getElementById('quizStageContainer');
@@ -481,7 +518,7 @@
         const isMatched = userMatches.some(m => m.left === item.id);
         const isSelected = selectedLeftMatch === item.id;
         html += `
-          <button id="node-left-${item.id}" onclick="clickLeftMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node btn-child-3d ${isSelected ? 'selected' : ''} ${isMatched ? 'matched' : ''} ${item.bg} text-white p-3 sm:p-4 rounded-3xl border-b-4 flex items-center gap-3 font-black text-xs sm:text-sm shadow-xl">
+          <button id="node-left-${item.id}" onclick="clickLeftMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node btn-child-clean ${isSelected ? 'selected' : ''} ${isMatched ? 'matched' : ''} ${item.bg} p-3 sm:p-4 rounded-3xl flex items-center gap-3 font-black text-xs sm:text-sm">
             <span class="text-3xl sm:text-4xl filter drop-shadow">${item.icon}</span>
             <span>${item.name}</span>
           </button>
@@ -490,11 +527,11 @@
       html += '</div>';
 
       // Kolom Kanan
-      html += '<div class="flex flex-col gap-3.5">';
+      html += '<div class="flex flex-col gap-3.5 justify-center">';
       qData.rightItems.forEach(item => {
-        const isMatched = userMatches.some(m => m.right === item.id);
+        const isMatched = userMatches.some(m => m.right === item.id && (currentQuizIndex !== 3 || userMatches.filter(x => x.right === item.id).length >= (item.id === 'pm1' ? 2 : 1)));
         html += `
-          <button id="node-right-${item.id}" onclick="clickRightMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node btn-child-3d ${isMatched ? 'matched' : ''} ${item.bg} text-white p-3 sm:p-4 rounded-3xl border-b-4 flex items-center gap-3 font-black text-xs sm:text-sm shadow-xl">
+          <button id="node-right-${item.id}" onclick="clickRightMatch('${item.id}')" ${isMatched ? 'disabled' : ''} class="match-node btn-child-clean ${isMatched ? 'matched' : ''} ${item.bg} p-3 sm:p-4 rounded-3xl flex items-center gap-3 font-black text-xs sm:text-sm">
             <span class="text-3xl sm:text-4xl filter drop-shadow">${item.icon}</span>
             <span>${item.name}</span>
           </button>
@@ -583,7 +620,7 @@
         }
         isCorrect = userMatches.every(m => {
           const itemLeft = qData.leftItems.find(x => x.id === m.left);
-          return itemLeft && itemLeft.pair === m.right;
+          return itemLeft && (itemLeft.pair === m.right || itemLeft.pairAlt === m.right);
         });
       }
 
@@ -598,7 +635,6 @@
     }
 
     function triggerFullCelebration() {
-      // Efek Confetti Kembang Api Ceria
       confetti({ particleCount: 140, spread: 90, origin: { y: 0.6 } });
       setTimeout(() => confetti({ particleCount: 160, angle: 60, spread: 100, origin: { x: 0 } }), 200);
       setTimeout(() => confetti({ particleCount: 160, angle: 120, spread: 100, origin: { x: 1 } }), 400);
