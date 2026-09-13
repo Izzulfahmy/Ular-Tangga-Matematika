@@ -11,7 +11,7 @@
     <!-- Google Fonts: Plus Jakarta Sans & Nunito -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@700;800;900&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- QRCode.js Library -->
@@ -271,6 +271,22 @@
             .nav-btn-custom { width: 40px; height: 40px; }
             .nav-btn-custom svg { width: 18px; height: 18px; }
         }
+
+        /* Scrollbar Halus untuk Grid Avatar Modal */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 
     <!-- Firebase SDK Setup -->
@@ -316,32 +332,39 @@
         </button>
     </div>
 
-    <!-- FULLSCREEN SETUP MODAL -->
-    <div id="startup-modal" class="fixed inset-0 z-[10000] flex items-center justify-center bg-emerald-950/90 backdrop-blur-md p-4 overflow-y-auto">
-        <div id="startup-card" class="bg-white p-6 sm:p-8 rounded-3xl sm:rounded-[2.5rem] shadow-2xl max-w-lg w-full border-4 border-emerald-400 text-center space-y-6 my-auto">
+    <!-- MODAL PENGATURAN PERMAINAN BARU DENGAN AVATAR CARD INTERAKTIF -->
+    <div id="startup-modal" class="fixed inset-0 z-[10000] flex items-center justify-center bg-slate-900/80 backdrop-blur-md p-3 sm:p-4 overflow-y-auto">
+        <div id="startup-card" class="bg-white p-5 sm:p-8 rounded-3xl sm:rounded-[2.5rem] shadow-2xl max-w-xl w-full border-4 border-emerald-400 text-center space-y-6 my-auto">
+            
+            <!-- HEADER MODAL -->
             <div>
-                <div class="text-5xl mb-2">🎲🐍🪜</div>
-                <h2 class="text-3xl font-black text-emerald-600 tracking-tight font-jakarta">Ular Tangga Edukasi</h2>
-                <p class="text-xs font-extrabold text-slate-400 mt-1 uppercase tracking-wider">Pengaturan Permainan</p>
+                <div class="inline-flex items-center justify-center p-3 bg-emerald-100 rounded-2xl mb-2 text-4xl shadow-inner border border-emerald-200">
+                    🎲🐍🪜
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-black text-emerald-600 tracking-tight font-jakarta">Ular Tangga Edukasi</h2>
+                <p class="text-xs font-black text-slate-400 mt-1 uppercase tracking-widest">Pengaturan Permainan</p>
             </div>
             
+            <!-- SELEKSI JUMLAH PEMAIN (CARD TOGGLE) -->
             <div class="space-y-2">
                 <label class="block text-xs font-black text-slate-500 uppercase tracking-wider">1. Pilih Jumlah Pemain</label>
-                <div class="grid grid-cols-4 gap-2">
-                    <button type="button" onclick="setPlayerCount(1)" id="btn-pcount-1" class="py-3 bg-emerald-50 border-2 border-brand-500 text-brand-600 font-black rounded-2xl text-base text-center transition-all">1</button>
-                    <button type="button" onclick="setPlayerCount(2)" id="btn-pcount-2" class="py-3 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-base text-center transition-all">2</button>
-                    <button type="button" onclick="setPlayerCount(3)" id="btn-pcount-3" class="py-3 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-base text-center transition-all">3</button>
-                    <button type="button" onclick="setPlayerCount(4)" id="btn-pcount-4" class="py-3 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-base text-center transition-all">4</button>
+                <div class="grid grid-cols-4 gap-2 sm:gap-3 max-w-md mx-auto">
+                    <button type="button" onclick="setPlayerCount(1)" id="btn-pcount-1" class="py-3 bg-emerald-500 text-white font-black rounded-2xl text-lg text-center shadow-lg border-b-4 border-emerald-700 transition-all scale-105">1</button>
+                    <button type="button" onclick="setPlayerCount(2)" id="btn-pcount-2" class="py-3 bg-slate-100 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-lg text-center hover:bg-slate-200 transition-all">2</button>
+                    <button type="button" onclick="setPlayerCount(3)" id="btn-pcount-3" class="py-3 bg-slate-100 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-lg text-center hover:bg-slate-200 transition-all">3</button>
+                    <button type="button" onclick="setPlayerCount(4)" id="btn-pcount-4" class="py-3 bg-slate-100 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-lg text-center hover:bg-slate-200 transition-all">4</button>
                 </div>
             </div>
 
+            <!-- SELEKSI AVATAR CARD HEWAN PEMAIN -->
             <div class="space-y-3 text-left">
                 <label class="block text-xs font-black text-slate-500 uppercase tracking-wider text-center">2. Pilih Hewan Pion Pemain</label>
-                <div id="animal-selection-container" class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                <div id="animal-selection-container" class="space-y-4 max-h-72 overflow-y-auto pr-1 custom-scrollbar">
+                    <!-- Dynamic rendering Card Avatar via JS -->
                 </div>
             </div>
 
-            <button onclick="initiateGameWithCountdown()" class="toy-btn w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl text-lg transition-all shadow-lg active:translate-y-1 uppercase tracking-wider border-b-4 border-brand-900">
+            <button onclick="initiateGameWithCountdown()" class="toy-btn w-full py-4 bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl text-lg transition-all shadow-xl active:translate-y-1 uppercase tracking-wider border-b-4 border-brand-900 font-jakarta">
                 Mulai Permainan 🚀
             </button>
         </div>
@@ -625,7 +648,6 @@
 
             qrBox.innerHTML = '';
             
-            // Format URL Remote HP
             const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
             const remoteUrl = `${baseUrl}/remote.html?gameId=${currentGameId}&player=${playerIdx}`;
 
@@ -770,38 +792,63 @@
             playSound('click');
             tempPlayerCount = count;
             for(let i=1; i<=4; i++) {
-                document.getElementById(`btn-pcount-${i}`).className = (i === count)
-                    ? "py-3 bg-emerald-50 border-2 border-brand-500 text-brand-600 font-black rounded-2xl text-base text-center transition-all shadow-sm"
-                    : "py-3 bg-slate-50 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-base text-center transition-all";
+                const btn = document.getElementById(`btn-pcount-${i}`);
+                if(i === count) {
+                    btn.className = "py-3 bg-emerald-500 text-white font-black rounded-2xl text-lg text-center shadow-lg border-b-4 border-emerald-700 transition-all scale-105";
+                } else {
+                    btn.className = "py-3 bg-slate-100 border-2 border-slate-200 text-slate-600 font-black rounded-2xl text-lg text-center hover:bg-slate-200 transition-all";
+                }
             }
             renderAnimalSelectionControls();
         }
 
+        /* RENDERING DESAIN CARD AVATAR BESAR & INTERAKTIF BARU */
         function renderAnimalSelectionControls() {
             const container = document.getElementById('animal-selection-container');
             container.innerHTML = '';
+            
             for (let i = 0; i < tempPlayerCount; i++) {
-                const div = document.createElement('div');
-                div.className = "flex items-center justify-between bg-slate-50 p-2.5 rounded-2xl border border-slate-200 gap-2";
+                const section = document.createElement('div');
+                section.className = "bg-slate-50 p-4 rounded-3xl border-2 border-slate-200 space-y-3";
                 
-                let optionsHTML = availableAnimals.map(a => 
-                    `<option value="${a.emoji}|${a.name}" ${selectedAnimals[i].name === a.name ? 'selected' : ''}>${a.emoji} ${a.name}</option>`
-                ).join('');
-
-                div.innerHTML = `
-                    <span class="text-xs font-black text-slate-700">Pemain ${i+1}:</span>
-                    <select onchange="onAnimalSelectChange(${i}, this.value)" class="bg-white border border-slate-300 font-bold text-xs rounded-xl p-2 outline-none focus:ring-2 focus:ring-brand-500">
-                        ${optionsHTML}
-                    </select>
+                // Header Pemain
+                section.innerHTML = `
+                    <div class="flex items-center justify-between border-b pb-2">
+                        <span class="text-sm font-black text-slate-800 uppercase tracking-wide">Pemain ${i+1}</span>
+                        <span id="selected-label-${i}" class="text-xs font-extrabold text-emerald-600 bg-emerald-100 px-3 py-1 rounded-full">
+                            ${selectedAnimals[i].emoji} ${selectedAnimals[i].name}
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-5 gap-2 sm:gap-3" id="avatar-grid-${i}"></div>
                 `;
-                container.appendChild(div);
+                container.appendChild(section);
+
+                const avatarGrid = document.getElementById(`avatar-grid-${i}`);
+                
+                // Render Grid Avatar Hewan
+                availableAnimals.forEach(animal => {
+                    const isSelected = selectedAnimals[i].name === animal.name;
+                    const cardBtn = document.createElement('button');
+                    cardBtn.type = "button";
+                    cardBtn.onclick = () => selectAnimalCard(i, animal);
+                    
+                    cardBtn.className = isSelected
+                        ? "p-2 bg-white border-4 border-emerald-500 rounded-2xl shadow-md flex flex-col items-center justify-center transition-all scale-105 ring-2 ring-emerald-300"
+                        : "p-2 bg-white border-2 border-slate-200 rounded-2xl hover:border-emerald-300 hover:shadow-sm flex flex-col items-center justify-center transition-all opacity-70 hover:opacity-100";
+
+                    cardBtn.innerHTML = `
+                        <span class="text-3xl sm:text-4xl leading-none mb-1 transform transition-transform group-hover:scale-110">${animal.emoji}</span>
+                        <span class="text-[10px] sm:text-xs font-black text-slate-700 truncate w-full text-center">${animal.name}</span>
+                    `;
+                    avatarGrid.appendChild(cardBtn);
+                });
             }
         }
 
-        function onAnimalSelectChange(pIdx, val) {
+        function selectAnimalCard(pIdx, animal) {
             playSound('click');
-            const [emoji, name] = val.split('|');
-            selectedAnimals[pIdx] = { name, emoji };
+            selectedAnimals[pIdx] = { name: animal.name, emoji: animal.emoji };
+            renderAnimalSelectionControls();
         }
 
         function initiateGameWithCountdown() {
@@ -957,7 +1004,6 @@
             return { x, y };
         }
 
-        /* FORMULA SVG DIGAMBAR ULANG AGAR TANGGA PRESISI & RAPI */
         function drawSnakesAndLadders() {
             const svg = document.getElementById('svg-layer');
             let svgContent = '';
@@ -972,12 +1018,10 @@
                 const length = Math.sqrt(dx*dx + dy*dy);
                 if (length === 0) continue;
 
-                // Vektor Normal Terstandardisasi untuk lebar rel tangga
                 const nx = -dy / length; 
                 const ny = dx / length; 
-                const ladderWidth = 1.4; // Lebar rel proporsional
+                const ladderWidth = 1.4; 
 
-                // Titik Garis Rel Kiri & Kanan
                 const r1x1 = pos1.x + nx * ladderWidth; 
                 const r1y1 = pos1.y + ny * ladderWidth;
                 const r1x2 = pos2.x + nx * ladderWidth; 
@@ -988,11 +1032,9 @@
                 const r2x2 = pos2.x - nx * ladderWidth; 
                 const r2y2 = pos2.y - ny * ladderWidth;
 
-                // Gambar Rel Utama Kiri & Kanan
                 svgContent += `<line x1="${r1x1}" y1="${r1y1}" x2="${r1x2}" y2="${r1y2}" stroke="#78350f" stroke-width="0.8" stroke-linecap="round"/>`;
                 svgContent += `<line x1="${r2x1}" y1="${r2y1}" x2="${r2x2}" y2="${r2y2}" stroke="#78350f" stroke-width="0.8" stroke-linecap="round"/>`;
 
-                // Gambar Anak-Anak Tangga (Rungs) Presisi
                 const stepSpacing = 4.5;
                 const rungCount = Math.floor(length / stepSpacing); 
                 for(let i = 1; i <= rungCount; i++) {
