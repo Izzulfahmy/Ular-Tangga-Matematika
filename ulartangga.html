@@ -843,12 +843,11 @@
             }, 900);
         }
 
-        /* MENDENGARKAN PERINTAH FIRESTORE DARI REMOTE HP (DI-PERBAIKI) */
+        /* MENDENGARKAN PERINTAH FIRESTORE DARI REMOTE HP */
         function setupFirestoreRemoteListener() {
             if(!window.dbFirestore) return;
             const gameRef = window.fsDoc(window.dbFirestore, "game_sessions", currentGameId);
             
-            // Inisialisasi room sesi di Firestore
             window.fsSetDoc(gameRef, {
                 currentPlayer: 0,
                 status: "active",
@@ -856,22 +855,18 @@
                 timestamp: Date.now()
             }, { merge: true });
 
-            // Listen real-time command
             window.fsOnSnapshot(gameRef, (snapshot) => {
                 if(snapshot.exists()) {
                     const data = snapshot.data();
                     const action = data.lastAction;
 
-                    // Validasi: pastikan ada aksi dan timestamp aksi lebih baru dari aksi yang sudah diproses
                     if(action && action.timestamp && action.timestamp > lastProcessedTimestamp) {
                         lastProcessedTimestamp = action.timestamp;
 
                         if(action.type === "ROLL_DICE" && action.player === currentPlayer && !isMoving) {
-                            // Reset lastAction di Firestore agar tidak dipicu ulang
                             window.fsSetDoc(gameRef, { lastAction: null }, { merge: true });
                             rollDice3D();
                         } else if(action.type === "SUBMIT_ANSWER" && action.player === currentPlayer && soalAktif) {
-                            // Reset lastAction di Firestore agar tidak dipicu ulang
                             window.fsSetDoc(gameRef, { lastAction: null }, { merge: true });
                             checkJawabanSiswa(action.answer);
                         }
@@ -962,68 +957,101 @@
             return { x, y };
         }
 
+        /* FORMULA SVG DIGAMBAR ULANG AGAR TANGGA PRESISI & RAPI */
         function drawSnakesAndLadders() {
             const svg = document.getElementById('svg-layer');
             let svgContent = '';
 
+            // 1. MENGGAMBAR TANGGA (LADDERS)
             for (const [start, end] of Object.entries(ladders)) {
-                const pos1 = getCoordinates(parseInt(start)); const pos2 = getCoordinates(end);
-                const dx = pos2.x - pos1.x; const dy = pos2.y - pos1.y;
+                const pos1 = getCoordinates(parseInt(start)); 
+                const pos2 = getCoordinates(end);
+                
+                const dx = pos2.x - pos1.x; 
+                const dy = pos2.y - pos1.y;
                 const length = Math.sqrt(dx*dx + dy*dy);
                 if (length === 0) continue;
 
-                const px = -dy/length; const py = dx/length; const w = 1.6;
-                const r1x1 = pos1.x + px*w; const r1y1 = pos1.y + py*w;
-                const r1x2 = pos2.x + px*w; const r1y2 = pos2.y + py*w;
-                const r2x1 = pos1.x - px*w; const r2y1 = pos1.y - py*w;
-                const r2x2 = pos2.x - px*w; const r2y2 = pos2.y - py*w;
+                // Vektor Normal Terstandardisasi untuk lebar rel tangga
+                const nx = -dy / length; 
+                const ny = dx / length; 
+                const ladderWidth = 1.4; // Lebar rel proporsional
 
-                svgContent += `<line x1="${r1x1}" y1="${r1y1}" x2="${r1x2}" y2="${r1y2}" stroke="#78350f" stroke-width="1.2" stroke-linecap="round"/>`;
-                svgContent += `<line x1="${r2x1}" y1="${r2y1}" x2="${r2x2}" y2="${r2y2}" stroke="#78350f" stroke-width="1.2" stroke-linecap="round"/>`;
+                // Titik Garis Rel Kiri & Kanan
+                const r1x1 = pos1.x + nx * ladderWidth; 
+                const r1y1 = pos1.y + ny * ladderWidth;
+                const r1x2 = pos2.x + nx * ladderWidth; 
+                const r1y2 = pos2.y + ny * ladderWidth;
 
-                const stepSize = 6.5;
-                const rungCount = Math.floor(length / stepSize); 
+                const r2x1 = pos1.x - nx * ladderWidth; 
+                const r2y1 = pos1.y - ny * ladderWidth;
+                const r2x2 = pos2.x - nx * ladderWidth; 
+                const r2y2 = pos2.y - ny * ladderWidth;
+
+                // Gambar Rel Utama Kiri & Kanan
+                svgContent += `<line x1="${r1x1}" y1="${r1y1}" x2="${r1x2}" y2="${r1y2}" stroke="#78350f" stroke-width="0.8" stroke-linecap="round"/>`;
+                svgContent += `<line x1="${r2x1}" y1="${r2y1}" x2="${r2x2}" y2="${r2y2}" stroke="#78350f" stroke-width="0.8" stroke-linecap="round"/>`;
+
+                // Gambar Anak-Anak Tangga (Rungs) Presisi
+                const stepSpacing = 4.5;
+                const rungCount = Math.floor(length / stepSpacing); 
                 for(let i = 1; i <= rungCount; i++) {
                     const t = i / (rungCount + 1);
-                    const rx1 = r1x1 + (r1x2 - r1x1)*t; 
-                    const ry1 = r1y1 + (r1y2 - r1y1)*t;
-                    const rx2 = r2x1 + (r2x2 - r2x1)*t; 
-                    const ry2 = r2y2 + (r2y2 - r2y1)*t;
-                    svgContent += `<line x1="${rx1}" y1="${ry1}" x2="${rx2}" y2="${ry2}" stroke="#a16207" stroke-width="0.9" stroke-linecap="round"/>`;
+                    const rx1 = r1x1 + (r1x2 - r1x1) * t; 
+                    const ry1 = r1y1 + (r1y2 - r1y1) * t;
+                    const rx2 = r2x1 + (r2x2 - r2x1) * t; 
+                    const ry2 = r2y1 + (r2y2 - r2y1) * t;
+                    svgContent += `<line x1="${rx1}" y1="${ry1}" x2="${rx2}" y2="${ry2}" stroke="#a16207" stroke-width="0.6" stroke-linecap="round"/>`;
                 }
             }
 
-            const snakeColors = [{ body: '#ef4444', belly: '#fca5a5' }, { body: '#10b981', belly: '#6ee7b7' }, { body: '#3b82f6', belly: '#93c5fd' }, { body: '#8b5cf6', belly: '#c4b5fd' }];
+            // 2. MENGGAMBAR ULAR (SNAKES)
+            const snakeColors = [
+                { body: '#ef4444', belly: '#fca5a5' }, 
+                { body: '#10b981', belly: '#6ee7b7' }, 
+                { body: '#3b82f6', belly: '#93c5fd' }, 
+                { body: '#8b5cf6', belly: '#c4b5fd' }
+            ];
             let sIdx = 0;
+
             for (const [head, tail] of Object.entries(snakes)) {
-                const hPos = getCoordinates(parseInt(head)); const tPos = getCoordinates(tail);
-                const dx = tPos.x - hPos.x; const dy = tPos.y - hPos.y;
+                const hPos = getCoordinates(parseInt(head)); 
+                const tPos = getCoordinates(tail);
+                const dx = tPos.x - hPos.x; 
+                const dy = tPos.y - hPos.y;
                 const length = Math.sqrt(dx*dx + dy*dy);
-                const px = -dy/length; const py = dx/length;
-                const curve = length > 30 ? 15 : 8; 
-                const cx1 = hPos.x + dx*0.3 + px*curve; const cy1 = hPos.y + dy*0.3 + py*curve;
-                const cx2 = hPos.x + dx*0.7 - px*curve; const cy2 = hPos.y + dy*0.7 - py*curve;
+                const px = -dy/length; 
+                const py = dx/length;
+                const curve = length > 30 ? 12 : 6; 
+                
+                const cx1 = hPos.x + dx*0.3 + px*curve; 
+                const cy1 = hPos.y + dy*0.3 + py*curve;
+                const cx2 = hPos.x + dx*0.7 - px*curve; 
+                const cy2 = hPos.y + dy*0.7 - py*curve;
 
                 const pathData = `M ${hPos.x} ${hPos.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${tPos.x} ${tPos.y}`;
-                const col = snakeColors[sIdx % snakeColors.length]; sIdx++;
+                const col = snakeColors[sIdx % snakeColors.length]; 
+                sIdx++;
 
-                svgContent += `<path d="${pathData}" stroke="${col.body}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
-                svgContent += `<path d="${pathData}" stroke="${col.belly}" stroke-width="1.4" stroke-dasharray="1.2 2.5" fill="none" stroke-linecap="round"/>`;
+                svgContent += `<path d="${pathData}" stroke="${col.body}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+                svgContent += `<path d="${pathData}" stroke="${col.belly}" stroke-width="1.2" stroke-dasharray="1 2" fill="none" stroke-linecap="round"/>`;
 
-                const hdx = hPos.x - cx1; const hdy = hPos.y - cy1;
+                const hdx = hPos.x - cx1; 
+                const hdy = hPos.y - cy1;
                 const hAngle = Math.atan2(hdy, hdx) * 180 / Math.PI;
-                const tdx = tPos.x - cx2; const tdy = tPos.y - cy2;
+                const tdx = tPos.x - cx2; 
+                const tdy = tPos.y - cy2;
                 const tAngle = Math.atan2(tdy, tdx) * 180 / Math.PI;
 
                 svgContent += `
                     <g transform="translate(${hPos.x}, ${hPos.y}) rotate(${hAngle})">
-                        <ellipse cx="-1.2" cy="0" rx="3.2" ry="2.4" fill="${col.body}"/>
-                        <circle cx="-0.4" cy="-1.1" r="0.7" fill="white"/><circle cx="-0.2" cy="-1.1" r="0.35" fill="black"/>
-                        <circle cx="-0.4" cy="1.1" r="0.7" fill="white"/><circle cx="-0.2" cy="1.1" r="0.35" fill="black"/>
-                        <path d="M 2 0 L 4 -0.6 M 2 0 L 4 0.6 M 2 0 L 3 0" stroke="#f43f5e" stroke-width="0.5" fill="none" stroke-linecap="round"/>
+                        <ellipse cx="-1" cy="0" rx="2.8" ry="2" fill="${col.body}"/>
+                        <circle cx="-0.3" cy="-0.9" r="0.6" fill="white"/><circle cx="-0.1" cy="-0.9" r="0.3" fill="black"/>
+                        <circle cx="-0.3" cy="0.9" r="0.6" fill="white"/><circle cx="-0.1" cy="0.9" r="0.3" fill="black"/>
+                        <path d="M 1.8 0 L 3.5 -0.5 M 1.8 0 L 3.5 0.5" stroke="#f43f5e" stroke-width="0.4" fill="none" stroke-linecap="round"/>
                     </g>
                     <g transform="translate(${tPos.x}, ${tPos.y}) rotate(${tAngle})">
-                        <path d="M -2.5 -1.2 L 1.2 0 L -2.5 1.2 Z" fill="${col.body}"/>
+                        <path d="M -2 -1 L 1 0 L -2 1 Z" fill="${col.body}"/>
                     </g>
                 `;
             }
@@ -1044,7 +1072,6 @@
                 }
             }
 
-            // Sync giliran ke Firestore
             if(window.dbFirestore && currentGameId) {
                 window.fsSetDoc(window.fsDoc(window.dbFirestore, "game_sessions", currentGameId), {
                     currentPlayer: currentPlayer,
