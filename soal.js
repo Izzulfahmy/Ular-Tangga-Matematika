@@ -91,11 +91,11 @@ const bankSoal = [
   },
   {
     id: 11,
-    soal: "Urutan daur hidup kupu-kupu yang tepat adalah...",
-    a: "Telur → kepompong → ulat → kupu-kupu dewasa",
-    b: "Ulat → telur → kepompong → kupu-kupu dewasa",
-    c: "Telur → ulat (larva) → kepompong (pupa) → kupu-kupu dewasa",
-    d: "Kepompong → ulat → telur → kupu-kupu dewasa",
+    soal: "Urutan daur hidup kupu-kupu yang tepat ditunjukkan oleh gambar...",
+    a: "<img src='aset/hewan/11a.png' alt='Opsi A' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    b: "<img src='aset/hewan/11b.png' alt='Opsi B' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    c: "<img src='aset/hewan/11c.png' alt='Opsi C' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    d: "<img src='aset/hewan/11d.png' alt='Opsi D' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
     kunci: "C"
   },
   {
@@ -118,11 +118,11 @@ const bankSoal = [
   },
   {
     id: 14,
-    soal: "Tahapan siklus hidup katak yang benar adalah...",
-    a: "Telur → katak muda → berudu → katak dewasa",
-    b: "Telur → berudu → berudu berkaki → katak muda → katak dewasa",
-    c: "Berudu → telur → katak muda → katak dewasa",
-    d: "Telur → pupa → berudu → katak dewasa",
+    soal: "Tahapan siklus hidup katak yang benar ditunjukkan oleh gambar...",
+    a: "<img src='aset/hewan/14a.png' alt='Opsi A' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    b: "<img src='aset/hewan/14b.png' alt='Opsi B' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    c: "<img src='aset/hewan/14c.png' alt='Opsi C' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    d: "<img src='aset/hewan/14d.png' alt='Opsi D' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
     kunci: "B"
   },
   {
@@ -136,11 +136,11 @@ const bankSoal = [
   },
   {
     id: 16,
-    soal: "Urutan daur hidup kecoak yang benar adalah...",
-    a: "Telur → pupa → kecoak dewasa",
-    b: "Telur → nimfa → kecoak dewasa",
-    c: "Larva → pupa → kecoak dewasa",
-    d: "Nimfa → telur → kecoak dewasa",
+    soal: "Urutan daur hidup nyamuk yang benar ditunjukkan oleh gambar...",
+    a: "<img src='aset/hewan/16a.png' alt='Opsi A' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    b: "<img src='aset/hewan/16b.png' alt='Opsi B' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    c: "<img src='aset/hewan/16c.png' alt='Opsi C' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
+    d: "<img src='aset/hewan/16d.png' alt='Opsi D' class='h-20 sm:h-24 object-contain rounded-lg my-1'>",
     kunci: "B"
   },
   {
