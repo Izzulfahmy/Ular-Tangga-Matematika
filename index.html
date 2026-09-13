@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Tarik Tambang Matematika - Media Pembelajaran</title>
   
-  <!-- Font Playful & Ceria dari Google Fonts -->
+  <!-- Favicon Logo UNEJ pada Tab Browser -->
+  <link rel="icon" type="image/png" href="aset/logo/unej.png" />
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Fredoka -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
 
   <style>
     /* Reset & Core Setup */
@@ -23,30 +26,23 @@
     html, body {
       width: 100%;
       height: 100vh;
-      height: 100dvh; /* Support dynamic viewport height di mobile browser */
-      overflow: hidden; /* Menjaga agar konten pas 1 layar */
-      font-family: 'Fredoka', sans-serif;
+      height: 100dvh;
+      overflow: hidden;
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
-    /* Background Ceria Gradasi Dinamis */
+    /* Background Gradient Ceria & Elegan */
     body {
-      background: linear-gradient(135deg, #70e1f5 0%, #ffd194 50%, #ff9a9e 100%);
-      background-size: 200% 200%;
-      animation: gradientBG 12s ease infinite;
+      background: radial-gradient(circle at 50% 30%, #ffffff 0%, #e0f2fe 50%, #bae6fd 100%);
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
       position: relative;
     }
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Elemen Dekorasi Latar Belakang Floating Bubble */
-    .bg-bubbles {
+    /* Elemen Dekorasi Latar Belakang Animated Waves & Circles */
+    .bg-decorations {
       position: absolute;
       top: 0;
       left: 0;
@@ -57,271 +53,303 @@
       overflow: hidden;
     }
 
-    .bubble {
+    .decor-circle {
       position: absolute;
       border-radius: 50%;
-      opacity: 0.35;
-      animation: floatUp 8s infinite ease-in-out;
+      filter: blur(50px);
+      opacity: 0.6;
+      animation: pulseGlow 8s infinite alternate ease-in-out;
     }
 
-    .bubble:nth-child(1) { width: 80px; height: 80px; background: #FF6B6B; left: 10%; animation-duration: 7s; }
-    .bubble:nth-child(2) { width: 120px; height: 120px; background: #4ECDC4; left: 85%; animation-duration: 9s; animation-delay: 1s; }
-    .bubble:nth-child(3) { width: 60px; height: 60px; background: #FFE66D; left: 70%; animation-duration: 6s; animation-delay: 2s; }
-    .bubble:nth-child(4) { width: 100px; height: 100px; background: #FF9F43; left: 20%; animation-duration: 10s; animation-delay: 0.5s; }
+    .decor-1 { width: 320px; height: 320px; background: #FFD166; top: -50px; left: -50px; }
+    .decor-2 { width: 400px; height: 400px; background: #4D96FF; bottom: -100px; right: -100px; }
+    .decor-3 { width: 250px; height: 250px; background: #FF6B6B; bottom: 10%; left: 5%; animation-delay: 2s; }
 
-    @keyframes floatUp {
-      0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
-      50% { transform: translateY(-40px) scale(1.1) rotate(15deg); }
+    @keyframes pulseGlow {
+      0% { transform: scale(1) translateY(0); opacity: 0.4; }
+      100% { transform: scale(1.2) translateY(-20px); opacity: 0.7; }
     }
 
-    /* Main Card Container */
-    .dashboard-container {
+    /* Dashboard Main Container (Full Screen Layout without Frame) */
+    .dashboard-wrapper {
       position: relative;
       z-index: 2;
-      width: 90%;
-      max-width: 680px;
-      max-height: 94vh;
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 32px;
-      padding: 24px 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 
-                  inset 0 0 0 4px rgba(255, 255, 255, 0.8);
+      width: 100%;
+      height: 100%;
+      max-width: 1100px;
+      padding: 30px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* 1. Logo Header Section */
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 12px 32px;
+      border-radius: 60px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 10px 25px rgba(0, 102, 204, 0.06), 0 2px 6px rgba(0, 0, 0, 0.04);
+      animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideDown {
+      0% { transform: translateY(-40px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .logo-img {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 3px 5px rgba(0,0,0,0.08));
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .logo-img:hover {
+      transform: scale(1.15) translateY(-2px);
+    }
+
+    /* 2. Hero Content Section */
+    .hero-section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      text-align: center;
-      animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      margin: auto 0;
+      animation: fadeInScale 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
     }
 
-    @keyframes popIn {
-      0% { transform: scale(0.8); opacity: 0; }
+    @keyframes fadeInScale {
+      0% { transform: scale(0.92); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
 
-    /* 1. Header Logo Bar */
-    .logo-group {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 16px;
-      width: 100%;
+    .tag-subtitle {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #2563eb;
+      letter-spacing: 3px;
+      text-transform: uppercase;
       margin-bottom: 8px;
     }
 
-    .logo-item {
-      height: 52px;
-      width: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-      transition: transform 0.3s ease;
-    }
-
-    .logo-item:hover {
-      transform: scale(1.15) rotate(5deg);
-    }
-
-    /* 2. Judul Section */
-    .title-section {
-      margin: 8px 0;
-    }
-
-    .sub-title {
-      font-family: 'Quicksand', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #6c5ce7;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 2px;
-    }
-
     .main-title {
-      font-size: 2.2rem;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 3.2rem;
       font-weight: 700;
-      line-height: 1.15;
-      background: linear-gradient(45deg, #ff007f, #ff9f43, #00b894, #0984e3);
-      background-size: 300% 300%;
+      line-height: 1.1;
+      color: #1e293b;
+      margin-bottom: 16px;
+      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .main-title span {
+      background: linear-gradient(135deg, #ff4757 0%, #ff6b81 40%, #ffa502 100%);
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: rainbowText 6s ease infinite;
-      text-shadow: 0 10px 20px rgba(0,0,0,0.05);
-      margin-bottom: 6px;
-    }
-
-    @keyframes rainbowText {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
     }
 
     .badge-ppg {
-      display: inline-block;
-      background: #ffeaa7;
-      color: #d63031;
-      border: 2px dashed #fdcb6e;
-      padding: 6px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.85);
+      color: #d97706;
+      border: 1.5px solid #fef3c7;
+      padding: 8px 22px;
       border-radius: 50px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 700;
-      font-family: 'Quicksand', sans-serif;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 14px rgba(245, 158, 11, 0.12);
     }
 
-    /* 3. Menu Navigation Cards */
-    .menu-container {
+    .badge-ppg::before {
+      content: "🎓";
+      font-size: 1rem;
+    }
+
+    /* 3. Navigation Cards Area */
+    .menu-grid {
       display: flex;
-      gap: 16px;
-      width: 100%;
-      margin-top: 16px;
       justify-content: center;
+      gap: 24px;
+      width: 100%;
+      max-width: 580px;
+      margin-bottom: 10px;
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+    }
+
+    @keyframes slideUp {
+      0% { transform: translateY(40px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
     }
 
     .menu-card {
       flex: 1;
-      max-width: 200px;
-      background: #ffffff;
       text-decoration: none;
-      border-radius: 24px;
-      padding: 16px 12px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 28px;
+      padding: 24px 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      box-shadow: 0 8px 15px rgba(0,0,0,0.08);
-      border: 3px solid transparent;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      gap: 12px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06),
+                  inset 0 0 0 2px rgba(255, 255, 255, 1);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       cursor: pointer;
       position: relative;
       overflow: hidden;
     }
 
-    /* Variasi Warna Card 1: Materi */
+    .menu-card::after {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.6) 50%, transparent 55%);
+      transform: rotate(30deg) translateY(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .menu-card:hover::after {
+      transform: rotate(30deg) translateY(100%);
+    }
+
     .menu-card.materi {
-      border-color: #74b9ff;
-      background: linear-gradient(180deg, #ffffff 60%, #e8f4fe 100%);
+      border-bottom: 5px solid #3b82f6;
     }
 
-    /* Variasi Warna Card 2: Ular Tangga */
     .menu-card.ular-tangga {
-      border-color: #55efc4;
-      background: linear-gradient(180deg, #ffffff 60%, #e6faf5 100%);
+      border-bottom: 5px solid #10b981;
     }
 
-    .icon-box {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
+    .icon-wrapper {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 1.8rem;
-      transition: transform 0.4s ease;
+      font-size: 2.2rem;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .materi .icon-box {
-      background: #0984e3;
-      color: white;
-      box-shadow: 0 6px 12px rgba(9, 132, 227, 0.3);
+    .materi .icon-wrapper {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.35);
     }
 
-    .ular-tangga .icon-box {
-      background: #00b894;
-      color: white;
-      box-shadow: 0 6px 12px rgba(0, 184, 148, 0.3);
+    .ular-tangga .icon-wrapper {
+      background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(16, 185, 129, 0.35);
     }
 
-    .menu-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #2d3436;
+    .card-label {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #1e293b;
     }
 
-    /* Hover & Active Effects */
+    /* Hover State Interactive */
     .menu-card:hover {
-      transform: translateY(-8px) scale(1.03);
-      box-shadow: 0 14px 25px rgba(0,0,0,0.15);
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12),
+                  inset 0 0 0 2px rgba(255, 255, 255, 1);
     }
 
-    .menu-card:hover .icon-box {
-      transform: rotate(12deg) scale(1.1);
+    .menu-card:hover .icon-wrapper {
+      transform: scale(1.12) rotate(6deg);
     }
 
     .menu-card:active {
       transform: translateY(-2px) scale(0.98);
     }
 
-    /* Responsif untuk Layar Kecil (Mobile) */
-    @media (max-height: 650px) {
-      .dashboard-container { padding: 16px 14px; }
-      .logo-item { height: 40px; }
-      .main-title { font-size: 1.7rem; }
-      .sub-title { font-size: 0.9rem; }
-      .badge-ppg { font-size: 0.8rem; padding: 4px 12px; }
-      .icon-box { width: 50px; height: 50px; font-size: 1.5rem; }
-      .menu-title { font-size: 1rem; }
-      .menu-card { padding: 12px 8px; }
+    /* Media Queries untuk Layar Kecil / Mobile */
+    @media (max-height: 700px) {
+      .dashboard-wrapper { padding: 18px 16px; }
+      .logo-container { padding: 8px 20px; gap: 16px; }
+      .logo-img { height: 38px; }
+      .tag-subtitle { font-size: 0.95rem; }
+      .main-title { font-size: 2.4rem; margin-bottom: 10px; }
+      .badge-ppg { font-size: 0.85rem; padding: 6px 16px; }
+      .icon-wrapper { width: 58px; height: 58px; font-size: 1.75rem; }
+      .card-label { font-size: 1.1rem; }
+      .menu-card { padding: 16px 12px; }
     }
 
-    @media (max-width: 400px) {
-      .logo-group { gap: 10px; }
-      .logo-item { height: 36px; }
-      .main-title { font-size: 1.5rem; }
-      .menu-container { gap: 10px; }
+    @media (max-width: 480px) {
+      .logo-container { gap: 12px; padding: 8px 16px; }
+      .logo-img { height: 32px; }
+      .main-title { font-size: 2.1rem; }
+      .menu-grid { gap: 12px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Animated Bubbles -->
-  <div class="bg-bubbles">
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
+  <!-- Animated Background Glows -->
+  <div class="bg-decorations">
+    <div class="decor-circle decor-1"></div>
+    <div class="decor-circle decor-2"></div>
+    <div class="decor-circle decor-3"></div>
   </div>
 
-  <!-- Main Container -->
-  <div class="dashboard-container">
+  <!-- Dashboard Container (Full Screen Canvas) -->
+  <main class="dashboard-wrapper">
     
-    <!-- 1. Header Logo Bar -->
-    <header class="logo-group">
-      <img src="aset/logo/tutwuri.png" alt="Tutwuri Handayani" class="logo-item" title="Kemendikbud">
-      <img src="aset/logo/unej.png" alt="Universitas Jember" class="logo-item" title="UNEJ">
-      <img src="aset/logo/ppg.png" alt="PPG" class="logo-item" title="PPG">
-      <img src="aset/logo/fkip.png" alt="FKIP" class="logo-item" title="FKIP UNEJ">
+    <!-- 1. Top Header Logos -->
+    <header class="logo-container">
+      <img src="aset/logo/tutwuri.png" alt="Kemendikbud" class="logo-img" title="Kemendikbud">
+      <img src="aset/logo/unej.png" alt="Universitas Jember" class="logo-img" title="Universitas Jember">
+      <img src="aset/logo/ppg.png" alt="PPG" class="logo-img" title="PPG">
+      <img src="aset/logo/fkip.png" alt="FKIP UNEJ" class="logo-img" title="FKIP UNEJ">
     </header>
 
-    <!-- 2. Judul Section -->
-    <section class="title-section">
-      <h2 class="sub-title">Media Pembelajaran</h2>
-      <h1 class="main-title">Tarik Tambang<br>Matematika</h1>
+    <!-- 2. Central Hero Title -->
+    <section class="hero-section">
+      <p class="tag-subtitle">Media Pembelajaran</p>
+      <h1 class="main-title">Tarik Tambang<br><span>Matematika</span></h1>
       <div class="badge-ppg">
         PPG Calon Guru Gelombang 1 2026
       </div>
     </section>
 
-    <!-- 3. Menu Navigasi -->
-    <nav class="menu-container">
-      <!-- Button Materi -->
+    <!-- 3. Bottom Menu Cards -->
+    <nav class="menu-grid">
+      <!-- Menu Materi -->
       <a href="materi/index.html" class="menu-card materi" onclick="playClickSound(event, this.href)">
-        <div class="icon-box">📚</div>
-        <span class="menu-title">Materi</span>
+        <div class="icon-wrapper">📚</div>
+        <span class="card-label">Materi</span>
       </a>
 
-      <!-- Button Ular Tangga -->
+      <!-- Menu Ular Tangga -->
       <a href="UT/index.html" class="menu-card ular-tangga" onclick="playClickSound(event, this.href)">
-        <div class="icon-box">🎲</div>
-        <span class="menu-title">Ular Tangga</span>
+        <div class="icon-wrapper">🎲</div>
+        <span class="card-label">Ular Tangga</span>
       </a>
     </nav>
 
-  </div>
+  </main>
 
-  <!-- Audio Synthesizer -->
+  <!-- Audio Synthesizer (Interactive Web Sound Effect) -->
   <script>
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     let audioCtx;
@@ -342,17 +370,17 @@
       const gain = audioCtx.createGain();
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+      osc.frequency.setValueAtTime(420, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(840, audioCtx.currentTime + 0.12);
 
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+      gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
 
       osc.connect(gain);
       gain.connect(audioCtx.destination);
 
       osc.start();
-      osc.stop(audioCtx.currentTime + 0.1);
+      osc.stop(audioCtx.currentTime + 0.12);
     }
 
     function playClickSound(event, targetUrl) {
@@ -363,6 +391,7 @@
       }, 180);
     }
 
+    // Subtle Hover Sound Effect
     document.querySelectorAll('.menu-card').forEach(card => {
       card.addEventListener('mouseenter', () => {
         initAudio();
@@ -370,13 +399,13 @@
           const osc = audioCtx.createOscillator();
           const gain = audioCtx.createGain();
           osc.type = 'triangle';
-          osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-          gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+          osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
           osc.connect(gain);
           gain.connect(audioCtx.destination);
           osc.start();
-          osc.stop(audioCtx.currentTime + 0.05);
+          osc.stop(audioCtx.currentTime + 0.06);
         }
       });
     });
