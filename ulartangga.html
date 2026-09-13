@@ -38,9 +38,10 @@
             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #f0fdfa 100%);
         }
 
+        /* Ukuran papan disesuaikan agar lebih lebar & responsif */
         .board-wrapper {
             width: 100%;
-            max-width: min(100vw - 16px, calc(100vh - 120px)); 
+            max-width: min(100vw - 24px, calc(100vh - 100px)); 
             position: relative;
             margin: auto;
         }
@@ -65,8 +66,8 @@
             position: absolute;
             top: 2px;
             left: 4px;
-            font-size: 0.6rem;
-            opacity: 0.7;
+            font-size: 0.65rem;
+            opacity: 0.75;
         }
 
         .quiz-dot {
@@ -80,7 +81,7 @@
         }
 
         @media (min-width: 640px) {
-            .cell-number { font-size: 0.8rem; top: 4px; left: 6px; }
+            .cell-number { font-size: 0.85rem; top: 4px; left: 6px; }
             .cell { border-radius: 12px; }
             .quiz-dot { width: 10px; height: 10px; top: 6px; right: 6px; }
         }
@@ -89,8 +90,8 @@
             position: absolute;
             width: 6vmin;
             height: 6vmin;
-            max-width: 40px;
-            max-height: 40px;
+            max-width: 44px;
+            max-height: 44px;
             transform: translate(-50%, -80%); 
             transition: top 0.3s ease, left 0.3s ease;
             z-index: 50;
@@ -102,7 +103,7 @@
         }
 
         .token-emoji {
-            font-size: 4vmin;
+            font-size: 4.5vmin;
             line-height: 1;
             position: relative;
             z-index: 2;
@@ -110,7 +111,7 @@
         }
 
         @media (min-width: 640px) {
-            .token-emoji { font-size: 28px; }
+            .token-emoji { font-size: 32px; }
         }
 
         .token-base {
@@ -435,13 +436,13 @@
         </div>
     </div>
 
-    <!-- MAIN WRAPPER TERSTRUKTUR FULLSCREEN PAPAN -->
-    <div class="w-full max-w-xl flex flex-col items-center gap-3 my-auto py-2">
+    <!-- MAIN WRAPPER TERSTRUKTUR FULLSCREEN PAPAN (DIPERLEBAR KE MAX-W-3XL) -->
+    <div class="w-full max-w-3xl flex flex-col items-center gap-3 my-auto py-2">
 
-        <!-- 1. PAPAN PERMAINAN -->
+        <!-- 1. PAPAN PERMAINAN (DIPERBESAR) -->
         <div class="board-wrapper flex justify-center items-center">
-            <div class="board-container bg-white p-1 sm:p-2 rounded-2xl sm:rounded-[2rem] shadow-lg border-2 sm:border-4 border-white">
-                <div class="w-full h-full bg-slate-50 rounded-xl overflow-hidden border border-slate-200 relative">
+            <div class="board-container bg-white p-1.5 sm:p-3 rounded-2xl sm:rounded-[2.5rem] shadow-xl border-2 sm:border-4 border-white">
+                <div class="w-full h-full bg-slate-50 rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 relative">
                     <svg id="svg-layer" class="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
                     <div id="board-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-10 p-0.5 w-full h-full border-t border-l border-slate-300/60"></div>
 
@@ -457,7 +458,7 @@
 
         <!-- 2. TOMBOL LEMPAR DADU -->
         <div class="w-full lg:fixed lg:bottom-5 lg:right-5 lg:w-auto z-[90]">
-            <button id="btn-roll" onclick="rollDice3D()" class="toy-btn w-full lg:w-auto bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl py-3 lg:py-2.5 px-4 lg:px-5 shadow-md active:translate-y-1 transition-all text-sm tracking-wider uppercase border border-brand-600 flex items-center justify-center gap-3">
+            <button id="btn-roll" onclick="rollDice3D()" class="toy-btn w-full lg:w-auto bg-brand-500 hover:bg-brand-600 text-white font-black rounded-2xl py-3.5 lg:py-3 px-5 lg:px-6 shadow-xl active:translate-y-1 transition-all text-sm tracking-wider uppercase border border-brand-600 flex items-center justify-center gap-3">
                 <div id="mini-dice-visual" class="w-8 h-8 lg:w-9 lg:h-9 bg-white border border-slate-200 rounded-xl flex items-center justify-center p-0.5 shrink-0">
                     <div class="mini-dice-grid">
                         <div class="col-start-2 row-start-2 mini-pip-red"></div>
@@ -821,8 +822,12 @@
             { name: 'Serigala', emoji: '🐺' }
         ];
 
+        // TANGGA (LADDERS)
         const ladders = { 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
-        const snakes = { 17: 7, 54: 34, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 99: 78 };
+        
+        // ULAR (SNAKES) - HANYA 4 ULAR AGAR DURASI DILAKUKAN LEBIH CEPAT!
+        const snakes = { 17: 7, 62: 19, 87: 24, 99: 78 };
+        
         const cellColors = ['bg-red-50 text-red-500', 'bg-blue-50 text-blue-500', 'bg-emerald-50 text-emerald-500', 'bg-yellow-50 text-yellow-600', 'bg-purple-50 text-purple-500', 'bg-pink-50 text-pink-500'];
 
         let tempPlayerCount = 1; 
