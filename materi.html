@@ -169,18 +169,29 @@
       transform: translateY(1px) scale(0.97);
     }
 
-    /* Penyesuaian Responsif Ukuran Gambar SVG */
+    /* Ukuran Gambar SVG yang Lebih Besar Karena Tanpa Teks */
     .quiz-svg-icon {
-      width: 64px;
-      height: 64px;
+      width: 76px;
+      height: 76px;
       object-fit: contain;
       filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
     }
 
+    .quiz-svg-option {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+    }
+
     @media (min-width: 640px) {
       .quiz-svg-icon {
-        width: 80px;
-        height: 80px;
+        width: 96px;
+        height: 96px;
+      }
+      .quiz-svg-option {
+        width: 72px;
+        height: 72px;
       }
     }
 
@@ -190,7 +201,8 @@
       .home-btn { left: 16px; }
       .fullscreen-btn { right: 16px; }
       .quiz-btn { right: 70px; }
-      .quiz-svg-icon { width: 52px; height: 52px; }
+      .quiz-svg-icon { width: 60px; height: 60px; }
+      .quiz-svg-option { width: 48px; height: 48px; }
     }
   </style>
 </head>
@@ -344,30 +356,30 @@
       }
     }
 
-    /* DATABASE SOAL INTERAKTIF (ASET SVG LOKAL SOAL 1 TANPA BORDER) */
+    /* DATABASE SOAL INTERAKTIF (ASET SVG LOKAL KUPU & KATAK TANPA TEKS & TANPA BORDER) */
     const quizDatabase = [
       {
         type: 'sequence',
         title: 'Urutan Daur Hidup Kupu-kupu 🦋',
-        subtitle: 'Susun urutan gambar pertumbuhan kupu-kupu dari awal sampai akhir!',
+        subtitle: 'Urutkan gambar pertumbuhan kupu-kupu dari awal sampai akhir!',
         correctOrder: ['egg', 'caterpillar', 'pupa', 'butterfly'],
         items: [
-          { id: 'egg', name: 'Telur', svg: 'aset/latihansoal/telurkupu.svg', color: 'bg-amber-100/90 text-amber-900 shadow-lg' },
-          { id: 'caterpillar', name: 'Ulat', svg: 'aset/latihansoal/ulatkupu.svg', color: 'bg-emerald-100/90 text-emerald-900 shadow-lg' },
-          { id: 'pupa', name: 'Kepompong', svg: 'aset/latihansoal/kepompong.svg', color: 'bg-orange-100/90 text-orange-900 shadow-lg' },
-          { id: 'butterfly', name: 'Kupu-kupu', svg: 'aset/latihansoal/kupukupu.svg', color: 'bg-pink-100/90 text-pink-900 shadow-lg' }
+          { id: 'egg', svg: 'aset/latihansoal/telurkupu.svg', color: 'bg-amber-100/90 shadow-lg' },
+          { id: 'caterpillar', svg: 'aset/latihansoal/ulatkupu.svg', color: 'bg-emerald-100/90 shadow-lg' },
+          { id: 'pupa', svg: 'aset/latihansoal/kepompong.svg', color: 'bg-orange-100/90 shadow-lg' },
+          { id: 'butterfly', svg: 'aset/latihansoal/kupukupu.svg', color: 'bg-pink-100/90 shadow-lg' }
         ]
       },
       {
         type: 'sequence',
         title: 'Urutan Daur Hidup Katak 🐸',
-        subtitle: 'Susun tahapan metamorfosis katak dari awal sampai akhir!',
+        subtitle: 'Urutkan gambar metamorfosis katak dari awal sampai akhir!',
         correctOrder: ['frog_egg', 'tadpole', 'froglet', 'adult_frog'],
         items: [
-          { id: 'frog_egg', name: 'Telur', icon: '⚪', color: 'bg-slate-100/90 text-slate-900 shadow-lg' },
-          { id: 'tadpole', name: 'Berudu', icon: '🐟', color: 'bg-sky-100/90 text-sky-900 shadow-lg' },
-          { id: 'froglet', name: 'Katak Muda', icon: '🐸', color: 'bg-teal-100/90 text-teal-900 shadow-lg' },
-          { id: 'adult_frog', name: 'Katak Dewasa', icon: '🐸', color: 'bg-green-100/90 text-green-900 shadow-lg' }
+          { id: 'frog_egg', svg: 'aset/latihansoal/telurkatak.svg', color: 'bg-slate-100/90 shadow-lg' },
+          { id: 'tadpole', svg: 'aset/latihansoal/berudu.svg', color: 'bg-sky-100/90 shadow-lg' },
+          { id: 'froglet', svg: 'aset/latihansoal/katakmuda.svg', color: 'bg-teal-100/90 shadow-lg' },
+          { id: 'adult_frog', svg: 'aset/latihansoal/katak.svg', color: 'bg-green-100/90 shadow-lg' }
         ]
       },
       {
@@ -440,7 +452,7 @@
       }
     }
 
-    /* LOGIKA MENGURUTKAN (TANPA BORDER APAPUN) */
+    /* LOGIKA MENGURUTKAN (MURNI GAMBAR TANPA TEKS TAHAPAN) */
     function renderSequenceUI() {
       const qData = quizDatabase[currentQuizIndex];
       const container = document.getElementById('quizStageContainer');
@@ -450,19 +462,14 @@
         const filledId = sequenceAnswers[i];
         if (filledId) {
           const item = qData.items.find(x => x.id === filledId);
-          const iconContent = item.svg 
-            ? `<img src="${item.svg}" alt="${item.name}" class="quiz-svg-icon mb-1 float-anim" />`
-            : `<span class="text-4xl sm:text-5xl mb-1 filter drop-shadow-md float-anim">${item.icon}</span>`;
-
           slotsHTML += `
-            <div onclick="removeSequenceAnswer(${i})" class="btn-child-clean ${item.color} rounded-3xl p-3 sm:p-4 flex flex-col items-center justify-center cursor-pointer">
-              ${iconContent}
-              <span class="text-xs sm:text-sm font-black text-center">${item.name}</span>
+            <div onclick="removeSequenceAnswer(${i})" class="btn-child-clean ${item.color} rounded-3xl p-4 sm:p-5 flex flex-col items-center justify-center cursor-pointer min-h-[120px] sm:min-h-[140px]">
+              <img src="${item.svg}" class="quiz-svg-icon float-anim" />
             </div>
           `;
         } else {
           slotsHTML += `
-            <div class="bg-white/30 backdrop-blur-md rounded-3xl p-4 flex flex-col items-center justify-center text-white font-black text-sm min-h-[110px] shadow-inner">
+            <div class="bg-white/30 backdrop-blur-md rounded-3xl p-4 flex flex-col items-center justify-center text-white font-black text-base min-h-[120px] sm:min-h-[140px] shadow-inner">
               Tahap ${i+1}
             </div>
           `;
@@ -470,18 +477,14 @@
       }
       slotsHTML += '</div>';
 
-      let optionsHTML = '<div class="flex flex-wrap gap-3 justify-center bg-white/90 backdrop-blur-md p-4 sm:p-5 rounded-3xl shadow-xl">';
+      let optionsHTML = '<div class="flex flex-wrap gap-4 justify-center bg-white/90 backdrop-blur-md p-4 sm:p-5 rounded-3xl shadow-xl">';
       const shuffled = [...qData.items].sort((a,b) => a.id.localeCompare(b.id));
       shuffled.forEach(item => {
         const isSelected = sequenceAnswers.includes(item.id);
-        const optionVisual = item.svg 
-          ? `<img src="${item.svg}" alt="${item.name}" class="w-8 h-8 object-contain" />`
-          : `<span class="text-2xl">${item.icon}</span>`;
 
         optionsHTML += `
-          <button onclick="selectSequenceOption('${item.id}')" ${isSelected ? 'disabled' : ''} class="btn-child-clean ${isSelected ? 'opacity-30 bg-slate-200 text-slate-500 shadow-none' : `${item.color} hover:scale-105`} rounded-2xl px-4 py-2.5 font-black text-xs sm:text-sm flex items-center gap-2">
-            ${optionVisual}
-            <span>${item.name}</span>
+          <button onclick="selectSequenceOption('${item.id}')" ${isSelected ? 'disabled' : ''} class="btn-child-clean ${isSelected ? 'opacity-30 bg-slate-200 shadow-none' : `${item.color} hover:scale-105`} rounded-2xl p-3 flex items-center justify-center">
+            <img src="${item.svg}" class="quiz-svg-option" />
           </button>
         `;
       });
