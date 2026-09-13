@@ -38,7 +38,6 @@
             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #f0fdfa 100%);
         }
 
-        /* PERLEBARAN UKURAN PAPAN */
         .board-wrapper {
             width: 100%;
             max-width: min(100vw - 16px, calc(100vh - 80px)); 
@@ -286,12 +285,18 @@
             pointer-events: auto;
         }
 
-        /* ANIMASI CELEBRATION WINNER FULLSCREEN */
+        /* ANIMASI DEKORASI CELEBRATION WINNER */
         @keyframes trophyBounce {
             0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-20px) scale(1.1); }
+            50% { transform: translateY(-15px) scale(1.08); }
         }
         .trophy-anim { animation: trophyBounce 1.5s infinite ease-in-out; }
+
+        @keyframes partyPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(10deg); }
+        }
+        .party-anim { animation: partyPulse 1.2s infinite ease-in-out; }
     </style>
 
     <!-- Firebase SDK Setup -->
@@ -613,19 +618,19 @@
         </div>
     </div>
 
-    <!-- PERAYAAN FINISH MERIAH FULL-SCREEN OVERLAY -->
+    <!-- PERAYAAN FINISH MERIAH FULL-SCREEN OVERLAY (DENGAN REVISI PERSEPI EMOJI TAPAK TAMBAH UTUH) -->
     <div id="confetti-container" class="fixed inset-0 z-[40000] bg-slate-950/90 backdrop-blur-md hidden flex flex-col justify-center items-center p-4 text-center">
-        <div class="transform scale-0 transition-transform duration-500 max-w-xl w-full flex flex-col items-center bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 p-8 sm:p-12 rounded-[3rem] border-8 border-yellow-200 shadow-[0_0_80px_rgba(245,158,11,0.6)] relative overflow-hidden" id="win-modal">
+        <div class="transform scale-0 transition-transform duration-500 max-w-xl w-full flex flex-col items-center bg-gradient-to-b from-amber-400 via-amber-500 to-amber-600 p-8 sm:p-12 rounded-[3rem] border-8 border-yellow-200 shadow-[0_0_80px_rgba(245,158,11,0.6)] relative" id="win-modal">
             
-            <!-- EFEK KEMBANG API EMOJI -->
-            <div class="absolute -top-4 -left-4 text-6xl animate-bounce">🎆</div>
-            <div class="absolute -top-4 -right-4 text-6xl animate-bounce">✨</div>
-            <div class="absolute -bottom-4 -left-4 text-6xl animate-bounce">🎉</div>
-            <div class="absolute -bottom-4 -right-4 text-6xl animate-bounce">🥳</div>
+            <!-- EFEK EMOJI KEMBANG API & SELEBRASI DI SETIAP POJOK DENGAN ANIMASI -->
+            <div class="absolute top-4 left-4 text-5xl sm:text-6xl party-anim">🎆</div>
+            <div class="absolute top-4 right-4 text-5xl sm:text-6xl party-anim">✨</div>
+            <div class="absolute bottom-4 left-4 text-5xl sm:text-6xl party-anim">🎉</div>
+            <div class="absolute bottom-4 right-4 text-5xl sm:text-6xl party-anim">🥳</div>
 
-            <div class="text-7xl sm:text-9xl mb-4 trophy-anim drop-shadow-2xl">🏆</div>
+            <div class="text-7xl sm:text-9xl my-2 trophy-anim drop-shadow-2xl">🏆</div>
             <h2 id="win-title" class="text-3xl sm:text-5xl font-black text-slate-950 mb-3 font-jakarta tracking-wide uppercase">SELAMAT!</h2>
-            <p id="win-desc" class="text-base sm:text-2xl font-black text-slate-900 mb-8 leading-snug">
+            <p id="win-desc" class="text-base sm:text-2xl font-black text-slate-900 mb-8 leading-snug px-4">
                 Pemain berhasil menaklukkan papan dan mencapai Garis Finish!
             </p>
             <button onclick="resetGame()" class="toy-btn px-10 py-4 bg-slate-950 hover:bg-slate-900 text-amber-300 font-black rounded-2xl border-4 border-yellow-300 shadow-2xl transition-all text-lg sm:text-xl uppercase tracking-wider flex items-center gap-3">
@@ -745,7 +750,6 @@
                     gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                     osc.connect(gain); gain.connect(ctx.destination); osc.start(now); osc.stop(now + 0.3);
                 } else if (type === 'fanfare') {
-                    /* SUARA SELEBRASI FINISH MERIAH */
                     const fanfareNotes = [
                         { f: 523.25, d: 0.15, t: 0 },
                         { f: 659.25, d: 0.15, t: 0.15 },
@@ -1322,7 +1326,6 @@
                         let cPos = playerPositions[currentPlayer]; 
                         previousPositions[currentPlayer] = cPos; 
 
-                        /* LOGIKA BARU: APABILA TOTAL LANGKAH > 100, TETAP DIANGGAP LANGSUNG KETETAPKAN PETAK FINISH (100) */
                         let tPos = cPos + result;
                         if (tPos > 100) {
                             tPos = 100;
@@ -1419,7 +1422,6 @@
             isMoving = false; document.getElementById('btn-roll').disabled = false;
         }
 
-        /* PERAYAAN FINISH FULL SCREEN MERIAH + EFEK SUARA SELEBRASI */
         function triggerWin(pIndex) {
             playSound('fanfare');
             const mc = document.getElementById('confetti-container'); 
