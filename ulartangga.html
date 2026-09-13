@@ -38,16 +38,17 @@
             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 50%, #f0fdfa 100%);
         }
 
+        /* Disesuaikan untuk 60 petak (10 kolom x 6 baris = aspek rasio 10:6) */
         .board-wrapper {
             width: 100%;
-            max-width: min(100vw - 16px, calc(100vh - 120px)); 
+            max-width: min(100vw - 16px, calc((100vh - 120px) * (10 / 6))); 
             position: relative;
             margin: auto;
         }
 
         .board-container {
             width: 100%;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 10 / 6;
             position: relative;
             z-index: 10;
         }
@@ -231,7 +232,6 @@
         }
         .animate-pop { animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-        /* Styling Tombol Floating Glassmorphism */
         .nav-btn-custom {
             width: 48px;
             height: 48px;
@@ -272,7 +272,6 @@
             .nav-btn-custom svg { width: 18px; height: 18px; }
         }
 
-        /* Banner Motivasi Top Toast Animation */
         #event-banner {
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
         }
@@ -349,7 +348,7 @@
                 <div class="text-4xl bg-emerald-500/20 p-2.5 rounded-2xl border border-emerald-500/30">🎲</div>
                 <div>
                     <h1 class="text-2xl sm:text-4xl font-black font-jakarta tracking-tight text-white flex items-center gap-2">
-                        Ular Tangga Edukasi
+                        Ular Tangga Edukasi (60 Petak)
                     </h1>
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Pengaturan Sesi & Karakter Pemain</p>
                 </div>
@@ -368,13 +367,9 @@
             </div>
         </div>
 
-        <!-- AREA UTAMA SPLIT PANEL (KIRI CONTROLS & KANAN AVATAR GRID) -->
+        <!-- AREA UTAMA SPLIT PANEL -->
         <div class="my-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-center py-4">
-            
-            <!-- PANEL KIRI: JUMLAH PEMAIN & TAB SELEKSI (4 COL) -->
             <div class="lg:col-span-4 bg-slate-800/80 backdrop-blur-md p-5 rounded-3xl border border-slate-700/80 shadow-2xl space-y-6">
-                
-                <!-- 1. SELEKSI JUMLAH PEMAIN -->
                 <div class="space-y-2">
                     <label class="block text-xs font-black text-emerald-400 uppercase tracking-widest">1. Pilih Jumlah Pemain</label>
                     <div class="grid grid-cols-4 gap-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-700">
@@ -385,13 +380,11 @@
                     </div>
                 </div>
 
-                <!-- 2. PILIH PEMAIN AKTIF (TAB SWITCHER) -->
                 <div class="space-y-2">
                     <label class="block text-xs font-black text-emerald-400 uppercase tracking-widest">2. Pilih Pemain Yang Diatur</label>
                     <div id="player-tabs-container" class="grid grid-cols-2 gap-2"></div>
                 </div>
 
-                <!-- STATUS SELEKSI PEMAIN AKTIF -->
                 <div class="bg-slate-900/90 p-4 rounded-2xl border border-slate-700 flex items-center justify-between">
                     <div>
                         <span id="active-player-label-title" class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Karakter Saat Ini:</span>
@@ -399,23 +392,18 @@
                     </div>
                     <span class="text-3xl" id="active-player-label-emoji">🐰</span>
                 </div>
-
             </div>
 
-            <!-- PANEL KANAN: KATALOG HEWAN FULLSCREEN GRID (8 COL) -->
             <div class="lg:col-span-8 bg-slate-800/80 backdrop-blur-md p-6 rounded-3xl border border-slate-700/80 shadow-2xl space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
                     <label class="block text-xs font-black text-emerald-400 uppercase tracking-widest">3. Pilih Hewan Pion Untuk Pemain Aktif</label>
                     <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Klik Langsung Karakter</span>
                 </div>
-
-                <!-- KATALOG 10 HEWAN DENGAN AVATAR BESAR DAN CERIA -->
                 <div id="animals-catalog-grid" class="grid grid-cols-2 sm:grid-cols-5 gap-3"></div>
             </div>
-
         </div>
 
-        <!-- FOOTER BAR FULLSCREEN: TOMBOL START GAME -->
+        <!-- FOOTER BAR FULLSCREEN -->
         <div class="border-t border-slate-800 pt-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p class="text-xs text-slate-500 font-bold tracking-wider uppercase">
                 Siap untuk belajar sambil bermain dengan menyenangkan! ✨
@@ -425,7 +413,6 @@
                 <span class="text-2xl">🚀</span>
             </button>
         </div>
-
     </div>
 
     <!-- OVERLAY COUNTDOWN FULLSCREEN -->
@@ -435,15 +422,16 @@
         </div>
     </div>
 
-    <!-- MAIN WRAPPER TERSTRUKTUR FULLSCREEN PAPAN -->
-    <div class="w-full max-w-xl flex flex-col items-center gap-3 my-auto py-2">
+    <!-- MAIN WRAPPER PAPAN PERMAINAN 60 PETAK -->
+    <div class="w-full max-w-2xl flex flex-col items-center gap-3 my-auto py-2">
 
-        <!-- 1. PAPAN PERMAINAN -->
+        <!-- 1. PAPAN PERMAINAN (10x6 Grid) -->
         <div class="board-wrapper flex justify-center items-center">
             <div class="board-container bg-white p-1 sm:p-2 rounded-2xl sm:rounded-[2rem] shadow-lg border-2 sm:border-4 border-white">
                 <div class="w-full h-full bg-slate-50 rounded-xl overflow-hidden border border-slate-200 relative">
                     <svg id="svg-layer" class="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 100 100" preserveAspectRatio="none"></svg>
-                    <div id="board-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-10 p-0.5 w-full h-full border-t border-l border-slate-300/60"></div>
+                    <!-- Grid 10 Kolom x 6 Baris -->
+                    <div id="board-grid" class="absolute inset-0 grid grid-cols-10 grid-rows-6 p-0.5 w-full h-full border-t border-l border-slate-300/60"></div>
 
                     <div id="tokens-container">
                         <div id="player-token-0" class="player-token hidden"><div id="token-emoji-0" class="token-emoji">🐰</div><div class="token-base base-0"></div></div>
@@ -616,7 +604,7 @@
         <div class="bg-white p-6 sm:p-8 rounded-[2rem] sm:rounded-[3rem] border-4 border-yellow-300 shadow-2xl text-center transform scale-0 transition-transform duration-300 max-w-sm w-full" id="win-modal">
             <div class="text-5xl sm:text-7xl mb-2 sm:mb-4">🏆</div>
             <h2 id="win-title" class="text-2xl sm:text-4xl font-black mb-2 font-jakarta">SELAMAT!</h2>
-            <p id="win-desc" class="text-xs sm:text-lg font-bold text-slate-600 mb-4 sm:mb-6">Kamu berhasil mencapai garis akhir (100).</p>
+            <p id="win-desc" class="text-xs sm:text-lg font-bold text-slate-600 mb-4 sm:mb-6">Kamu berhasil mencapai garis akhir (60).</p>
             <button onclick="resetGame()" class="px-6 py-2.5 bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-black rounded-xl border-2 border-yellow-600 shadow-md transition-all pointer-events-auto text-xs sm:text-base">
                 Main Lagi!
             </button>
@@ -631,6 +619,8 @@
         let qrCodeInstance = null;
         let lastProcessedTimestamp = 0;
         let bannerTimeout = null;
+
+        const TOTAL_CELLS = 60; // Disesuaikan menjadi 60 petak
 
         const snakeMotivations = [
             "Jangan menyerah! Kegagalan adalah awal dari keberhasilan. Yuk bangkit lagi! 💪✨",
@@ -736,7 +726,6 @@
             } catch (e) { console.error("SFX error:", e); }
         }
 
-        /* LOGIKA TAMPILKAN POP-UP QR CODE DINAMIS */
         function showQRCode(playerIdx) {
             playSound('click');
             const modal = document.getElementById('qr-modal');
@@ -807,7 +796,7 @@
             }
         }
 
-        /* PERMAINAN ULAR TANGGA */
+        /* HEWAN & KONFIGURASI PAPAN 60 PETAK */
         const availableAnimals = [
             { name: 'Kelinci', emoji: '🐰' },
             { name: 'Kambing', emoji: '🐐' },
@@ -821,8 +810,10 @@
             { name: 'Serigala', emoji: '🐺' }
         ];
 
-        const ladders = { 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
-        const snakes = { 17: 7, 54: 34, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 99: 78 };
+        // Ular & Tangga disesuaikan secara rasional untuk papan 60 petak
+        const ladders = { 4: 14, 9: 27, 20: 38, 28: 51, 40: 57 };
+        const snakes = { 17: 7, 34: 19, 44: 22, 54: 36, 59: 41 };
+
         const cellColors = ['bg-red-50 text-red-500', 'bg-blue-50 text-blue-500', 'bg-emerald-50 text-emerald-500', 'bg-yellow-50 text-yellow-600', 'bg-purple-50 text-purple-500', 'bg-pink-50 text-pink-500'];
 
         let tempPlayerCount = 1; 
@@ -885,7 +876,6 @@
             renderAnimalSelectionControls();
         }
 
-        /* RENDERING SELEKSI KARAKTER DENGAN DESIGN FULLSCREEN BARU */
         function renderAnimalSelectionControls() {
             const tabsContainer = document.getElementById('player-tabs-container');
             const gridContainer = document.getElementById('animals-catalog-grid');
@@ -893,12 +883,10 @@
             tabsContainer.innerHTML = '';
             gridContainer.innerHTML = '';
 
-            // Update Label Header Pemain Aktif
             document.getElementById('active-player-label-title').innerText = `Pemain ${activePlayerTab + 1}:`;
             document.getElementById('active-player-label-name').innerText = `${selectedAnimals[activePlayerTab].emoji} ${selectedAnimals[activePlayerTab].name}`;
             document.getElementById('active-player-label-emoji').innerText = selectedAnimals[activePlayerTab].emoji;
 
-            // Render Tab Switcher Pemain
             for (let i = 0; i < tempPlayerCount; i++) {
                 const isTabActive = activePlayerTab === i;
                 const tabBtn = document.createElement('button');
@@ -916,7 +904,6 @@
                 tabsContainer.appendChild(tabBtn);
             }
 
-            // Render Katalog 10 Hewan Lengkap di Grid Layar Utama
             availableAnimals.forEach(animal => {
                 const isSelectedByCurrentPlayer = selectedAnimals[activePlayerTab].name === animal.name;
                 const cardBtn = document.createElement('button');
@@ -978,7 +965,6 @@
             }, 900);
         }
 
-        /* MENDENGARKAN PERINTAH FIRESTORE DARI REMOTE HP */
         function setupFirestoreRemoteListener() {
             if(!window.dbFirestore) return;
             const gameRef = window.fsDoc(window.dbFirestore, "game_sessions", currentGameId);
@@ -1017,13 +1003,13 @@
             if (bankSoalGlobal.length === 0) return;
 
             let petakTersedia = [];
-            for(let i = 2; i <= 98; i++) {
+            for(let i = 2; i <= (TOTAL_CELLS - 1); i++) {
                 if(!ladders[i] && !snakes[i]) {
                     petakTersedia.push(i);
                 }
             }
             if(petakTersedia.length < bankSoalGlobal.length) {
-                for(let i = 2; i <= 98; i++) {
+                for(let i = 2; i <= (TOTAL_CELLS - 1); i++) {
                     if(!petakTersedia.includes(i)) petakTersedia.push(i);
                 }
             }
@@ -1069,10 +1055,11 @@
             updateTurnUI();
         }
 
+        /* MEMBANGUN BOARD UNTUK 60 PETAK (10 KOLOM x 6 BARIS) */
         function buildBoard() {
             const grid = document.getElementById('board-grid');
             grid.innerHTML = '';
-            for (let row = 9; row >= 0; row--) {
+            for (let row = 5; row >= 0; row--) {
                 for (let col = 0; col < 10; col++) {
                     let num = (row % 2 === 0) ? (row * 10) + col + 1 : (row * 10) + (9 - col) + 1; 
                     const cell = document.createElement('div');
@@ -1084,11 +1071,14 @@
             }
         }
 
+        /* PERHITUNGAN KOORDINAT PERSENTASE UNTUK 6 BARIS (60 PETAK) */
         function getCoordinates(num) {
             let row = Math.floor((num - 1) / 10);
             let col = (num - 1) % 10;
             if (row % 2 !== 0) col = 9 - col;
-            let x = (col * 10) + 5; let y = 95 - (row * 10);
+            
+            let x = (col * 10) + 5; 
+            let y = 100 - (row * (100 / 6)) - ((100 / 6) / 2); // Presisi tengah baris
             return { x, y };
         }
 
@@ -1294,7 +1284,7 @@
                         previousPositions[currentPlayer] = cPos; 
 
                         let tPos = cPos + result;
-                        if (tPos > 100) { setTimeout(nextTurn, 800); return; }
+                        if (tPos > TOTAL_CELLS) { setTimeout(nextTurn, 800); return; }
                         
                         moveTokenStepByStep(currentPlayer, cPos, tPos, 300, () => pemicuEvaluasiPetakLangkah(tPos));
                     }, 600);
@@ -1358,7 +1348,7 @@
         }
 
         function checkSnakesLadders(pIndex, pos) {
-            if (pos === 100) { triggerWin(pIndex); return; }
+            if (pos === TOTAL_CELLS) { triggerWin(pIndex); return; }
             if (ladders[pos]) {
                 playSound('correct');
                 showEventBanner('ladder', selectedAnimals[pIndex].name);
@@ -1377,7 +1367,7 @@
         }
 
         function nextTurn() {
-            if(playerPositions.includes(100)) return;
+            if(playerPositions.includes(TOTAL_CELLS)) return;
             currentPlayer = (currentPlayer + 1) % numPlayers; updateTurnUI();
             isMoving = false; document.getElementById('btn-roll').disabled = false;
         }
@@ -1386,7 +1376,7 @@
             playSound('correct');
             const mc = document.getElementById('confetti-container'); const wm = document.getElementById('win-modal');
             document.getElementById('win-title').innerHTML = `${selectedAnimals[pIndex].emoji} ${selectedAnimals[pIndex].name} MENANG!`;
-            document.getElementById('win-desc').innerHTML = `<b>${selectedAnimals[pIndex].name}</b> berhasil sampai petak 100!`;
+            document.getElementById('win-desc').innerHTML = `<b>${selectedAnimals[pIndex].name}</b> berhasil sampai petak ${TOTAL_CELLS}!`;
             mc.classList.remove('hidden');
             setTimeout(() => { wm.classList.remove('scale-0'); wm.classList.add('scale-100'); }, 50);
         }
