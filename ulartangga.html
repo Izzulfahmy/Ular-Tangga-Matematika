@@ -293,7 +293,6 @@
             box-shadow: 0 0 15px rgba(16, 185, 129, 0.8) !important;
         }
 
-        /* PENYESUAIAN GAMBAR DI MODAL AGAR FIT TANPA SCROLL */
         #quiz-modal img {
             max-height: 44px !important;
             width: auto !important;
@@ -394,6 +393,81 @@
                 <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
             </svg>
         </button>
+    </div>
+
+    <!-- PANEL ATURAN PERMAINAN SAMPLING KIRI -->
+    <div class="w-full lg:fixed lg:top-5 lg:left-5 lg:w-80 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-lg border-2 border-emerald-200 z-[90] max-h-[85vh] overflow-y-auto mb-3 lg:mb-0 transition-all">
+        <div class="flex items-center justify-between border-b border-emerald-100 pb-2 mb-2 sticky top-0 bg-white/95 z-10">
+            <h3 class="font-black text-slate-800 text-xs sm:text-sm tracking-wide uppercase flex items-center gap-1.5 font-jakarta">
+                <span class="text-emerald-600">📜</span> Aturan Permainan
+            </h3>
+            <button onclick="toggleRulesBox()" id="btn-toggle-rules" class="text-[10px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 hover:bg-emerald-100 transition-all">
+                Sembunyikan 🔼
+            </button>
+        </div>
+
+        <div id="rules-content-body" class="space-y-2.5 text-xs">
+            <!-- Poin 1 -->
+            <div class="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="w-5 h-5 rounded-md bg-emerald-500 text-white font-extrabold text-[10px] flex items-center justify-center shrink-0">01</span>
+                    <h4 class="font-black text-slate-800 text-[11px] font-jakarta">Giliran & Kocok Dadu</h4>
+                </div>
+                <p class="text-[10.5px] text-slate-600 leading-snug font-semibold">
+                    Setiap kelompok bergiliran melempar dadu digital. Pion kelompok akan melangkah secara otomatis di papan permainan sesuai angka dadu.
+                </p>
+            </div>
+
+            <!-- Poin 2 -->
+            <div class="bg-blue-50/60 p-2.5 rounded-xl border border-blue-100">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="w-5 h-5 rounded-md bg-blue-500 text-white font-extrabold text-[10px] flex items-center justify-center shrink-0">02</span>
+                    <h4 class="font-black text-slate-800 text-[11px] font-jakarta">Ketentuan Petak Kuis</h4>
+                </div>
+                <p class="text-[10.5px] text-slate-600 leading-snug font-semibold mb-1">
+                    Jika mendarat di petak soal, kelompok wajib berdiskusi untuk menjawab:
+                </p>
+                <ul class="text-[10px] font-bold space-y-0.5 pl-1">
+                    <li class="text-emerald-700 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+                        <span><b>Benar:</b> Mendapat poin & tetap di petak.</span>
+                    </li>
+                    <li class="text-rose-600 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0"></span>
+                        <span><b>Salah:</b> Mundur kembali ke petak awal.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Poin 3 -->
+            <div class="bg-amber-50/60 p-2.5 rounded-xl border border-amber-100">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="w-5 h-5 rounded-md bg-amber-500 text-white font-extrabold text-[10px] flex items-center justify-center shrink-0">03</span>
+                    <h4 class="font-black text-slate-800 text-[11px] font-jakarta">Petak Tangga & Ular</h4>
+                </div>
+                <ul class="text-[10px] font-bold space-y-1 text-slate-600">
+                    <li class="flex items-start gap-1">
+                        <span class="text-amber-500">🪜</span>
+                        <span><b>Petak Tangga:</b> Jika di kaki tangga, pion otomatis naik.</span>
+                    </li>
+                    <li class="flex items-start gap-1">
+                        <span class="text-rose-500">🐍</span>
+                        <span><b>Petak Ular:</b> Jika di kepala ular, pion meluncur turun.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Poin 4 -->
+            <div class="bg-purple-50/60 p-2.5 rounded-xl border border-purple-100">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="w-5 h-5 rounded-md bg-purple-500 text-white font-extrabold text-[10px] flex items-center justify-center shrink-0">04</span>
+                    <h4 class="font-black text-slate-800 text-[11px] font-jakarta">Penentuan Kemenangan</h4>
+                </div>
+                <p class="text-[10.5px] text-slate-600 leading-snug font-semibold">
+                    Kelompok yang pertama kali mencapai garis <i>finish</i> dinyatakan sebagai pemenang!
+                </p>
+            </div>
+        </div>
     </div>
 
     <!-- PENGATURAN PERMAINAN FULLSCREEN -->
@@ -686,7 +760,7 @@
             "MANTAP! Semangat belajar membawamu terbang tinggi! Teruskan prestasimu! 🎈🥳"
         ];
 
-        /* VARIASI PESAN BANNER JAWA BAN KUIS */
+        /* VARIASI PESAN BANNER JAWABAN KUIS */
         const correctAnswersMotivations = [
             "JAWABAN TEPAT! Pengetahuanmu sungguh luar biasa! ⭐ Cerdas sekali!",
             "HEBAT! Jawabannya Benar! Kamu makin hebat dalam memahami materi! 🎉",
@@ -700,6 +774,19 @@
             "Tetap semangat! Belajar dari kesalahan membuatmu makin pintar! 🧠✨",
             "Ayo bangkit! Setiap kesalahan adalah tangga menuju pengetahuan baru! 🌈"
         ];
+
+        function toggleRulesBox() {
+            playSound('click');
+            const body = document.getElementById('rules-content-body');
+            const btn = document.getElementById('btn-toggle-rules');
+            if(body.classList.contains('hidden')) {
+                body.classList.remove('hidden');
+                btn.innerText = 'Sembunyikan 🔼';
+            } else {
+                body.classList.add('hidden');
+                btn.innerText = 'Tampilkan 🔽';
+            }
+        }
 
         function showEventBanner(type, playerName) {
             const banner = document.getElementById('event-banner');
