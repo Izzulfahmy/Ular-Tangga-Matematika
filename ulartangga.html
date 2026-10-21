@@ -395,18 +395,21 @@
         </button>
     </div>
 
-    <!-- PANEL ATURAN PERMAINAN SAMPLING KIRI (DIRAMPINGKAN & DIPOSISIKAN LEBIH KE BAWAH) -->
-    <div class="w-full lg:fixed lg:top-20 lg:left-4 lg:w-64 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-lg border-2 border-emerald-200 z-[90] max-h-[78vh] overflow-y-auto mb-3 lg:mb-0 transition-all">
-        <div class="flex items-center justify-between border-b border-emerald-100 pb-1.5 mb-2 sticky top-0 bg-white/95 z-10">
-            <h3 class="font-black text-slate-800 text-xs tracking-wide uppercase flex items-center gap-1 font-jakarta">
+    <!-- PANEL ATURAN PERMAINAN SAMPLING KIRI (TOMBOL IKON MINIMALIS & UI MODERN) -->
+    <div class="w-full lg:fixed lg:top-20 lg:left-4 lg:w-64 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-lg border-2 border-emerald-200 z-[90] max-h-[78vh] overflow-y-auto mb-3 lg:mb-0 transition-all">
+        <div class="flex items-center justify-between border-b border-emerald-100 pb-2 mb-2 sticky top-0 bg-white/95 z-10">
+            <h3 class="font-black text-slate-800 text-xs tracking-wide uppercase flex items-center gap-1.5 font-jakarta">
                 <span class="text-emerald-600">📜</span> Aturan Permainan
             </h3>
-            <button onclick="toggleRulesBox()" id="btn-toggle-rules" class="text-[9px] font-extrabold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-lg border border-emerald-200 hover:bg-emerald-100 transition-all">
-                Sembunyikan 🔼
+            <!-- TOMBOL TOGGLE SIMBOL ONLY -->
+            <button onclick="toggleRulesBox()" id="btn-toggle-rules" title="Sembunyikan/Tampilkan Aturan" class="w-7 h-7 rounded-lg bg-emerald-50 hover:bg-emerald-500 text-emerald-600 hover:text-white border border-emerald-200 hover:border-emerald-500 flex items-center justify-center transition-all duration-200 shadow-sm active:scale-95 group">
+                <svg id="rules-toggle-icon" class="w-4 h-4 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                </svg>
             </button>
         </div>
 
-        <div id="rules-content-body" class="space-y-2 text-[11px]">
+        <div id="rules-content-body" class="space-y-2 text-[11px] transition-all duration-300">
             <!-- Poin 1 -->
             <div class="bg-emerald-50/60 p-2 rounded-xl border border-emerald-100">
                 <div class="flex items-center gap-1.5 mb-1">
@@ -778,13 +781,14 @@
         function toggleRulesBox() {
             playSound('click');
             const body = document.getElementById('rules-content-body');
-            const btn = document.getElementById('btn-toggle-rules');
-            if(body.classList.contains('hidden')) {
+            const icon = document.getElementById('rules-toggle-icon');
+            
+            if (body.classList.contains('hidden')) {
                 body.classList.remove('hidden');
-                btn.innerText = 'Sembunyikan 🔼';
+                icon.style.transform = 'rotate(0deg)';
             } else {
                 body.classList.add('hidden');
-                btn.innerText = 'Tampilkan 🔽';
+                icon.style.transform = 'rotate(180deg)';
             }
         }
 
