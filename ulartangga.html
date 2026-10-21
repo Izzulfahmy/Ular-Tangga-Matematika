@@ -395,39 +395,39 @@
         </button>
     </div>
 
-    <!-- PANEL ATURAN PERMAINAN SAMPLING KIRI -->
-    <div class="w-full lg:fixed lg:top-5 lg:left-5 lg:w-80 bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-lg border-2 border-emerald-200 z-[90] max-h-[85vh] overflow-y-auto mb-3 lg:mb-0 transition-all">
-        <div class="flex items-center justify-between border-b border-emerald-100 pb-2 mb-2 sticky top-0 bg-white/95 z-10">
-            <h3 class="font-black text-slate-800 text-xs sm:text-sm tracking-wide uppercase flex items-center gap-1.5 font-jakarta">
+    <!-- PANEL ATURAN PERMAINAN SAMPLING KIRI (DIRAMPINGKAN & DIPOSISIKAN LEBIH KE BAWAH) -->
+    <div class="w-full lg:fixed lg:top-20 lg:left-4 lg:w-64 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-lg border-2 border-emerald-200 z-[90] max-h-[78vh] overflow-y-auto mb-3 lg:mb-0 transition-all">
+        <div class="flex items-center justify-between border-b border-emerald-100 pb-1.5 mb-2 sticky top-0 bg-white/95 z-10">
+            <h3 class="font-black text-slate-800 text-xs tracking-wide uppercase flex items-center gap-1 font-jakarta">
                 <span class="text-emerald-600">📜</span> Aturan Permainan
             </h3>
-            <button onclick="toggleRulesBox()" id="btn-toggle-rules" class="text-[10px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200 hover:bg-emerald-100 transition-all">
+            <button onclick="toggleRulesBox()" id="btn-toggle-rules" class="text-[9px] font-extrabold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-lg border border-emerald-200 hover:bg-emerald-100 transition-all">
                 Sembunyikan 🔼
             </button>
         </div>
 
-        <div id="rules-content-body" class="space-y-2.5 text-xs">
+        <div id="rules-content-body" class="space-y-2 text-[11px]">
             <!-- Poin 1 -->
-            <div class="bg-emerald-50/60 p-2.5 rounded-xl border border-emerald-100">
-                <div class="flex items-center gap-2 mb-1">
-                    <span class="w-5 h-5 rounded-md bg-emerald-500 text-white font-extrabold text-[10px] flex items-center justify-center shrink-0">01</span>
-                    <h4 class="font-black text-slate-800 text-[11px] font-jakarta">Giliran & Kocok Dadu</h4>
+            <div class="bg-emerald-50/60 p-2 rounded-xl border border-emerald-100">
+                <div class="flex items-center gap-1.5 mb-1">
+                    <span class="w-4 h-4 rounded-md bg-emerald-500 text-white font-extrabold text-[9px] flex items-center justify-center shrink-0">01</span>
+                    <h4 class="font-black text-slate-800 text-[10.5px] font-jakarta">Giliran & Kocok Dadu</h4>
                 </div>
-                <p class="text-[10.5px] text-slate-600 leading-snug font-semibold">
+                <p class="text-[10px] text-slate-600 leading-snug font-semibold">
                     Setiap kelompok bergiliran melempar dadu digital. Pion kelompok akan melangkah secara otomatis di papan permainan sesuai angka dadu.
                 </p>
             </div>
 
             <!-- Poin 2 -->
-            <div class="bg-blue-50/60 p-2.5 rounded-xl border border-blue-100">
-                <div class="flex items-center gap-2 mb-1">
-                    <span class="w-5 h-5 rounded-md bg-blue-500 text-white font-extrabold text-[10px] flex items-center justify-center shrink-0">02</span>
-                    <h4 class="font-black text-slate-800 text-[11px] font-jakarta">Ketentuan Petak Kuis</h4>
+            <div class="bg-blue-50/60 p-2 rounded-xl border border-blue-100">
+                <div class="flex items-center gap-1.5 mb-1">
+                    <span class="w-4 h-4 rounded-md bg-blue-500 text-white font-extrabold text-[9px] flex items-center justify-center shrink-0">02</span>
+                    <h4 class="font-black text-slate-800 text-[10.5px] font-jakarta">Ketentuan Petak Kuis</h4>
                 </div>
-                <p class="text-[10.5px] text-slate-600 leading-snug font-semibold mb-1">
+                <p class="text-[10px] text-slate-600 leading-snug font-semibold mb-1">
                     Jika mendarat di petak soal, kelompok wajib berdiskusi untuk menjawab:
                 </p>
-                <ul class="text-[10px] font-bold space-y-0.5 pl-1">
+                <ul class="text-[9.5px] font-bold space-y-0.5 pl-0.5">
                     <li class="text-emerald-700 flex items-center gap-1">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
                         <span><b>Benar:</b> Mendapat poin & tetap di petak.</span>
@@ -440,12 +440,12 @@
             </div>
 
             <!-- Poin 3 -->
-            <div class="bg-amber-50/60 p-2.5 rounded-xl border border-amber-100">
-                <div class="flex items-center gap-2 mb-1">
-                    <span class="w-5 h-5 rounded-md bg-amber-500 text-white font-extrabold text-[10px] flex items-center justify-center shrink-0">03</span>
-                    <h4 class="font-black text-slate-800 text-[11px] font-jakarta">Petak Tangga & Ular</h4>
+            <div class="bg-amber-50/60 p-2 rounded-xl border border-amber-100">
+                <div class="flex items-center gap-1.5 mb-1">
+                    <span class="w-4 h-4 rounded-md bg-amber-500 text-white font-extrabold text-[9px] flex items-center justify-center shrink-0">03</span>
+                    <h4 class="font-black text-slate-800 text-[10.5px] font-jakarta">Petak Tangga & Ular</h4>
                 </div>
-                <ul class="text-[10px] font-bold space-y-1 text-slate-600">
+                <ul class="text-[9.5px] font-bold space-y-1 text-slate-600">
                     <li class="flex items-start gap-1">
                         <span class="text-amber-500">🪜</span>
                         <span><b>Petak Tangga:</b> Jika di kaki tangga, pion otomatis naik.</span>
@@ -458,12 +458,12 @@
             </div>
 
             <!-- Poin 4 -->
-            <div class="bg-purple-50/60 p-2.5 rounded-xl border border-purple-100">
-                <div class="flex items-center gap-2 mb-1">
-                    <span class="w-5 h-5 rounded-md bg-purple-500 text-white font-extrabold text-[10px] flex items-center justify-center shrink-0">04</span>
-                    <h4 class="font-black text-slate-800 text-[11px] font-jakarta">Penentuan Kemenangan</h4>
+            <div class="bg-purple-50/60 p-2 rounded-xl border border-purple-100">
+                <div class="flex items-center gap-1.5 mb-1">
+                    <span class="w-4 h-4 rounded-md bg-purple-500 text-white font-extrabold text-[9px] flex items-center justify-center shrink-0">04</span>
+                    <h4 class="font-black text-slate-800 text-[10.5px] font-jakarta">Penentuan Kemenangan</h4>
                 </div>
-                <p class="text-[10.5px] text-slate-600 leading-snug font-semibold">
+                <p class="text-[10px] text-slate-600 leading-snug font-semibold">
                     Kelompok yang pertama kali mencapai garis <i>finish</i> dinyatakan sebagai pemenang!
                 </p>
             </div>
