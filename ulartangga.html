@@ -971,8 +971,9 @@
 
             qrBox.innerHTML = '';
             
-            const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
-            const remoteUrl = `${baseUrl}/remote.html?gameId=${currentGameId}&player=${playerIdx}`;
+            // Format URL Remote yang presisi
+            const currentUrl = window.location.href.split('?')[0];
+            const remoteUrl = currentUrl.replace('ulartangga.html', 'remote.html') + `?gameId=${currentGameId}&player=${playerIdx}`;
 
             qrCodeInstance = new QRCode(qrBox, {
                 text: remoteUrl,
@@ -1045,7 +1046,7 @@
             { name: 'Serigala', emoji: '🐺' }
         ];
 
-        /* TANGGA DAN ULAR (HANYA 4 ULAR DENGAN PENURUNAN DEKAT) */
+        /* TANGGA DAN ULAR */
         const ladders = { 4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91 };
         const snakes = { 17: 10, 54: 42, 75: 62, 98: 85 };
         const cellColors = ['bg-red-50 text-red-500', 'bg-blue-50 text-blue-500', 'bg-emerald-50 text-emerald-500', 'bg-yellow-50 text-yellow-600', 'bg-purple-50 text-purple-500', 'bg-pink-50 text-pink-500'];
@@ -1211,8 +1212,10 @@
             if(!window.dbFirestore) return;
             const gameRef = window.fsDoc(window.dbFirestore, "game_sessions", currentGameId);
             
+            lastProcessedTimestamp = Date.now();
+
             window.fsSetDoc(gameRef, {
-                currentPlayer: 0,
+                currentPlayer: parseInt(currentPlayer, 10),
                 status: "active",
                 lastAction: null,
                 timestamp: Date.now()
@@ -1226,10 +1229,13 @@
                     if(action && action.timestamp && action.timestamp > lastProcessedTimestamp) {
                         lastProcessedTimestamp = action.timestamp;
 
-                        if(action.type === "ROLL_DICE" && action.player === currentPlayer && !isMoving) {
+                        const actionPlayer = parseInt(action.player, 10);
+                        const activePlayer = parseInt(currentPlayer, 10);
+
+                        if(action.type === "ROLL_DICE" && actionPlayer === activePlayer && !isMoving) {
                             window.fsSetDoc(gameRef, { lastAction: null }, { merge: true });
                             rollDice3D();
-                        } else if(action.type === "SUBMIT_ANSWER" && action.player === currentPlayer && soalAktif) {
+                        } else if(action.type === "SUBMIT_ANSWER" && actionPlayer === activePlayer && soalAktif) {
                             window.fsSetDoc(gameRef, { lastAction: null }, { merge: true });
                             checkJawabanSiswa(action.answer);
                         }
@@ -1428,7 +1434,6 @@
                 }
             }
 
-            // Kirim data currentPlayer ke Firebase
             if(window.dbFirestore && currentGameId) {
                 window.fsSetDoc(window.fsDoc(window.dbFirestore, "game_sessions", currentGameId), {
                     currentPlayer: parseInt(currentPlayer, 10),

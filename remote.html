@@ -161,10 +161,11 @@
                 if(docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    // Memastikan data currentPlayer dikonversi ke integer agar tipe data sama
+                    // Memastikan konversi integer presisi
                     const activePlayer = parseInt(data.currentPlayer, 10);
+                    const myPlayerIndex = parseInt(playerIndex, 10);
 
-                    if (!isNaN(activePlayer) && activePlayer === playerIndex) {
+                    if (!isNaN(activePlayer) && activePlayer === myPlayerIndex) {
                         setTurnState(true);
                     } else {
                         setTurnState(false);
@@ -175,7 +176,7 @@
 
         function setTurnState(active) {
             isMyTurn = active;
-            if(!active) isRolling = false; // Reset lock saat berpindah giliran
+            if(!active) isRolling = false;
 
             const btnRoll = document.getElementById('btn-remote-roll');
             const turnBanner = document.getElementById('turn-banner');
@@ -217,7 +218,7 @@
             window.fsSetDoc(gameRef, {
                 lastAction: {
                     type: "ROLL_DICE",
-                    player: playerIndex,
+                    player: parseInt(playerIndex, 10),
                     timestamp: Date.now()
                 }
             }, { merge: true }).then(() => {
@@ -233,7 +234,7 @@
             window.fsSetDoc(gameRef, {
                 lastAction: {
                     type: "SUBMIT_ANSWER",
-                    player: playerIndex,
+                    player: parseInt(playerIndex, 10),
                     answer: ans,
                     timestamp: Date.now()
                 }
