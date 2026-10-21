@@ -241,9 +241,9 @@
     .menu-grid {
       display: flex;
       justify-content: center;
-      gap: 24px;
+      gap: 20px;
       width: 100%;
-      max-width: 580px;
+      max-width: 820px;
       margin-bottom: 10px;
       animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
     }
@@ -293,6 +293,10 @@
       border-bottom: 5px solid #0284c7;
     }
 
+    .menu-card.petunjuk {
+      border-bottom: 5px solid #d97706;
+    }
+
     .menu-card.ular-tangga {
       border-bottom: 5px solid #059669;
     }
@@ -312,6 +316,12 @@
       background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
       color: #ffffff;
       box-shadow: 0 10px 20px rgba(2, 132, 199, 0.35);
+    }
+
+    .petunjuk .icon-wrapper {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(217, 119, 6, 0.35);
     }
 
     .ular-tangga .icon-wrapper {
@@ -342,6 +352,150 @@
       transform: translateY(-2px) scale(0.98);
     }
 
+    /* MODAL PETUNJUK */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 650px;
+      border-radius: 32px;
+      padding: 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 4px solid #fef08a;
+      transform: scale(0.9) translateY(20px);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px dashed #e2e8f0;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #064e3b;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-close-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      border: none;
+      color: #64748b;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close-btn:hover {
+      background: #ef4444;
+      color: #ffffff;
+      transform: scale(1.1);
+    }
+
+    .guide-step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .guide-step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 20px;
+      padding: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .guide-step-item:hover {
+      border-color: #10b981;
+      background: #f0fdf4;
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+      color: #ffffff;
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .step-desc {
+      font-size: 0.92rem;
+      color: #334155;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .step-desc strong {
+      color: #047857;
+    }
+
     /* Media Queries */
     @media (max-height: 700px) {
       .dashboard-wrapper { padding: 18px 16px; }
@@ -355,10 +509,14 @@
       .icon-wrapper { width: 58px; height: 58px; font-size: 1.75rem; }
       .card-label { font-size: 1.15rem; }
       .menu-card { padding: 16px 12px; }
+      .modal-card { padding: 20px; }
     }
 
     @media (max-width: 600px) {
       .main-title { white-space: normal; }
+      .menu-grid { flex-direction: column; max-width: 320px; gap: 12px; }
+      .menu-card { flex-direction: row; justify-content: flex-start; padding: 14px 20px; gap: 16px; }
+      .icon-wrapper { width: 50px; height: 50px; font-size: 1.5rem; }
     }
 
     @media (max-width: 480px) {
@@ -366,7 +524,6 @@
       .fullscreen-btn svg { width: 18px; height: 18px; }
       .logo-container { gap: 12px; padding: 8px 16px; }
       .logo-img { height: 32px; }
-      .menu-grid { gap: 12px; }
     }
   </style>
 </head>
@@ -416,6 +573,12 @@
         <span class="card-label">Materi</span>
       </a>
 
+      <!-- Menu Petunjuk -->
+      <button type="button" class="menu-card petunjuk" onclick="openPetunjukModal()">
+        <div class="icon-wrapper">💡</div>
+        <span class="card-label">Petunjuk</span>
+      </button>
+
       <!-- Menu Ular Tangga -->
       <a href="ulartangga.html" class="menu-card ular-tangga" onclick="playClickSound(event, this.href)">
         <div class="icon-wrapper">🎲</div>
@@ -424,6 +587,52 @@
     </nav>
 
   </main>
+
+  <!-- MODAL POPUP PETUNJUK -->
+  <div id="petunjukModal" class="modal-overlay" onclick="closePetunjukModalOnOverlay(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <span>💡</span>
+          <span>Petunjuk Penggunaan</span>
+        </h2>
+        <button type="button" class="modal-close-btn" onclick="closePetunjukModal()">&times;</button>
+      </div>
+      <div class="guide-step-list">
+        
+        <div class="guide-step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3 class="step-title">Klik Menu Materi & Mencermati Pembelajaran</h3>
+            <p class="step-desc">
+              Klik menu <strong>Materi</strong> untuk mencermati materi pembelajaran yang disajikan serta menyaksikan video pembelajaran secara saksama.
+            </p>
+          </div>
+        </div>
+
+        <div class="guide-step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3 class="step-title">Mengerjakan Permainan Interaktif</h3>
+            <p class="step-desc">
+              Setelah selesai mencermati materi, klik tombol berbentuk gamepad/latihan di <strong>pojok kanan atas</strong> untuk mengerjakan permainan interaktif yang berisi <strong>3 soal interaktif</strong>.
+            </p>
+          </div>
+        </div>
+
+        <div class="guide-step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3 class="step-title">Bermain Permainan Ular Tangga</h3>
+            <p class="step-desc">
+              Jika sudah selesai mengerjakan latihan, lanjutkan ke menu <strong>Permainan Ular Tangga</strong>. Pilih <strong>jumlah pemain</strong>, tentukan <strong>karakter pion hewan</strong> pilihanmu, dan mulailah permainan dengan seru!
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 
   <!-- Audio Synthesizer & Fullscreen Logic -->
   <script>
@@ -465,6 +674,23 @@
       setTimeout(() => {
         window.location.href = targetUrl;
       }, 180);
+    }
+
+    /* Logic Modal Petunjuk */
+    function openPetunjukModal() {
+      playPopSound();
+      document.getElementById('petunjukModal').classList.add('active');
+    }
+
+    function closePetunjukModal() {
+      playPopSound();
+      document.getElementById('petunjukModal').classList.remove('active');
+    }
+
+    function closePetunjukModalOnOverlay(event) {
+      if (event.target.id === 'petunjukModal') {
+        closePetunjukModal();
+      }
     }
 
     /* Logic Toggle Fullscreen + Dynamic SVG Switch */
