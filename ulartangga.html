@@ -1424,9 +1424,10 @@
                 }
             }
 
+            // Kirim data currentPlayer ke Firebase
             if(window.dbFirestore && currentGameId) {
                 window.fsSetDoc(window.fsDoc(window.dbFirestore, "game_sessions", currentGameId), {
-                    currentPlayer: currentPlayer,
+                    currentPlayer: parseInt(currentPlayer, 10),
                     timestamp: Date.now()
                 }, { merge: true });
             }

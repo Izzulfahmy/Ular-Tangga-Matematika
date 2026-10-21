@@ -160,9 +160,11 @@
             window.fsOnSnapshot(gameRef, (docSnap) => {
                 if(docSnap.exists()) {
                     const data = docSnap.data();
-                    const activePlayer = data.currentPlayer;
+                    
+                    // Memastikan data currentPlayer dikonversi ke integer agar tipe data sama
+                    const activePlayer = parseInt(data.currentPlayer, 10);
 
-                    if(activePlayer === playerIndex) {
+                    if (!isNaN(activePlayer) && activePlayer === playerIndex) {
                         setTurnState(true);
                     } else {
                         setTurnState(false);
